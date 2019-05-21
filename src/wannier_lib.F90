@@ -244,7 +244,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
    use w90_plot
    use w90_transport
    use w90_comms, only: my_node_id, num_nodes, &
-      comms_array_split, comms_scatterv
+                        comms_array_split, comms_scatterv
 
    implicit none
 

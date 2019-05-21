@@ -1011,7 +1011,7 @@ SUBROUTINE compute_mmn
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum
    USE noncollin_module, ONLY: noncolin, npol
@@ -1365,7 +1365,7 @@ SUBROUTINE compute_spin
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum
    USE noncollin_module, ONLY: noncolin, npol
@@ -1509,7 +1509,7 @@ SUBROUTINE compute_orb
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum
    USE noncollin_module, ONLY: noncolin, npol
@@ -1916,7 +1916,7 @@ SUBROUTINE compute_amn
    USE cell_base, ONLY: tpiba2
    USE uspp, ONLY: nkb, vkb
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE wannier
    USE ions_base, ONLY: nat, ntyp => nsp, ityp, tau
    USE uspp_param, ONLY: upf

@@ -82,21 +82,21 @@ contains
       !============================================================!
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, elem_charge_SI, hbar_SI, &
-         eV_au, bohr, pi, eV_seconds
+                               eV_au, bohr, pi, eV_seconds
       use w90_comms, only: on_root, num_nodes, my_node_id, comms_reduce
       use w90_io, only: io_error, stdout, io_file_unit, seedname, &
-         io_stopwatch
+                        io_stopwatch
       use w90_postw90_common, only: nrpts, irvec, num_int_kpts_on_node, int_kpts, &
-         weight
+                                    weight
       use w90_parameters, only: timing_level, iprint, num_wann, berry_kmesh, &
-         berry_curv_adpt_kmesh, &
-         berry_curv_adpt_kmesh_thresh, &
-         wanint_kpoint_file, cell_volume, transl_inv, &
-         berry_task, berry_curv_unit, spin_decomp, &
-         kubo_nfreq, kubo_freq_list, nfermi, &
-         fermi_energy_list
+                                berry_curv_adpt_kmesh, &
+                                berry_curv_adpt_kmesh_thresh, &
+                                wanint_kpoint_file, cell_volume, transl_inv, &
+                                berry_task, berry_curv_unit, spin_decomp, &
+                                kubo_nfreq, kubo_freq_list, nfermi, &
+                                fermi_energy_list
       use w90_get_oper, only: get_HH_R, get_AA_R, get_BB_R, get_CC_R, &
-         get_SS_R
+                              get_SS_R
 
       real(kind=dp), allocatable    :: adkpt(:, :)
 
@@ -1098,12 +1098,12 @@ contains
       use w90_constants, only: dp, cmplx_0, cmplx_i, pi
       use w90_utility, only: utility_diagonalize, utility_rotate, utility_w0gauss
       use w90_parameters, only: num_wann, kubo_nfreq, kubo_freq_list, &
-         fermi_energy_list, kubo_eigval_max, &
-         kubo_adpt_smr, kubo_smr_fixed_en_width, &
-         kubo_adpt_smr_max, kubo_adpt_smr_fac, &
-         kubo_smr_index, berry_kmesh, spin_decomp
+                                fermi_energy_list, kubo_eigval_max, &
+                                kubo_adpt_smr, kubo_smr_fixed_en_width, &
+                                kubo_adpt_smr_max, kubo_adpt_smr_fac, &
+                                kubo_smr_index, berry_kmesh, spin_decomp
       use w90_postw90_common, only: pw90common_get_occ, pw90common_fourier_R_to_k_new, &
-         pw90common_fourier_R_to_k_vec, pw90common_kmesh_spacing
+                                    pw90common_fourier_R_to_k_vec, pw90common_kmesh_spacing
       use w90_wan_ham, only: wham_get_D_h, wham_get_eig_deleig
       use w90_get_oper, only: HH_R, AA_R
       use w90_spin, only: spin_get_nk
@@ -1269,15 +1269,15 @@ contains
       use w90_constants, only: dp, cmplx_0, cmplx_i
       use w90_utility, only: utility_re_tr, utility_im_tr, utility_w0gauss, utility_w0gauss_vec
       use w90_parameters, only: num_wann, nfermi, kubo_nfreq, kubo_freq_list, fermi_energy_list, &
-         kubo_smr_index, berry_kmesh, kubo_adpt_smr_fac, &
-         kubo_adpt_smr_max, kubo_adpt_smr, kubo_eigval_max, &
-         kubo_smr_fixed_en_width, sc_phase_conv, sc_w_thr
+                                kubo_smr_index, berry_kmesh, kubo_adpt_smr_fac, &
+                                kubo_adpt_smr_max, kubo_adpt_smr, kubo_eigval_max, &
+                                kubo_smr_fixed_en_width, sc_phase_conv, sc_w_thr
       use w90_postw90_common, only: pw90common_fourier_R_to_k_vec_dadb, &
-         pw90common_fourier_R_to_k_new_second_d, pw90common_get_occ, &
-         pw90common_kmesh_spacing, pw90common_fourier_R_to_k_vec_dadb_TB_conv
+                                    pw90common_fourier_R_to_k_new_second_d, pw90common_get_occ, &
+                                    pw90common_kmesh_spacing, pw90common_fourier_R_to_k_vec_dadb_TB_conv
       use w90_wan_ham, only: wham_get_eig_UU_HH_JJlist, wham_get_occ_mat_list, wham_get_D_h, &
-         wham_get_eig_UU_HH_AA_sc, wham_get_eig_deleig, wham_get_D_h_P_value, &
-         wham_get_eig_deleig_TB_conv, wham_get_eig_UU_HH_AA_sc_TB_conv
+                             wham_get_eig_UU_HH_AA_sc, wham_get_eig_deleig, wham_get_D_h_P_value, &
+                             wham_get_eig_deleig_TB_conv, wham_get_eig_UU_HH_AA_sc_TB_conv
       use w90_get_oper, only: AA_R
       use w90_utility, only: utility_rotate, utility_zdotu
       ! Arguments

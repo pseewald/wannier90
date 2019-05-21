@@ -72,7 +72,7 @@ contains
       use w90_constants, only: cmplx_0
       use w90_io, only: io_error
       use w90_parameters, only: num_wann, num_kpts, bands_plot, transport, &
-         bands_plot_mode, transport_mode
+                                bands_plot_mode, transport_mode
 
       implicit none
 
@@ -166,8 +166,8 @@ contains
       use w90_constants, only: cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, io_stopwatch
       use w90_parameters, only: num_bands, num_kpts, num_wann, u_matrix, &
-         eigval, kpt_latt, u_matrix_opt, lwindow, ndimwin, &
-         have_disentangled, timing_level
+                                eigval, kpt_latt, u_matrix_opt, lwindow, ndimwin, &
+                                have_disentangled, timing_level
       use w90_parameters, only: lsitesymmetry !YN:
 
       implicit none
@@ -354,8 +354,8 @@ contains
          !====================================================!
 
          use w90_parameters, only: num_wann, real_lattice, recip_lattice, wannier_centres, &
-            num_atoms, atoms_pos_cart, translation_centre_frac, &
-            automatic_translation, num_species, atoms_species_num, lenconfac
+                                   num_atoms, atoms_pos_cart, translation_centre_frac, &
+                                   automatic_translation, num_species, atoms_species_num, lenconfac
          use w90_io, only: stdout, io_error
          use w90_utility, only: utility_cart_to_frac, utility_frac_to_cart
 
@@ -439,7 +439,7 @@ contains
       !============================================!
 
       use w90_io, only: io_error, io_stopwatch, io_file_unit, &
-         seedname, io_date
+                        seedname, io_date
       use w90_parameters, only: num_wann, timing_level
 
       integer            :: i, j, irpt, file_unit
@@ -605,7 +605,7 @@ contains
       !! Write out the matrix elements of r
       !============================================!
       use w90_parameters, only: m_matrix, wb, bk, num_wann, num_kpts, kpt_latt, &
-         nntot, write_bvec
+                                nntot, write_bvec
       use w90_constants, only: twopi, cmplx_i
       use w90_io, only: io_error, io_file_unit, seedname, io_date
 
@@ -678,9 +678,9 @@ contains
       !============================================!
 
       use w90_io, only: io_error, io_stopwatch, io_file_unit, &
-         seedname, io_date
+                        seedname, io_date
       use w90_parameters, only: real_lattice, num_wann, timing_level, &
-         m_matrix, wb, bk, num_kpts, kpt_latt, nntot
+                                m_matrix, wb, bk, num_kpts, kpt_latt, nntot
       use w90_constants, only: twopi, cmplx_i
 
       integer            :: i, j, irpt, ik, nn, idir, file_unit

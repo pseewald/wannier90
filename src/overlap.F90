@@ -42,8 +42,8 @@ contains
       !! This must be called before calling overlap_read
 
       use w90_parameters, only: num_bands, num_wann, num_kpts, nntot, timing_level, &
-         u_matrix, m_matrix_orig, m_matrix_orig_local, a_matrix, &
-         u_matrix_opt, m_matrix, m_matrix_local
+                                u_matrix, m_matrix_orig, m_matrix_orig_local, a_matrix, &
+                                u_matrix_opt, m_matrix, m_matrix_local
       use w90_io, only: io_error, io_stopwatch
       use w90_comms, only: my_node_id, num_nodes, comms_array_split
 
@@ -93,12 +93,12 @@ contains
       !! Note: one needs to call overlap_allocate first!
 
       use w90_parameters, only: num_bands, num_wann, num_kpts, nntot, nncell, nnlist, &
-         devel_flag, u_matrix, m_matrix, a_matrix, timing_level, &
-         m_matrix_orig, u_matrix_opt, cp_pp, use_bloch_phases, gamma_only, & ![ysl]
-         m_matrix_local, m_matrix_orig_local
+                                devel_flag, u_matrix, m_matrix, a_matrix, timing_level, &
+                                m_matrix_orig, u_matrix_opt, cp_pp, use_bloch_phases, gamma_only, & ![ysl]
+                                m_matrix_local, m_matrix_orig_local
       use w90_io, only: io_file_unit, io_error, seedname, io_stopwatch
       use w90_comms, only: my_node_id, num_nodes, &
-         comms_array_split, comms_scatterv
+                           comms_array_split, comms_scatterv
 
       implicit none
 
@@ -541,8 +541,8 @@ contains
       !! Dellocate memory
 
       use w90_parameters, only: u_matrix, m_matrix, m_matrix_orig, &
-         a_matrix, u_matrix_opt, &
-         m_matrix_local, m_matrix_orig_local
+                                a_matrix, u_matrix_opt, &
+                                m_matrix_local, m_matrix_orig_local
       use w90_io, only: io_error
 
       implicit none
@@ -614,13 +614,13 @@ contains
       use w90_constants
       use w90_io, only: io_error, io_stopwatch
       use w90_parameters, only: num_bands, num_wann, num_kpts, timing_level, &
-         u_matrix, m_matrix, nntot, nnlist, &
-         m_matrix_local
+                                u_matrix, m_matrix, nntot, nnlist, &
+                                m_matrix_local
       use w90_utility, only: utility_zgemm
       use w90_parameters, only: lsitesymmetry !RS:
       use w90_sitesym, only: sitesym_symmetrize_u_matrix !RS:
       use w90_comms, only: my_node_id, num_nodes, &
-         comms_array_split, comms_scatterv, comms_gatherv
+                           comms_array_split, comms_scatterv, comms_gatherv
 
       implicit none
 
@@ -749,7 +749,7 @@ contains
       use w90_constants
       use w90_io, only: io_error, io_stopwatch
       use w90_parameters, only: num_wann, timing_level, &
-         u_matrix, m_matrix, nntot!,num_kpts,nnlist
+                                u_matrix, m_matrix, nntot!,num_kpts,nnlist
       use w90_utility, only: utility_zgemm
 
       implicit none

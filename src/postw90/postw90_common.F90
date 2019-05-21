@@ -157,7 +157,7 @@ contains
 
       use w90_constants, only: dp
       use w90_io, only: io_error, io_file_unit, &
-         io_date, io_time, io_stopwatch
+                        io_date, io_time, io_stopwatch
 
       integer       :: k_unit
       integer       :: loop_nodes, loop_kpt, i, ierr
@@ -225,7 +225,7 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, io_file_unit, io_date, io_time, &
-         io_stopwatch
+                        io_stopwatch
       use w90_parameters
 
       integer :: ierr
@@ -472,11 +472,11 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, io_file_unit, &
-         io_date, io_time, io_stopwatch
+                        io_date, io_time, io_stopwatch
       use w90_parameters, only: num_wann, num_kpts, num_bands, have_disentangled, &
-         u_matrix_opt, u_matrix, m_matrix, &
-         ndimwin, lwindow, nntot, wannier_centres, &
-         num_valence_bands, scissors_shift
+                                u_matrix_opt, u_matrix, m_matrix, &
+                                ndimwin, lwindow, nntot, wannier_centres, &
+                                num_valence_bands, scissors_shift
 
       implicit none
 
@@ -690,7 +690,7 @@ contains
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_parameters, only: num_kpts, kpt_latt, num_wann, use_ws_distance
       use w90_ws_distance, only: irdist_ws, crdist_ws, &
-         wdist_ndeg, ws_translate_dist
+                                 wdist_ndeg, ws_translate_dist
 
       implicit none
 
@@ -925,7 +925,7 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_parameters, only: timing_level, num_kpts, kpt_latt, num_wann, &
-         use_ws_distance, wannier_centres, recip_lattice
+                                use_ws_distance, wannier_centres, recip_lattice
       use w90_ws_distance, only: irdist_ws, wdist_ndeg, ws_translate_dist
       use w90_utility, only: utility_cart_to_frac
 
@@ -1215,7 +1215,7 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_parameters, only: num_kpts, kpt_latt, num_wann, use_ws_distance, &
-         wannier_centres, recip_lattice
+                                wannier_centres, recip_lattice
       use w90_ws_distance, only: irdist_ws, wdist_ndeg, ws_translate_dist
       use w90_utility, only: utility_cart_to_frac
 

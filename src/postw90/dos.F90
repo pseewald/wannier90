@@ -44,17 +44,17 @@ contains
       !=======================================================!
 
       use w90_io, only: io_error, io_file_unit, io_date, io_stopwatch, &
-         seedname, stdout
+                        seedname, stdout
       use w90_comms, only: on_root, num_nodes, my_node_id, comms_reduce
       use w90_postw90_common, only: num_int_kpts_on_node, int_kpts, weight, &
-         pw90common_fourier_R_to_k
+                                    pw90common_fourier_R_to_k
       use w90_parameters, only: num_wann, dos_energy_min, dos_energy_max, &
-         dos_energy_step, timing_level, &
-         wanint_kpoint_file, dos_kmesh, &
-         dos_smr_index, dos_adpt_smr, dos_adpt_smr_fac, &
-         dos_adpt_smr_max, spin_decomp, &
-         dos_smr_fixed_en_width, &
-         dos_project, num_dos_project
+                                dos_energy_step, timing_level, &
+                                wanint_kpoint_file, dos_kmesh, &
+                                dos_smr_index, dos_adpt_smr, dos_adpt_smr_fac, &
+                                dos_adpt_smr_max, spin_decomp, &
+                                dos_smr_fixed_en_width, &
+                                dos_project, num_dos_project
       use w90_get_oper, only: get_HH_R, get_SS_R, HH_R
       use w90_wan_ham, only: wham_get_eig_deleig
       use w90_utility, only: utility_diagonalize
@@ -472,7 +472,7 @@ contains
       use w90_constants, only: dp, smearing_cutoff, min_smearing_binwidth_ratio
       use w90_utility, only: utility_w0gauss
       use w90_parameters, only: num_wann, spin_decomp, num_elec_per_state, &
-         num_dos_project, dos_project
+                                num_dos_project, dos_project
       use w90_spin, only: spin_get_nk
 
       ! Arguments

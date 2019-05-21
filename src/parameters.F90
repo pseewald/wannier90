@@ -3729,7 +3729,7 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, io_file_unit, &
-         io_date, io_time, io_stopwatch
+                        io_date, io_time, io_stopwatch
       use w90_comms, only: on_root, comms_bcast
 
       implicit none
@@ -4689,7 +4689,7 @@ contains
 
       use w90_constants, only: bohr, eps6, eps2
       use w90_utility, only: utility_cart_to_frac, &
-         utility_string_to_coord, utility_strip
+                             utility_string_to_coord, utility_strip
       use w90_io, only: io_error
 
       implicit none
@@ -5626,7 +5626,7 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, io_file_unit, io_date, io_time, &
-         io_stopwatch
+                        io_stopwatch
       use w90_comms, only: comms_bcast, on_root
 
       integer :: ierr

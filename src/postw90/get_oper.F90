@@ -63,12 +63,12 @@ contains
 
       use w90_constants, only: dp, cmplx_0
       use w90_io, only: io_error, stdout, io_stopwatch, &
-         io_file_unit, seedname
+                        io_file_unit, seedname
       use w90_parameters, only: num_wann, ndimwin, num_kpts, num_bands, &
-         eigval, u_matrix, have_disentangled, &
-         timing_level, scissors_shift, &
-         num_valence_bands, effective_model, &
-         real_lattice
+                                eigval, u_matrix, have_disentangled, &
+                                timing_level, scissors_shift, &
+                                num_valence_bands, effective_model, &
+                                real_lattice
       use w90_postw90_common, only: nrpts, rpt_origin, v_matrix, ndegen, irvec, crvec
       use w90_comms, only: on_root, comms_bcast
 
@@ -247,11 +247,11 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i
       use w90_parameters, only: num_kpts, nntot, num_wann, wb, bk, timing_level, &
-         num_bands, ndimwin, nnlist, have_disentangled, &
-         transl_inv, nncell, effective_model
+                                num_bands, ndimwin, nnlist, have_disentangled, &
+                                transl_inv, nncell, effective_model
       use w90_postw90_common, only: nrpts
       use w90_io, only: stdout, io_file_unit, io_error, io_stopwatch, &
-         seedname
+                        seedname
       use w90_comms, only: on_root, comms_bcast
 
       complex(kind=dp), allocatable :: AA_q(:, :, :, :)
@@ -497,11 +497,11 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i
       use w90_parameters, only: num_kpts, nntot, nnlist, num_wann, num_bands, &
-         ndimwin, eigval, wb, bk, have_disentangled, &
-         timing_level, nncell, scissors_shift
+                                ndimwin, eigval, wb, bk, have_disentangled, &
+                                timing_level, nncell, scissors_shift
       use w90_postw90_common, only: nrpts, v_matrix
       use w90_io, only: stdout, io_file_unit, io_error, io_stopwatch, &
-         seedname
+                        seedname
       use w90_comms, only: on_root, comms_bcast
 
       integer          :: idir, n, m, nn, i, ii, j, jj, &
@@ -642,12 +642,12 @@ contains
 
       use w90_constants, only: dp, cmplx_0
       use w90_parameters, only: num_kpts, nntot, nnlist, num_wann, &
-         num_bands, ndimwin, wb, bk, &
-         have_disentangled, timing_level, &
-         scissors_shift, uHu_formatted
+                                num_bands, ndimwin, wb, bk, &
+                                have_disentangled, timing_level, &
+                                scissors_shift, uHu_formatted
       use w90_postw90_common, only: nrpts, v_matrix
       use w90_io, only: stdout, io_error, io_stopwatch, io_file_unit, &
-         seedname
+                        seedname
       use w90_comms, only: on_root, comms_bcast
 
       integer          :: i, j, ii, jj, m, n, a, b, nn1, nn2, ik, nb_tmp, nkp_tmp, &
@@ -801,11 +801,11 @@ contains
 
       use w90_constants, only: dp, cmplx_0
       use w90_parameters, only: num_kpts, nntot, nnlist, num_wann, &
-         num_bands, ndimwin, wb, bk, &
-         have_disentangled, timing_level
+                                num_bands, ndimwin, wb, bk, &
+                                have_disentangled, timing_level
       use w90_postw90_common, only: nrpts, v_matrix
       use w90_io, only: stdout, io_error, io_stopwatch, io_file_unit, &
-         seedname
+                        seedname
       use w90_comms, only: on_root, comms_bcast
 
       integer          :: i, j, ii, jj, m, n, a, b, nn1, nn2, ik, nb_tmp, nkp_tmp, nntot_tmp, &
@@ -949,10 +949,10 @@ contains
 
       use w90_constants, only: dp, pi, cmplx_0
       use w90_parameters, only: num_wann, ndimwin, num_kpts, num_bands, &
-         timing_level, have_disentangled, spn_formatted
+                                timing_level, have_disentangled, spn_formatted
       use w90_postw90_common, only: nrpts, v_matrix
       use w90_io, only: io_error, io_stopwatch, stdout, seedname, &
-         io_file_unit
+                        io_file_unit
       use w90_comms, only: on_root, comms_bcast
 
       implicit none

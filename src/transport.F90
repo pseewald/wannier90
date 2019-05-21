@@ -109,7 +109,7 @@ contains
 
       use w90_io, only: stdout, io_stopwatch
       use w90_parameters, only: transport_mode, tran_read_ht, timing_level, write_hr, &
-         write_xyz
+                                write_xyz
       use w90_hamiltonian, only: hamiltonian_get_hr, hamiltonian_write_hr, hamiltonian_setup
 
       implicit none
@@ -171,7 +171,7 @@ contains
       use w90_constants, only: dp, eps8
       use w90_io, only: io_error, io_stopwatch, stdout
       use w90_parameters, only: one_dim_dir, real_lattice, num_wann, &
-         mp_grid, timing_level
+                                mp_grid, timing_level
       use w90_hamiltonian, only: irvec, nrpts, ham_r
 
       implicit none
@@ -256,9 +256,9 @@ contains
       use w90_constants, only: dp
       use w90_io, only: io_stopwatch, stdout
       use w90_parameters, only: num_wann, mp_grid, timing_level, real_lattice, &
-         hr_cutoff, dist_cutoff, dist_cutoff_mode, &
-         one_dim_dir, length_unit, transport_mode, &
-         tran_num_cell_ll, tran_num_ll, dist_cutoff_hc
+                                hr_cutoff, dist_cutoff, dist_cutoff_mode, &
+                                one_dim_dir, length_unit, transport_mode, &
+                                tran_num_cell_ll, tran_num_ll, dist_cutoff_hc
       use w90_hamiltonian, only: wannier_centres_translated
 
       implicit none
@@ -401,9 +401,9 @@ contains
       !
       use w90_constants, only: dp
       use w90_io, only: io_error, io_stopwatch, seedname, io_date, &
-         io_file_unit
+                        io_file_unit
       use w90_parameters, only: num_wann, tran_num_bb, tran_write_ht, &
-         nfermi, fermi_energy_list, timing_level
+                                nfermi, fermi_energy_list, timing_level
       !
       implicit none
       !
@@ -480,10 +480,10 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_1, cmplx_i, pi
       use w90_io, only: io_error, io_stopwatch, seedname, io_date, &
-         io_file_unit, stdout
+                        io_file_unit, stdout
       use w90_parameters, only: tran_num_bb, tran_read_ht, &
-         tran_win_min, tran_win_max, tran_energy_step, &
-         timing_level
+                                tran_win_min, tran_win_max, tran_energy_step, &
+                                timing_level
 
       implicit none
 
@@ -645,11 +645,11 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_1, cmplx_i, pi
       use w90_io, only: io_error, io_stopwatch, seedname, io_date, &
-         stdout, io_file_unit
+                        stdout, io_file_unit
       use w90_parameters, only: tran_num_ll, tran_num_rr, tran_num_cc, tran_num_lc, &
-         tran_num_cr, tran_num_bandc, &
-         tran_win_min, tran_win_max, tran_energy_step, &
-         tran_use_same_lead, timing_level, tran_read_ht
+                                tran_num_cr, tran_num_bandc, &
+                                tran_win_min, tran_win_max, tran_energy_step, &
+                                tran_use_same_lead, timing_level, tran_read_ht
 
       implicit none
 
@@ -1450,10 +1450,10 @@ contains
       !=========================================================================!
       use w90_constants, only: dp, cmplx_0, twopi, cmplx_i
       use w90_io, only: io_error, stdout, seedname, io_file_unit, io_date, &
-         io_stopwatch
+                        io_stopwatch
 
       use w90_parameters, only: num_wann, have_disentangled, num_bands, u_matrix, u_matrix_opt, &
-         real_lattice, iprint, timing_level
+                                real_lattice, iprint, timing_level
 
       use w90_hamiltonian, only: wannier_centres_translated
 
@@ -1707,8 +1707,8 @@ contains
       use w90_constants, only: dp
       use w90_io, only: io_error, stdout, io_stopwatch
       use w90_parameters, only: one_dim_dir, tran_num_ll, num_wann, tran_num_cell_ll, &
-         real_lattice, tran_group_threshold, iprint, timing_level, lenconfac, &
-         wannier_spreads, write_xyz, dist_cutoff
+                                real_lattice, tran_group_threshold, iprint, timing_level, lenconfac, &
+                                wannier_spreads, write_xyz, dist_cutoff
       use w90_hamiltonian, only: wannier_centres_translated
 
       implicit none
@@ -2496,7 +2496,7 @@ contains
       use w90_constants, only: dp
       use w90_io, only: stdout, io_stopwatch, io_error
       use w90_parameters, only: tran_num_ll, num_wann, tran_num_cell_ll, iprint, timing_level, &
-         tran_group_threshold, write_xyz
+                                tran_group_threshold, write_xyz
       use w90_hamiltonian, only: wannier_centres_translated
 
       implicit none
@@ -2784,8 +2784,8 @@ contains
 
       use w90_io, only: seedname, io_file_unit, io_date, stdout
       use w90_parameters, only: num_wann, &
-         atoms_pos_cart, atoms_symbol, num_species, &
-         atoms_species_num, num_atoms, transport_mode
+                                atoms_pos_cart, atoms_symbol, num_species, &
+                                atoms_species_num, num_atoms, transport_mode
       use w90_hamiltonian, only: wannier_centres_translated
 
       implicit none
@@ -2836,7 +2836,7 @@ contains
       use w90_constants, only: dp
       use w90_io, only: stdout, io_stopwatch
       use w90_parameters, only: tran_num_cell_ll, num_wann, tran_num_ll, &
-         timing_level, iprint, tran_easy_fix
+                                timing_level, iprint, tran_easy_fix
 
       implicit none
 
@@ -2920,9 +2920,9 @@ contains
       use w90_constants, only: dp, eps5
       use w90_io, only: io_error, stdout, seedname, io_file_unit, io_date, io_stopwatch
       use w90_parameters, only: tran_num_cell_ll, num_wann, tran_num_ll, kpt_cart, nfermi, fermi_energy_list, &
-         tran_write_ht, tran_num_rr, tran_num_lc, tran_num_cr, tran_num_cc, &
-         tran_num_bandc, timing_level, dist_cutoff_mode, dist_cutoff, &
-         dist_cutoff_hc
+                                tran_write_ht, tran_num_rr, tran_num_lc, tran_num_cr, tran_num_cc, &
+                                tran_num_bandc, timing_level, dist_cutoff_mode, dist_cutoff, &
+                                dist_cutoff_hc
       use w90_hamiltonian, only: wannier_centres_translated
 
       implicit none

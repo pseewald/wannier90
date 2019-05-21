@@ -76,7 +76,7 @@ contains
       !! arrays wdist_ndeg, irdist_ws, crdist_ws.
 
       use w90_parameters, only: num_wann, wannier_centres, real_lattice, &
-         recip_lattice, iprint
+                                recip_lattice, iprint
       !translation_centre_frac, automatic_translation,lenconfac
       use w90_io, only: stdout, io_error
       use w90_utility, only: utility_cart_to_frac, utility_frac_to_cart
@@ -263,7 +263,7 @@ contains
       !! of the first one.
 
       use w90_io, only: io_error, io_stopwatch, io_file_unit, &
-         seedname, io_date
+                        seedname, io_date
       use w90_parameters, only: num_wann
 
       implicit none

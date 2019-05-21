@@ -41,7 +41,7 @@ contains
       use w90_io, only: io_error, stdout
       use w90_postw90_common, only: num_int_kpts_on_node, int_kpts, weight
       use w90_parameters, only: spin_kmesh, wanint_kpoint_file, &
-         nfermi, fermi_energy_list
+                                nfermi, fermi_energy_list
       use w90_get_oper, only: get_HH_R, get_SS_R
 
       integer       :: loop_x, loop_y, loop_z, loop_tot
@@ -145,7 +145,7 @@ contains
       use w90_io, only: io_error
       use w90_utility, only: utility_diagonalize, utility_rotate_diag
       use w90_parameters, only: num_wann, spin_axis_polar, &
-         spin_axis_azimuth
+                                spin_axis_azimuth
       use w90_postw90_common, only: pw90common_fourier_R_to_k
       use w90_get_oper, only: HH_R, SS_R
 

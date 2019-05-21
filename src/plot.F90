@@ -30,14 +30,14 @@ contains
       use w90_constants, only: eps6
       use w90_io, only: stdout, io_stopwatch
       use w90_parameters, only: num_kpts, bands_plot, dos_plot, &
-         kpt_latt, fermi_surface_plot, &
-         wannier_plot, timing_level, write_bvec, &
-         write_hr, write_rmn, write_tb, write_u_matrices
+                                kpt_latt, fermi_surface_plot, &
+                                wannier_plot, timing_level, write_bvec, &
+                                write_hr, write_rmn, write_tb, write_u_matrices
       use w90_hamiltonian, only: hamiltonian_get_hr, hamiltonian_write_hr, &
-         hamiltonian_setup, hamiltonian_write_rmn, &
-         hamiltonian_write_tb, nrpts, irvec
+                                 hamiltonian_setup, hamiltonian_write_rmn, &
+                                 hamiltonian_write_tb, nrpts, irvec
       use w90_ws_distance, only: done_ws_distance, ws_translate_dist, &
-         ws_write_vec
+                                 ws_write_vec
 
       implicit none
 
@@ -110,15 +110,15 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, stdout, io_file_unit, seedname, &
-         io_time, io_stopwatch
+                        io_time, io_stopwatch
       use w90_parameters, only: num_wann, bands_num_points, recip_metric, &
-         bands_num_spec_points, timing_level, &
-         bands_spec_points, bands_label, bands_plot_format, &
-         bands_plot_mode, num_bands_project, bands_plot_project, &
-         use_ws_distance
+                                bands_num_spec_points, timing_level, &
+                                bands_spec_points, bands_label, bands_plot_format, &
+                                bands_plot_mode, num_bands_project, bands_plot_project, &
+                                use_ws_distance
       use w90_hamiltonian, only: irvec, nrpts, ndegen, ham_r
       use w90_ws_distance, only: irdist_ws, wdist_ndeg, &
-         ws_translate_dist
+                                 ws_translate_dist
 
       implicit none
 
@@ -450,8 +450,8 @@ contains
          use w90_constants, only: dp, cmplx_0, eps8
          use w90_io, only: io_error, stdout
          use w90_parameters, only: num_wann, mp_grid, real_lattice, &
-            one_dim_dir, bands_plot_dim, &
-            hr_cutoff, dist_cutoff, dist_cutoff_mode
+                                   one_dim_dir, bands_plot_dim, &
+                                   hr_cutoff, dist_cutoff, dist_cutoff_mode
          use w90_hamiltonian, only: wannier_centres_translated
 
          implicit none
@@ -616,7 +616,7 @@ contains
          use w90_constants, only: dp
          use w90_io, only: io_file_unit, seedname
          use w90_parameters, only: num_wann, bands_num_spec_points, &
-            bands_label, num_bands_project
+                                   bands_label, num_bands_project
 
          implicit none
 
@@ -789,9 +789,9 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi
       use w90_io, only: io_error, stdout, io_file_unit, seedname, &
-         io_date, io_time, io_stopwatch
+                        io_date, io_time, io_stopwatch
       use w90_parameters, only: num_wann, fermi_surface_num_points, timing_level, &
-         recip_lattice, nfermi, fermi_energy_list
+                                recip_lattice, nfermi, fermi_energy_list
       use w90_hamiltonian, only: irvec, nrpts, ndegen, ham_r
 
       implicit none
@@ -926,13 +926,13 @@ contains
 
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi, cmplx_1
       use w90_io, only: io_error, stdout, io_file_unit, seedname, &
-         io_date, io_stopwatch
+                        io_date, io_stopwatch
       use w90_parameters, only: num_wann, num_bands, num_kpts, u_matrix, spin, &
-         ngs => wannier_plot_supercell, kpt_latt, num_species, atoms_species_num, &
-         atoms_symbol, atoms_pos_cart, num_atoms, real_lattice, have_disentangled, &
-         ndimwin, lwindow, u_matrix_opt, num_wannier_plot, wannier_plot_list, &
-         wannier_plot_mode, wvfn_formatted, timing_level, wannier_plot_format, &
-         spinors, wannier_plot_spinor_mode, wannier_plot_spinor_phase
+                                ngs => wannier_plot_supercell, kpt_latt, num_species, atoms_species_num, &
+                                atoms_symbol, atoms_pos_cart, num_atoms, real_lattice, have_disentangled, &
+                                ndimwin, lwindow, u_matrix_opt, num_wannier_plot, wannier_plot_list, &
+                                wannier_plot_mode, wvfn_formatted, timing_level, wannier_plot_format, &
+                                spinors, wannier_plot_spinor_mode, wannier_plot_spinor_phase
 
       implicit none
 
@@ -1254,10 +1254,10 @@ contains
 
          use w90_constants, only: bohr
          use w90_parameters, only: recip_lattice, iprint, &
-            wannier_plot_radius, wannier_centres, atoms_symbol, &
-            wannier_plot_scale, atoms_pos_frac, num_atoms
+                                   wannier_plot_radius, wannier_centres, atoms_symbol, &
+                                   wannier_plot_scale, atoms_pos_frac, num_atoms
          use w90_utility, only: utility_translate_home, &
-            utility_cart_to_frac, utility_frac_to_cart
+                                utility_cart_to_frac, utility_frac_to_cart
 
          implicit none
 
@@ -1634,9 +1634,9 @@ contains
       !============================================!
 
       use w90_parameters, only: num_bands, num_kpts, num_wann, have_disentangled, &
-         kpt_latt, u_matrix, u_matrix_opt
+                                kpt_latt, u_matrix, u_matrix_opt
       use w90_io, only: io_error, stdout, io_file_unit, seedname, &
-         io_time, io_stopwatch, io_date
+                        io_time, io_stopwatch, io_date
 
       implicit none
       integer             :: matunit

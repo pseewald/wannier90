@@ -601,10 +601,10 @@ contains
       !!
       use w90_get_oper, only: get_HH_R, get_SS_R, HH_R
       use w90_parameters, only: num_wann, boltz_calc_also_dos, &
-         boltz_dos_energy_step, boltz_dos_energy_min, boltz_dos_energy_max, &
-         boltz_dos_adpt_smr, boltz_dos_smr_fixed_en_width, boltz_dos_adpt_smr_fac, &
-         boltz_dos_adpt_smr_max, &
-         param_get_smearing_type, boltz_dos_smr_index, boltz_tdf_smr_index
+                                boltz_dos_energy_step, boltz_dos_energy_min, boltz_dos_energy_max, &
+                                boltz_dos_adpt_smr, boltz_dos_smr_fixed_en_width, boltz_dos_adpt_smr_fac, &
+                                boltz_dos_adpt_smr_max, &
+                                param_get_smearing_type, boltz_dos_smr_index, boltz_tdf_smr_index
       use w90_utility, only: utility_diagonalize
       use w90_wan_ham, only: wham_get_eig_deleig
 
@@ -973,7 +973,7 @@ contains
       use w90_constants, only: dp, smearing_cutoff, min_smearing_binwidth_ratio
       use w90_utility, only: utility_w0gauss
       use w90_parameters, only: num_wann, spin_decomp, num_elec_per_state, &
-         boltz_TDF_smr_fixed_en_width, boltz_TDF_smr_index, boltz_relax_time
+                                boltz_TDF_smr_fixed_en_width, boltz_TDF_smr_index, boltz_relax_time
       use w90_spin, only: spin_get_nk
 
       ! Arguments

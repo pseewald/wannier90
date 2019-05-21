@@ -69,19 +69,19 @@ contains
       !============================================================!
 
       use w90_constants, only: dp, cmplx_0, elem_charge_SI, hbar_SI, &
-         eV_au, bohr, elec_mass_SI, twopi, eps0_SI
+                               eV_au, bohr, elec_mass_SI, twopi, eps0_SI
       use w90_comms, only: on_root, num_nodes, my_node_id, comms_reduce
       use w90_utility, only: utility_det3
       use w90_io, only: io_error, stdout, io_file_unit, seedname, &
-         io_stopwatch
+                        io_stopwatch
       use w90_postw90_common, only: nrpts, irvec, num_int_kpts_on_node, int_kpts, &
-         weight
+                                    weight
       use w90_parameters, only: timing_level, iprint, num_wann, gyrotropic_kmesh, &
-         cell_volume, transl_inv, gyrotropic_task, &
-         gyrotropic_nfreq, gyrotropic_freq_list, nfermi, &
-         fermi_energy_list, gyrotropic_box, gyrotropic_box_corner, spinors
+                                cell_volume, transl_inv, gyrotropic_task, &
+                                gyrotropic_nfreq, gyrotropic_freq_list, nfermi, &
+                                fermi_energy_list, gyrotropic_box, gyrotropic_box_corner, spinors
       use w90_get_oper, only: get_HH_R, get_AA_R, get_BB_R, get_CC_R, &
-         get_SS_R
+                              get_SS_R
 
       real(kind=dp), allocatable    :: gyro_K_spn(:, :, :)
       real(kind=dp), allocatable    :: gyro_DOS(:)
@@ -439,12 +439,12 @@ contains
       use w90_constants, only: dp, cmplx_0, cmplx_i
       use w90_utility, only: utility_rotate, utility_rotate_diag, utility_w0gauss
       use w90_parameters, only: num_wann, fermi_energy_list, &
-         gyrotropic_smr_index, nfermi, gyrotropic_nfreq, &
-         gyrotropic_degen_thresh, gyrotropic_smr_max_arg, &
-         gyrotropic_band_list, gyrotropic_num_bands, &
-         gyrotropic_smr_fixed_en_width
+                                gyrotropic_smr_index, nfermi, gyrotropic_nfreq, &
+                                gyrotropic_degen_thresh, gyrotropic_smr_max_arg, &
+                                gyrotropic_band_list, gyrotropic_num_bands, &
+                                gyrotropic_smr_fixed_en_width
       use w90_postw90_common, only: pw90common_get_occ, &
-         pw90common_fourier_R_to_k_vec
+                                    pw90common_fourier_R_to_k_vec
       use w90_wan_ham, only: wham_get_eig_deleig, wham_get_D_h
 
       use w90_get_oper, only: HH_R, SS_R, AA_R
@@ -609,7 +609,7 @@ contains
 
       use w90_constants, only: dp
       use w90_parameters, only: num_wann, gyrotropic_nfreq, gyrotropic_freq_list, &
-         gyrotropic_band_list, gyrotropic_num_bands
+                                gyrotropic_band_list, gyrotropic_num_bands
       ! Arguments
       !
       real(kind=dp), intent(in)                    :: eig(:)
@@ -662,8 +662,8 @@ contains
       use w90_constants, only: dp, cmplx_0, cmplx_i, pi, cmplx_1
       use w90_utility, only: utility_rotate
       use w90_parameters, only: num_wann, gyrotropic_nfreq, gyrotropic_freq_list, &
-         fermi_energy_list, nfermi, gyrotropic_eigval_max, &
-         gyrotropic_num_bands, gyrotropic_band_list, iprint
+                                fermi_energy_list, nfermi, gyrotropic_eigval_max, &
+                                gyrotropic_num_bands, gyrotropic_band_list, iprint
 
       use w90_comms, only: on_root
       use w90_io, only: stdout, io_time, io_error
@@ -860,7 +860,7 @@ contains
 
    subroutine gyrotropic_outprint_tensor(f_out_name, arrEf, arrEF1D, arrEfW, units, comment, symmetrize)
       use w90_parameters, only: gyrotropic_nfreq, gyrotropic_freq_list, &
-         nfermi, fermi_energy_list
+                                nfermi, fermi_energy_list
       use w90_io, only: io_file_unit, seedname, stdout
 
       character(len=*), intent(in) :: f_out_name

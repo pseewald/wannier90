@@ -1229,7 +1229,7 @@ SUBROUTINE compute_dmn
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq, nhm
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum, mp_bcast
    USE mp_world, ONLY: world_comm, nproc
@@ -1912,7 +1912,7 @@ SUBROUTINE compute_mmn
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq, nhm
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum
    USE noncollin_module, ONLY: noncolin, npol
@@ -2307,7 +2307,7 @@ SUBROUTINE compute_spin
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum
    USE noncollin_module, ONLY: noncolin, npol
@@ -2546,7 +2546,7 @@ SUBROUTINE compute_orb
    USE uspp, ONLY: nkb, vkb
    USE uspp_param, ONLY: upf, nh, lmaxq
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE mp_global, ONLY: intra_pool_comm
    USE mp, ONLY: mp_sum
    USE noncollin_module, ONLY: noncolin, npol
@@ -2959,7 +2959,7 @@ SUBROUTINE compute_amn
    USE gvect, ONLY: g, ngm, gstart
    USE uspp, ONLY: nkb, vkb
    USE becmod, ONLY: bec_type, becp, calbec, &
-      allocate_bec_type, deallocate_bec_type
+                     allocate_bec_type, deallocate_bec_type
    USE wannier
    USE ions_base, ONLY: nat, ntyp => nsp, ityp, tau
    USE uspp_param, ONLY: upf

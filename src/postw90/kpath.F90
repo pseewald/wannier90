@@ -42,15 +42,15 @@ contains
       use w90_comms
       use w90_constants, only: dp, cmplx_0, cmplx_i, twopi, eps8
       use w90_io, only: io_error, io_file_unit, seedname, &
-         io_time, io_stopwatch, stdout
+                        io_time, io_stopwatch, stdout
       use w90_utility, only: utility_diagonalize
       use w90_postw90_common, only: pw90common_fourier_R_to_k
       use w90_parameters, only: num_wann, kpath_task, &
-         bands_num_spec_points, bands_label, &
-         kpath_bands_colour, nfermi, fermi_energy_list, &
-         berry_curv_unit
+                                bands_num_spec_points, bands_label, &
+                                kpath_bands_colour, nfermi, fermi_energy_list, &
+                                berry_curv_unit
       use w90_get_oper, only: get_HH_R, HH_R, get_AA_R, get_BB_R, get_CC_R, &
-         get_FF_R, get_SS_R
+                              get_FF_R, get_SS_R
       use w90_spin, only: spin_get_nk
       use w90_berry, only: berry_get_imf_klist, berry_get_imfgh_klist
       use w90_constants, only: bohr
@@ -718,9 +718,9 @@ contains
       !===================================================================!
 
       use w90_parameters, only: kpath_num_points, &
-         bands_num_spec_points, &
-         bands_spec_points, &
-         recip_metric
+                                bands_num_spec_points, &
+                                bands_spec_points, &
+                                recip_metric
 
       integer, intent(out)    :: num_paths, total_pts
       real(kind=dp), allocatable, dimension(:), intent(out)   :: kpath_len, xval

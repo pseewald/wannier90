@@ -17,9 +17,9 @@ module w90_wannierise
 
    use w90_constants
    use w90_comms, only: on_root, my_node_id, num_nodes, &
-      comms_bcast, comms_array_split, &
-      comms_gatherv, comms_allreduce, &
-      comms_scatterv
+                        comms_bcast, comms_array_split, &
+                        comms_gatherv, comms_allreduce, &
+                        comms_scatterv
 
    implicit none
 
@@ -81,23 +81,23 @@ contains
       !===================================================================
       use w90_constants, only: dp, cmplx_1, cmplx_0
       use w90_io, only: stdout, io_error, io_wallclocktime, io_stopwatch &
-         , io_file_unit
+                        , io_file_unit
       use w90_parameters, only: num_wann, num_cg_steps, num_iter, nnlist, &
-         nntot, wbtot, u_matrix, m_matrix, num_kpts, iprint, num_print_cycles, &
-         num_dump_cycles, omega_invariant, param_write_chkpt, length_unit, &
-         lenconfac, proj_site, real_lattice, write_r2mn, guiding_centres, &
-         num_guide_cycles, num_no_guide_iter, timing_level, trial_step, precond, spinors, &
-         fixed_step, lfixstep, write_proj, have_disentangled, conv_tol, num_proj, &
-         conv_window, conv_noise_amp, conv_noise_num, wannier_centres, write_xyz, &
-         wannier_spreads, omega_total, omega_tilde, optimisation, write_vdw_data, &
-         write_hr_diag, kpt_latt
+                                nntot, wbtot, u_matrix, m_matrix, num_kpts, iprint, num_print_cycles, &
+                                num_dump_cycles, omega_invariant, param_write_chkpt, length_unit, &
+                                lenconfac, proj_site, real_lattice, write_r2mn, guiding_centres, &
+                                num_guide_cycles, num_no_guide_iter, timing_level, trial_step, precond, spinors, &
+                                fixed_step, lfixstep, write_proj, have_disentangled, conv_tol, num_proj, &
+                                conv_window, conv_noise_amp, conv_noise_num, wannier_centres, write_xyz, &
+                                wannier_spreads, omega_total, omega_tilde, optimisation, write_vdw_data, &
+                                write_hr_diag, kpt_latt
       use w90_utility, only: utility_frac_to_cart, utility_zgemm
       use w90_parameters, only: lsitesymmetry                !RS:
       use w90_sitesym, only: sitesym_symmetrize_gradient  !RS:
 
       !ivo
       use w90_hamiltonian, only: hamiltonian_setup, hamiltonian_get_hr, ham_r, &
-         rpt_origin, irvec, nrpts, ndegen
+                                 rpt_origin, irvec, nrpts, ndegen
 
       implicit none
 
@@ -1065,7 +1065,7 @@ contains
          !                                               !
          !===============================================!
          use w90_sitesym, only: sitesym_symmetrize_rotation, & !RS:
-            ir2ik, ik2ir !YN: RS:
+                                ir2ik, ik2ir !YN: RS:
 
          implicit none
 
@@ -1359,7 +1359,7 @@ contains
       !===================================================================
       use w90_constants, only: eps6
       use w90_parameters, only: num_wann, nntot, neigh, &
-         nnh, bk, bka, num_kpts, timing_level
+                                nnh, bk, bka, num_kpts, timing_level
       use w90_io, only: io_stopwatch
       use w90_utility, only: utility_inv3
 
@@ -1563,7 +1563,7 @@ contains
       !                                                                  !
       !===================================================================
       use w90_parameters, only: num_wann, nntot, wb, bk, num_kpts, &
-         omega_invariant, timing_level
+                                omega_invariant, timing_level
       use w90_io, only: io_stopwatch
 
       implicit none
@@ -1921,7 +1921,7 @@ contains
       !==================================================================!
 
       use w90_parameters, only: num_bands, num_wann, num_kpts, &
-         u_matrix_opt, eigval, lwindow, timing_level
+                                u_matrix_opt, eigval, lwindow, timing_level
       use w90_io, only: stdout, io_stopwatch
 
       implicit none
@@ -1972,9 +1972,9 @@ contains
 
       use w90_io, only: seedname, io_file_unit, io_date, stdout
       use w90_parameters, only: translate_home_cell, num_wann, wannier_centres, &
-         lenconfac, real_lattice, recip_lattice, iprint, &
-         num_atoms, atoms_symbol, atoms_pos_cart, &
-         num_species, atoms_species_num
+                                lenconfac, real_lattice, recip_lattice, iprint, &
+                                num_atoms, atoms_symbol, atoms_pos_cart, &
+                                num_species, atoms_species_num
       use w90_utility, only: utility_translate_home
 
       implicit none
@@ -2035,11 +2035,11 @@ contains
 
       use w90_io, only: seedname, io_file_unit, io_date, stdout, io_error
       use w90_parameters, only: translate_home_cell, num_wann, wannier_centres, &
-         lenconfac, real_lattice, recip_lattice, iprint, &
-         atoms_symbol, atoms_pos_cart, num_species, &
-         atoms_species_num, wannier_spreads, u_matrix, &
-         u_matrix_opt, num_kpts, have_disentangled, &
-         num_valence_bands, num_elec_per_state, write_vdw_data
+                                lenconfac, real_lattice, recip_lattice, iprint, &
+                                atoms_symbol, atoms_pos_cart, num_species, &
+                                atoms_species_num, wannier_spreads, u_matrix, &
+                                u_matrix_opt, num_kpts, have_disentangled, &
+                                num_valence_bands, num_elec_per_state, write_vdw_data
       use w90_utility, only: utility_translate_home
       use w90_constants, only: cmplx_0, eps6
 !~    use w90_disentangle, only : ndimfroz
@@ -2182,7 +2182,7 @@ contains
       use w90_constants, only: dp, cmplx_1, cmplx_0, eps5
       use w90_io, only: io_stopwatch, io_error, stdout
       use w90_parameters, only: num_kpts, num_wann, &
-         u_matrix, timing_level
+                                u_matrix, timing_level
 
       implicit none
 
@@ -2243,7 +2243,7 @@ contains
       use w90_constants, only: dp
       use w90_io, only: seedname, io_file_unit, io_error
       use w90_parameters, only: num_kpts, num_wann, nntot, wb, &
-         m_matrix
+                                m_matrix
 
       implicit none
 
@@ -2287,8 +2287,8 @@ contains
       use w90_constants, only: dp, cmplx_0
       use w90_io, only: io_stopwatch, io_error, stdout
       use w90_parameters, only: num_wann, num_kpts, nntot, wb, &
-         m_matrix, lenconfac, length_unit, &
-         timing_level
+                                m_matrix, lenconfac, length_unit, &
+                                timing_level
 
       implicit none
 
@@ -2386,14 +2386,14 @@ contains
       use w90_constants, only: dp, cmplx_1, cmplx_0
       use w90_io, only: stdout, io_error, io_time, io_stopwatch
       use w90_parameters, only: num_wann, num_iter, wb, &
-         nntot, u_matrix, m_matrix, num_kpts, iprint, &
-         num_print_cycles, num_dump_cycles, omega_invariant, &
-         param_write_chkpt, length_unit, lenconfac, &
-         proj_site, real_lattice, write_r2mn, guiding_centres, &
-         num_guide_cycles, num_no_guide_iter, timing_level, &
-         write_proj, have_disentangled, conv_tol, conv_window, &
-         wannier_centres, write_xyz, wannier_spreads, omega_total, &
-         omega_tilde, write_vdw_data
+                                nntot, u_matrix, m_matrix, num_kpts, iprint, &
+                                num_print_cycles, num_dump_cycles, omega_invariant, &
+                                param_write_chkpt, length_unit, lenconfac, &
+                                proj_site, real_lattice, write_r2mn, guiding_centres, &
+                                num_guide_cycles, num_no_guide_iter, timing_level, &
+                                write_proj, have_disentangled, conv_tol, conv_window, &
+                                wannier_centres, write_xyz, wannier_spreads, omega_total, &
+                                omega_tilde, write_vdw_data
       use w90_utility, only: utility_frac_to_cart, utility_zgemm
 
       implicit none
@@ -3068,7 +3068,7 @@ contains
       !                                                                  !
       !===================================================================
       use w90_parameters, only: num_wann, nntot, wbtot, wb, bk, &
-         omega_invariant, timing_level
+                                omega_invariant, timing_level
       use w90_io, only: io_error, io_stopwatch
 
       implicit none

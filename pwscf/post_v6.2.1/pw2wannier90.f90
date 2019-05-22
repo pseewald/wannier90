@@ -1610,7 +1610,7 @@ SUBROUTINE compute_dmn
       ik = ir2ik(ir)
       WRITE (stdout, '(i8)', advance='no') ir
       IF (MOD(ir, 10) == 0) WRITE (stdout, *)
-      FLUSH(stdout)
+      FLUSH (stdout)
       do isym = 1, nsym
          do iw = 1, n_wannier
             ip = iw2ip(iw)
@@ -1706,7 +1706,7 @@ SUBROUTINE compute_dmn
       ik = ir2ik(ir)
       WRITE (stdout, '(i8)', advance='no') ir
       IF (MOD(ir, 10) == 0) WRITE (stdout, *)
-      FLUSH(stdout)
+      FLUSH (stdout)
       ikevc = ik + ikstart - 1
       CALL davcio(evc, 2*nwordwfc, iunwfc, ikevc, -1)
       npw = ngk(ik)
@@ -2046,7 +2046,7 @@ SUBROUTINE compute_mmn
    DO ik = 1, iknum
       WRITE (stdout, '(i8)', advance='no') ik
       IF (MOD(ik, 10) == 0) WRITE (stdout, *)
-      FLUSH(stdout)
+      FLUSH (stdout)
       ikevc = ik + ikstart - 1
       CALL davcio(evc, 2*nwordwfc, iunwfc, ikevc, -1)
       npw = ngk(ik)
@@ -3024,7 +3024,7 @@ SUBROUTINE compute_amn
    DO ik = 1, iknum
       WRITE (stdout, '(i8)', advance='no') ik
       IF (MOD(ik, 10) == 0) WRITE (stdout, *)
-      FLUSH(stdout)
+      FLUSH (stdout)
       ikevc = ik + ikstart - 1
 !      if(noncolin) then
 !         call davcio (evc_nc, 2*nwordwfc, iunwfc, ikevc, -1 )
@@ -3437,7 +3437,7 @@ SUBROUTINE compute_amn_with_scdm
    DO ik = 1, iknum
       WRITE (stdout, '(i8)', advance='no') ik
       IF (MOD(ik, 10) == 0) WRITE (stdout, *)
-      FLUSH(stdout)
+      FLUSH (stdout)
       ikevc = ik + ikstart - 1
 !      if(noncolin) then
 !         call davcio (evc_nc, 2*nwordwfc, iunwfc, ikevc, -1 )
@@ -3799,7 +3799,7 @@ SUBROUTINE write_plot
 
       WRITE (stdout, '(i8)', advance='no') ik
       IF (MOD(ik, 10) == 0) WRITE (stdout, *)
-      FLUSH(stdout)
+      FLUSH (stdout)
 
       ikevc = ik - ikstart + 1
 

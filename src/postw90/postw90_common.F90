@@ -242,6 +242,7 @@ contains
       call comms_bcast(timing_level, 1)
       call comms_bcast(iprint, 1)
       call comms_bcast(ws_distance_tol, 1)
+      call comms_bcast(ws_search_size(1), 3)
 !    call comms_bcast(num_atoms,1)   ! Ivo: not used in postw90, right?
 !    call comms_bcast(num_species,1) ! Ivo: not used in postw90, right?
       call comms_bcast(real_lattice(1, 1), 9)
@@ -1011,17 +1012,19 @@ contains
                   if (present(OO)) OO(i, j) = OO(i, j) + phase_fac*OO_R(i, j, ir)
                   if (present(OO_da)) then
                      do a = 1, 3
-                        OO_da(i, j, a) = OO_da(i, j, a) + cmplx_i*(crvec(a, ir) + &
-                                                 local_wannier_centres(a, j) - local_wannier_centres(a, i))*phase_fac*OO_R(i, j, ir)
+                        OO_da(i, j, a) = &
+                           OO_da(i, j, a) + cmplx_i* &
+                           (crvec(a, ir) + local_wannier_centres(a, j) - local_wannier_centres(a, i))*phase_fac*OO_R(i, j, ir)
                      enddo
                   endif
                   if (present(OO_dadb)) then
                      do a = 1, 3
                         do b = 1, 3
-                           OO_dadb(i, j, a, b) = OO_dadb(i, j, a, b) - &
-                                                 (crvec(a, ir) + local_wannier_centres(a, j) - local_wannier_centres(a, i))* &
-                                                 (crvec(b, ir) + local_wannier_centres(b, j) - local_wannier_centres(b, i))* &
-                                                 phase_fac*OO_R(i, j, ir)
+                           OO_dadb(i, j, a, b) = &
+                              OO_dadb(i, j, a, b) - &
+                              (crvec(a, ir) + local_wannier_centres(a, j) - local_wannier_centres(a, i))* &
+                              (crvec(b, ir) + local_wannier_centres(b, j) - local_wannier_centres(b, i))* &
+                              phase_fac*OO_R(i, j, ir)
                         enddo
                      enddo
                   end if

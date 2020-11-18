@@ -77,7 +77,7 @@ program postw90
          stat = 'old'
       else
          stat = 'replace'
-      endif
+      end if
       pos = 'append'
 
       stdout = io_file_unit()
@@ -93,7 +93,7 @@ program postw90
       else
          write (stdout, '(/,1x,a,i3,a/)') &
             'Running in parallel on ', num_nodes, ' CPUs'
-      endif
+      end if
    end if
 
    ! Read onto the root node all the input parameters from seendame.win,
@@ -125,7 +125,7 @@ program postw90
          time2 = io_time()
          write (stdout, '(1x,a25,f11.3,a)') &
             'Time to get kmesh        ', time2 - time1, ' (sec)'
-      endif
+      end if
 
       ! GP, May 10, 2012: for the moment I leave this commented
       ! since we need first to tune that routine so that it doesn't
@@ -142,9 +142,9 @@ program postw90
          write (stdout, *) '                                   DRYRUN             '
          write (stdout, *) '                       No problems found with win file'
          write (stdout, *) '                       ==============================='
-      endif
+      end if
       stop
-   endif
+   end if
 
    ! We now distribute a subset of the parameters to the other nodes
    !
@@ -181,7 +181,7 @@ program postw90
       time1 = io_time()
       write (stdout, '(/1x,a25,f11.3,a)') &
          'Time to read and process .chk    ', time1 - time2, ' (sec)'
-   endif
+   end if
    !
    ! Now perform one or more of the following tasks
 
@@ -237,7 +237,7 @@ program postw90
    !
    if (on_root) then
       time1 = io_time()
-   endif
+   end if
 
    if (geninterp) call geninterp_main
 
@@ -249,7 +249,7 @@ program postw90
       time2 = io_time()
       write (stdout, '(/1x,a,f11.3,a)') &
          'Time for BoltzWann (Boltzmann transport) ', time2 - time1, ' (sec)'
-   endif
+   end if
 
    ! I put a barrier here before calling the final time printing routines,
    ! just to be sure that all processes have arrived here.

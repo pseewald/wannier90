@@ -198,7 +198,7 @@ contains
              (TRIM(bands_label((i - 1)*2)) .ne. TRIM(bands_label((i - 1)*2 + 1)))) then
             kpath_print_first_point(i) = .true.
          end if
-      enddo
+      end do
 
       ! Count the total number of special points
       num_spts = num_paths
@@ -252,7 +252,7 @@ contains
                ! we would not be printing it). Therefore I do not move
                ! on the x axis, there was a jump in the path here.
                xval(counter) = xval(counter - 1)
-            endif
+            end if
             plot_kpoint(:, counter) = bands_spec_points(:, 2*loop_spts - 1)
 
             idx_special_points(2*loop_spts - 1) = counter
@@ -269,7 +269,7 @@ contains
                xval(counter) = 0.0_dp
             else
                xval(counter) = xval(counter - 1) + kpath_len(loop_spts)/real(kpath_pts(loop_spts), dp)
-            endif
+            end if
             plot_kpoint(:, counter) = bands_spec_points(:, 2*loop_spts - 1) + &
                                       (bands_spec_points(:, 2*loop_spts) - bands_spec_points(:, 2*loop_spts - 1))* &
                                       (real(loop_i, dp)/real(kpath_pts(loop_spts), dp))
@@ -317,8 +317,8 @@ contains
             call ws_translate_dist(nrpts_cut, irvec_cut, force_recompute=.true.)
          else
             call io_error('Error in plot_interpolate bands: value of bands_plot_mode not recognised')
-         endif
-      endif
+         end if
+      end if
 
       ! [lp] the s-k and cut codes are very similar when use_ws_distance is used, a complete
       !      mercge after this point is not impossible
@@ -336,15 +336,15 @@ contains
                                                   real(irdist_ws(:, ideg, i, j, irpt), dp))
                         fac = cmplx(cos(rdotk), sin(rdotk), dp)/real(ndegen(irpt)*wdist_ndeg(i, j, irpt), dp)
                         ham_kprm(i, j) = ham_kprm(i, j) + fac*ham_r(i, j, irpt)
-                     enddo
-                  enddo
-                  enddo
+                     end do
+                  end do
+                  end do
                else
 ! [lp] Original code, without IJ-dependent shift:
                   rdotk = twopi*dot_product(plot_kpoint(:, loop_kpt), irvec(:, irpt))
                   fac = cmplx(cos(rdotk), sin(rdotk), dp)/real(ndegen(irpt), dp)
                   ham_kprm = ham_kprm + fac*ham_r(:, :, irpt)
-               endif
+               end if
             end do
             ! end of s-k mode
          elseif (index(bands_plot_mode, 'cut') .ne. 0) then
@@ -358,35 +358,35 @@ contains
                                                   real(irdist_ws(:, ideg, i, j, irpt), dp))
                         fac = cmplx(cos(rdotk), sin(rdotk), dp)/real(wdist_ndeg(i, j, irpt), dp)
                         ham_kprm(i, j) = ham_kprm(i, j) + fac*ham_r_cut(i, j, irpt)
-                     enddo
-                  enddo
-                  enddo
+                     end do
+                  end do
+                  end do
 ! [lp] Original code, without IJ-dependent shift:
                else
                   rdotk = twopi*dot_product(plot_kpoint(:, loop_kpt), irvec_cut(:, irpt))
 !~[aam] check divide by ndegen?
                   fac = cmplx(cos(rdotk), sin(rdotk), dp)
                   ham_kprm = ham_kprm + fac*ham_r_cut(:, :, irpt)
-               endif ! end of use_ws_distance
+               end if ! end of use_ws_distance
             end do
-         endif ! end of "cut" mode
+         end if ! end of "cut" mode
          !
          ! Diagonalise H_k (->basis of eigenstates)
          do j = 1, num_wann
             do i = 1, j
                ham_pack(i + ((j - 1)*j)/2) = ham_kprm(i, j)
-            enddo
-         enddo
+            end do
+         end do
          call ZHPEVX('V', 'A', 'U', num_wann, ham_pack, 0.0_dp, 0.0_dp, 0, 0, -1.0_dp, &
                      nfound, eig_int(1, loop_kpt), U_int, num_wann, cwork, rwork, iwork, ifail, info)
          if (info < 0) then
             write (stdout, '(a,i3,a)') 'THE ', -info, ' ARGUMENT OF ZHPEVX HAD AN ILLEGAL VALUE'
             call io_error('Error in plot_interpolate_bands')
-         endif
+         end if
          if (info > 0) then
             write (stdout, '(i3,a)') info, ' EIGENVECTORS FAILED TO CONVERGE'
             call io_error('Error in plot_interpolate_bands')
-         endif
+         end if
          ! Compute projection onto WF if requested
          if (num_bands_project > 0) then
          do loop_w = 1, num_wann
@@ -635,9 +635,9 @@ contains
                else
                   write (bndunit, '(2E16.8)') xval(nkp), eig_int(i, nkp)
                end if
-            enddo
+            end do
             write (bndunit, *) ' '
-         enddo
+         end do
          close (bndunit)
          ! Axis labels
          glabel(1) = TRIM(bands_label(1))
@@ -653,7 +653,7 @@ contains
          write (gnuunit, 701) xval(total_pts), emin, emax
          do i = 1, num_paths - 1
             write (gnuunit, 705) sum(kpath_len(1:i)), emin, sum(kpath_len(1:i)), emax
-         enddo
+         end do
          write (gnuunit, 702, advance="no") TRIM(glabel(1)), 0.0_dp, &
             (TRIM(glabel(i + 1)), sum(kpath_len(1:i)), i=1, bands_num_spec_points/2 - 1)
          write (gnuunit, 703) TRIM(glabel(1 + bands_num_spec_points/2)), sum(kpath_len(:))
@@ -859,18 +859,18 @@ contains
                do j = 1, num_wann
                   do i = 1, j
                      ham_pack(i + ((j - 1)*j)/2) = ham_kprm(i, j)
-                  enddo
-               enddo
+                  end do
+               end do
                call ZHPEVX('N', 'A', 'U', num_wann, ham_pack, 0.0_dp, 0.0_dp, 0, 0, -1.0_dp, &
                            nfound, eig_int(1, ikp), U_int, num_wann, cwork, rwork, iwork, ifail, info)
                if (info < 0) then
                   write (stdout, '(a,i3,a)') 'THE ', -info, ' ARGUMENT OF ZHPEVX HAD AN ILLEGAL VALUE'
                   call io_error('Error in plot_fermi_surface')
-               endif
+               end if
                if (info > 0) then
                   write (stdout, '(i3,a)') info, ' EIGENVECTORS FAILED TO CONVERGE'
                   call io_error('Error in plot_fermi_surface')
-               endif
+               end if
             end do
          end do
       end do
@@ -902,8 +902,8 @@ contains
          write (bxsf_unit, *) 'BAND: ', i
          do loop_kpt = 1, npts_plot
             write (bxsf_unit, '(2E16.8)') eig_int(i, loop_kpt)
-         enddo
-      enddo
+         end do
+      end do
       write (bxsf_unit, *) 'END_BANDGRID_3D'
       write (bxsf_unit, *) ' END_BLOCK_BANDGRID_3D'
       close (bxsf_unit)
@@ -965,7 +965,7 @@ contains
          write (wfnname, 200) 1, spin
       else
          write (wfnname, 199) 1
-      endif
+      end if
       inquire (file=wfnname, exist=have_file)
       if (.not. have_file) call io_error('plot_wannier: file '//wfnname//' not found')
 
@@ -993,7 +993,7 @@ contains
                                 -((ngs(3))/2)*ngz:((ngs(3) + 1)/2)*ngz - 1, 2, num_wannier_plot), stat=ierr)
          if (ierr /= 0) call io_error('Error in allocating wann_func_nc in plot_wannier')
          wann_func_nc = cmplx_0
-      endif
+      end if
       if (.not. spinors) then
          if (have_disentangled) then
             allocate (r_wvfn_tmp(ngx*ngy*ngz, maxval(ndimwin)), stat=ierr)
@@ -1008,7 +1008,7 @@ contains
          end if
          allocate (r_wvfn_nc(ngx*ngy*ngz, num_wann, 2), stat=ierr)
          if (ierr /= 0) call io_error('Error in allocating r_wvfn_nc in plot_wannier')
-      endif
+      end if
 
       call io_date(cdate, ctime)
       do loop_kpt = 1, num_kpts
@@ -1024,7 +1024,7 @@ contains
             write (wfnname, 200) loop_kpt, spin
          else
             write (wfnname, 199) loop_kpt
-         endif
+         end if
          file_unit = io_file_unit()
          if (wvfn_formatted) then
             open (unit=file_unit, file=wfnname, form='formatted')
@@ -1052,21 +1052,21 @@ contains
                         r_wvfn_tmp(nx, counter) = cmplx(w_real, w_imag, kind=dp)
                      else
                         r_wvfn_tmp_nc(nx, counter, 1) = cmplx(w_real, w_imag, kind=dp) ! up-spinor
-                     endif
+                     end if
                   end do
                   if (spinors) then
                      do nx = 1, ngx*ngy*ngz
                         read (file_unit, *) w_real, w_imag
                         r_wvfn_tmp_nc(nx, counter, 2) = cmplx(w_real, w_imag, kind=dp) ! down-spinor
                      end do
-                  endif
+                  end if
                else
                   if (.not. spinors) then
                      read (file_unit) (r_wvfn_tmp(nx, counter), nx=1, ngx*ngy*ngz)
                   else
                      read (file_unit) (r_wvfn_tmp_nc(nx, counter, 1), nx=1, ngx*ngy*ngz) ! up-spinor
                      read (file_unit) (r_wvfn_tmp_nc(nx, counter, 2), nx=1, ngx*ngy*ngz) ! down-spinor
-                  endif
+                  end if
                end if
                if (inc_band(loop_b)) counter = counter + 1
             end do
@@ -1079,21 +1079,21 @@ contains
                         r_wvfn(nx, loop_b) = cmplx(w_real, w_imag, kind=dp)
                      else
                         r_wvfn_nc(nx, loop_b, 1) = cmplx(w_real, w_imag, kind=dp) ! up-spinor
-                     endif
+                     end if
                   end do
                   if (spinors) then
                      do nx = 1, ngx*ngy*ngz
                         read (file_unit, *) w_real, w_imag
                         r_wvfn_nc(nx, loop_b, 2) = cmplx(w_real, w_imag, kind=dp) ! down-spinor
                      end do
-                  endif
+                  end if
                else
                   if (.not. spinors) then
                      read (file_unit) (r_wvfn(nx, loop_b), nx=1, ngx*ngy*ngz)
                   else
                      read (file_unit) (r_wvfn_nc(nx, loop_b, 1), nx=1, ngx*ngy*ngz) ! up-spinor
                      read (file_unit) (r_wvfn_nc(nx, loop_b, 2), nx=1, ngx*ngy*ngz) ! down-spinor
-                  endif
+                  end if
                end if
             end do
          end if
@@ -1119,7 +1119,7 @@ contains
                                 r_wvfn_nc(1, loop_w, 2), 1)
                   end do
                end do
-            endif
+            end if
          end if
 
          ! nxx, nyy, nzz span a parallelogram in the real space mesh, of side
@@ -1170,7 +1170,7 @@ contains
                                  dnphase = sign(1.0_dp, real(wann_func_nc(nxx, nyy, nzz, 2, loop_w), dp))
                               else
                                  upphase = 1.0_dp; dnphase = 1.0_dp
-                              endif
+                              end if
                               select case (wannier_plot_spinor_mode)
                               case ('total')
                                  wann_func(nxx, nyy, nzz, loop_w) = cmplx(sqrt(upspinor + dnspinor), 0.0_dp, dp)
@@ -1182,8 +1182,8 @@ contains
                                  call io_error('plot_wannier: Invalid wannier_plot_spinor_mode '//trim(wannier_plot_spinor_mode))
                               end select
                               wann_func(nxx, nyy, nzz, loop_w) = wann_func(nxx, nyy, nzz, loop_w)/real(num_kpts, dp)
-                           endif
-                        endif
+                           end if
+                        end if
                      end do
                   end do
                end do
@@ -1235,7 +1235,7 @@ contains
             write (stdout, '(6x,a,i4,7x,a,f11.6)') 'Wannier Function Num: ', wannier_plot_list(loop_w), &
                'Maximum Im/Re Ratio = ', ratmax
          end do
-      endif !!!!!
+      end if !!!!!
       write (stdout, *) ' '
       if (wannier_plot_format .eq. 'xcrysden') then
          call internal_xsf_format()
@@ -1243,7 +1243,7 @@ contains
          call internal_cube_format()
       else
          call io_error('wannier_plot_format not recognised in wannier_plot')
-      endif
+      end if
 
       if (timing_level > 1) call io_stopwatch('plot: wannier', 2)
 
@@ -1310,8 +1310,8 @@ contains
                if (atoms_symbol(isp) .eq. periodic_table(iname)) then
                   atomic_Z(isp) = iname
                   exit
-               endif
-            enddo
+               end if
+            end do
          end do
 
 202      format(a, '_', i5.5, '.cube')
@@ -1324,7 +1324,7 @@ contains
             modb(i) = sqrt(recip_lattice(i, 1)*recip_lattice(i, 1) &
                            + recip_lattice(i, 2)*recip_lattice(i, 2) &
                            + recip_lattice(i, 3)*recip_lattice(i, 3))
-         enddo
+         end do
 
          ! Grid spacing in each lattice direction
          dgrid(1) = moda(1)/ngx; dgrid(2) = moda(2)/ngy; dgrid(3) = moda(3)/ngz
@@ -1334,8 +1334,8 @@ contains
          do isp = 1, num_species
             do iat = 1, atoms_species_num(isp)
                comf(:) = comf(:) + atoms_pos_frac(:, iat, isp)
-            enddo
-         enddo
+            end do
+         end do
          comf(:) = comf(:)/num_atoms
 
          ! Loop over WFs
@@ -1355,7 +1355,7 @@ contains
                           + wannier_centres(2, wann_index)*recip_lattice(i, 2) &
                           + wannier_centres(3, wann_index)*recip_lattice(i, 3))*moda(i)/twopi &
                          + twopi*wannier_plot_radius/(moda(i)*modb(i))
-            enddo
+            end do
 
             rlength(:) = rend(:) - rstart(:)
             ilength(:) = ceiling(rlength(:)/dgrid(:))
@@ -1369,7 +1369,7 @@ contains
                orig(i) = real(istart(1) - 1, dp)*dgrid(1)*real_lattice(1, i)/moda(1) &
                          + real(istart(2) - 1, dp)*dgrid(2)*real_lattice(2, i)/moda(2) &
                          + real(istart(3) - 1, dp)*dgrid(3)*real_lattice(3, i)/moda(3)
-            enddo
+            end do
 
             ! Debugging
             if (iprint > 3) then
@@ -1385,7 +1385,7 @@ contains
                write (stdout, '(a,3i12)') 'ilength =', (ilength(i), i=1, 3)
                write (stdout, '(a,3f12.6)') 'orig    =', (orig(i), i=1, 3)
                write (stdout, '(a,3f12.6)') 'wann_cen=', (wannier_centres(i, wann_index), i=1, 3)
-            endif
+            end if
 
             allocate (wann_cube(1:ilength(1), 1:ilength(2), 1:ilength(3)), stat=ierr)
             if (ierr .ne. 0) call io_error('Error: allocating wann_cube in wannier_plot')
@@ -1405,7 +1405,7 @@ contains
                   write (stdout, *) '   (2) decrease wannier_plot_radius;'
                   write (stdout, *) '   (3) set wannier_plot_format=xcrysden'
                   call io_error('Error plotting WF cube.')
-               endif
+               end if
                do nyy = 1, ilength(2)
                   qyy = nyy + istart(2) - 1
                   iyy = int((abs(qyy) - 1)/ngy)
@@ -1418,7 +1418,7 @@ contains
                      write (stdout, *) '   (2) decrease wannier_plot_radius;'
                      write (stdout, *) '   (3) set wannier_plot_format=xcrysden'
                      call io_error('Error plotting WF cube.')
-                  endif
+                  end if
                   do nxx = 1, ilength(1)
                      qxx = nxx + istart(1) - 1
                      ixx = int((abs(qxx) - 1)/ngx)
@@ -1431,11 +1431,11 @@ contains
                         write (stdout, *) '   (2) decrease wannier_plot_radius;'
                         write (stdout, *) '   (3) set wannier_plot_format=xcrysden'
                         call io_error('Error plotting WF cube.')
-                     endif
+                     end if
                      wann_cube(nxx, nyy, nzz) = real(wann_func(qxx, qyy, qzz, loop_w), dp)
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
 
             ! WF centre in fractional coordinates
             call utility_cart_to_frac(wannier_centres(:, wann_index), wcf(:), recip_lattice)
@@ -1450,7 +1450,7 @@ contains
                write (stdout, '(a,3f12.6)') 'wcf     =', (wcf(i), i=1, 3)
                write (stdout, '(a,3f12.6)') 'diff    =', (diff(i), i=1, 3)
                write (stdout, '(a,3i12)') 'irdiff  =', (irdiff(i), i=1, 3)
-            endif
+            end if
 
             if (lmol) then ! In "molecule mode" translate origin of cube to bring it in coincidence with the atomic positions
                orig(:) = orig(:) + real(irdiff(1), kind=dp)*real_lattice(1, :) &
@@ -1470,14 +1470,14 @@ contains
                               dist = sqrt(difc(1)*difc(1) + difc(2)*difc(2) + difc(3)*difc(3))
                               if (dist .le. (wannier_plot_scale*wannier_plot_radius)) then
                                  icount = icount + 1
-                              endif
-                           enddo
-                        enddo
-                     enddo
-                  enddo ! iat
-               enddo ! isp
+                              end if
+                           end do
+                        end do
+                     end do
+                  end do ! iat
+               end do ! isp
                if (iprint > 3) write (stdout, '(a,i12)') 'icount  =', icount
-            endif
+            end if
 
             ! Write cube file (everything in Bohr)
             file_unit = io_file_unit()
@@ -1490,7 +1490,7 @@ contains
                write (file_unit, '(i4,3f13.5)') num_atoms, orig(1)/bohr, orig(2)/bohr, orig(3)/bohr
             else
                write (file_unit, '(i4,3f13.5)') icount, orig(1)/bohr, orig(2)/bohr, orig(3)/bohr
-            endif
+            end if
             ! Number of grid points in each direction, lattice vector
             write (file_unit, '(i4,3f13.5)') ilength(1), real_lattice(1, 1)/(real(ngx, dp)*bohr), &
                real_lattice(1, 2)/(real(ngy, dp)*bohr), real_lattice(1, 3)/(real(ngz, dp)*bohr)
@@ -1523,13 +1523,13 @@ contains
                                            + (/real(nxx, kind=dp), real(nyy, kind=dp), real(nzz, kind=dp)/)
                                  call utility_frac_to_cart(diff, difc, real_lattice)
                                  write (file_unit, '(i4,4f13.5)') atomic_Z(isp), val_Q, (difc(i)/bohr, i=1, 3)
-                              endif
-                           enddo
-                        enddo
-                     enddo
-                  endif
-               enddo ! iat
-            enddo ! isp
+                              end if
+                           end do
+                        end do
+                     end do
+                  end if
+               end do ! iat
+            end do ! isp
 
             ! Volumetric data in batches of 6 values per line, 'z'-direction first.
             do nxx = 1, ilength(1)
@@ -1537,9 +1537,9 @@ contains
                   do nzz = 1, ilength(3)
                      write (file_unit, '(E13.5)', advance='no') wann_cube(nxx, nyy, nzz)
                      if ((mod(nzz, 6) .eq. 0) .or. (nzz .eq. ilength(3))) write (file_unit, '(a)') ''
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
 
             deallocate (wann_cube, stat=ierr)
             if (ierr .ne. 0) call io_error('Error: deallocating wann_cube in wannier_plot')
@@ -1604,7 +1604,7 @@ contains
                write (file_unit, '(3f12.7)') real_lattice(3, 1), real_lattice(3, 2), real_lattice(3, 3)
                write (file_unit, '("PRIMCOORD")')
                write (file_unit, '(i6,"  1")') num_atoms
-            endif
+            end if
             do nsp = 1, num_species
                do nat = 1, atoms_species_num(nsp)
                   write (file_unit, '(a2,3x,3f12.7)') atoms_symbol(nsp), (atoms_pos_cart(i, nat, nsp), i=1, 3)
@@ -1678,7 +1678,7 @@ contains
             write (matunit, '(f15.10,sp,f15.10)') ((u_matrix_opt(i, j, nkp), i=1, num_bands), j=1, num_wann)
          end do
          close (matunit)
-      endif
+      end if
 
    end subroutine plot_u_matrices
 
@@ -1711,8 +1711,8 @@ contains
       do nkp = 1, num_kpts
          do nn = 1, nntot
             write (file_unit, '(4F12.6)') bk(:, nn, nkp), wb(nn)
-         enddo
-      enddo
+         end do
+      end do
       close (file_unit)
       !
       return

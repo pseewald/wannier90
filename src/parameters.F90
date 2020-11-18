@@ -654,8 +654,8 @@ contains
             write (stdout, *) 'num_bands', num_bands
             write (stdout, *) 'num_wann', num_wann
             call io_error('Error: num_bands must be greater than or equal to num_wann')
-         endif
-      endif
+         end if
+      end if
 
       num_dump_cycles = 100          ! frequency to write backups at
       call param_get_keyword('num_dump_cycles', found, i_value=num_dump_cycles)
@@ -690,7 +690,7 @@ contains
             call io_error('Error: gamma_only is true, but num_kpts > 1')
       else
          if (found) write (stdout, '(a)') ' Ignoring <gamma_only> in input file'
-      endif
+      end if
 ![ysl-e]
 
 !    aam: automatic_mp_grid no longer used
@@ -718,8 +718,8 @@ contains
             inquire (file=trim(seedname)//'.chk', exist=chk_found)
             if (.not. chk_found) &
                call io_error('Error: restart requested but '//trim(seedname)//'.chk file not found')
-         endif
-      endif
+         end if
+      end if
       !post processing takes priority (user is not warned of this)
       if (postproc_setup) restart = ' '
 
@@ -735,7 +735,7 @@ contains
          spinors = ltmp
       else
          if (found) write (stdout, '(a)') ' Ignoring <spinors> in input file'
-      endif
+      end if
 !    if(spinors .and. (2*(num_wann/2))/=num_wann) &
 !       call io_error('Error: For spinor WF num_wann must be even')
 
@@ -745,7 +745,7 @@ contains
          num_elec_per_state = 1
       else
          num_elec_per_state = 2
-      endif
+      end if
       call param_get_keyword('num_elec_per_state', found, i_value=num_elec_per_state)
       if ((num_elec_per_state /= 1) .and. (num_elec_per_state /= 2)) &
          call io_error('Error: num_elec_per_state can be only 1 or 2')
@@ -839,7 +839,7 @@ contains
       call param_get_keyword('slwf_lambda', found, r_value=slwf_lambda)
       if (found) then
          if (slwf_lambda < 0.0_dp) call io_error('Error: slwf_lambda  must be positive.')
-      endif
+      end if
 
       !%%%%%%%%%
       ! Plotting
@@ -915,7 +915,7 @@ contains
             call io_error('Error: wannier_plot_spinor_mode not recognised')
          if (wannier_plot_radius < 0.0_dp) call io_error('Error: wannier_plot_radius must be positive')
          if (wannier_plot_scale < 0.0_dp) call io_error('Error: wannier_plot_scale must be positive')
-      endif
+      end if
 
       write_u_matrices = .false.
       call param_get_keyword('write_u_matrices', found, l_value=write_u_matrices)
@@ -948,7 +948,7 @@ contains
          call param_get_range_vector('bands_plot_project', found, num_bands_project, .false., bands_plot_project)
          if (any(bands_plot_project < 1) .or. any(bands_plot_project > num_wann)) &
             call io_error('Error: bands_plot_project asks for a non-valid wannier function to be projected')
-      endif
+      end if
 
       bands_num_spec_points = 0
       call param_get_block_length('kpoint_path', found, i_temp)
@@ -972,7 +972,7 @@ contains
          if ((index(bands_plot_mode, 's-k') .eq. 0) .and. (index(bands_plot_mode, 'cut') .eq. 0)) &
             call io_error('Error: bands_plot_mode not recognised')
          if (bands_num_points < 0) call io_error('Error: bands_num_points must be positive')
-      endif
+      end if
 
       fermi_surface_plot = .false.
       call param_get_keyword('fermi_surface_plot', found, l_value=fermi_surface_plot)
@@ -990,7 +990,7 @@ contains
       if (found) then
          found_fermi_energy = .true.
          nfermi = 1
-      endif
+      end if
       !
       fermi_energy_scan = .false.
       call param_get_keyword('fermi_energy_min', found, r_value=fermi_energy_min)
@@ -1009,7 +1009,7 @@ contains
          if (found .and. fermi_energy_step <= 0.0_dp) call io_error( &
             'Error: fermi_energy_step must be positive')
          nfermi = nint(abs((fermi_energy_max - fermi_energy_min)/fermi_energy_step)) + 1
-      endif
+      end if
       !
       if (found_fermi_energy) then
          if (allocated(fermi_energy_list)) deallocate (fermi_energy_list)
@@ -1020,12 +1020,12 @@ contains
             fermi_energy_step = 0.0_dp
          else
             fermi_energy_step = (fermi_energy_max - fermi_energy_min)/real(nfermi - 1, dp)
-         endif
+         end if
          if (allocated(fermi_energy_list)) deallocate (fermi_energy_list)
          allocate (fermi_energy_list(nfermi), stat=ierr)
          do i = 1, nfermi
             fermi_energy_list(i) = fermi_energy_min + (i - 1)*fermi_energy_step
-         enddo
+         end do
 !!    elseif(nfermi==0) then
 !!        ! This happens when both found_fermi_energy=.false. and
 !!        ! fermi_energy_scan=.false. Functionalities that require
@@ -1038,7 +1038,7 @@ contains
          if (allocated(fermi_energy_list)) deallocate (fermi_energy_list)
          allocate (fermi_energy_list(1), stat=ierr)
          fermi_energy_list(1) = 0.0_dp
-      endif
+      end if
       if (ierr /= 0) call io_error( &
          'Error allocating fermi_energy_list in param_read')
 
@@ -1048,7 +1048,7 @@ contains
             call io_error('Error: fermi_surface_plot_format not recognised')
          if (fermi_surface_num_points < 0) &
             call io_error('Error: fermi_surface_num_points must be positive')
-      endif
+      end if
 
       kslice = .false.
       call param_get_keyword('kslice', found, l_value=kslice)
@@ -1076,11 +1076,11 @@ contains
          else
             call io_error('Error: kslice_2dkmesh must be provided as either' &
                           //' one integer or a vector of two integers')
-         endif
+         end if
          if (any(kslice_2dkmesh <= 0)) &
             call io_error('Error: kslice_2dkmesh elements must be' &
                           //' greater than zero')
-      endif
+      end if
 
       kslice_corner = 0.0_dp
       call param_get_keyword_vector('kslice_corner', found, 3, r_value=kslice_corner)
@@ -1170,7 +1170,7 @@ contains
          gyrotropic_box_tmp(:) = 0.0_dp
          call param_get_keyword_vector('gyrotropic_box_b'//achar(48 + i), found, 3, r_value=gyrotropic_box_tmp)
          if (found) gyrotropic_box(i, :) = gyrotropic_box_tmp(:)
-      enddo
+      end do
       gyrotropic_box_corner(:) = 0.0_dp
       call param_get_keyword_vector('gyrotropic_box_center', found, 3, r_value=gyrotropic_box_tmp)
       if (found) gyrotropic_box_corner(:) = &
@@ -1338,7 +1338,7 @@ contains
          dos_plot = .true.
       else
          dos_plot = .false.
-      endif
+      end if
       call param_get_keyword('dos_task', found, c_value=dos_task)
       if (dos) then
          if (index(dos_task, 'dos_plot') == 0 .and. &
@@ -1404,7 +1404,7 @@ contains
          do i = 1, num_dos_project
             dos_project(i) = i
          end do
-      endif
+      end if
 
       hr_plot = .false.
       call param_get_keyword('hr_plot', found, l_value=hr_plot)
@@ -1546,7 +1546,7 @@ contains
          if (tran_num_cell_ll < 0) call io_error('Error: tran_num_cell_ll < 0')
          if (tran_num_cell_rr < 0) call io_error('Error: tran_num_cell_rr < 0')
          if (tran_group_threshold < 0.0_dp) call io_error('Error: tran_group_threshold < 0')
-      endif
+      end if
 
       if (transport .and. tran_read_ht) goto 302
 
@@ -1598,7 +1598,7 @@ contains
                         write (stdout, '(a)') ' '
                         call io_error('param_read: mismatch in '//trim(seedname)//'.eig')
                      end if
-                  enddo
+                  end do
                end do
                close (eig_unit)
             end if
@@ -1630,7 +1630,7 @@ contains
             call io_error('Error: param_read: check disentanglement frozen windows')
          if (found2 .and. .not. found) &
             call io_error('Error: param_read: found dis_froz_min but not dis_froz_max')
-      endif
+      end if
 
       dis_num_iter = 200
       call param_get_keyword('dis_num_iter', found, i_value=dis_num_iter)
@@ -1666,8 +1666,8 @@ contains
          do nkp = 1, dis_spheres_num
             if (dis_spheres(4, nkp) < 1.0e-15_dp) &
                call io_error('Error: radius for dis_spheres must be > 0')
-         enddo
-      endif
+         end do
+      end if
       ! GS-end
 
       ! [gp-begin, Jun 1, 2012]
@@ -1855,7 +1855,7 @@ contains
       if (write_vdw_data) then
          if ((.not. gamma_only) .or. (num_kpts .ne. 1)) &
             call io_error('Error: write_vdw_data may only be used with a single k-point at Gamma')
-      endif
+      end if
       if (write_vdw_data .and. disentanglement .and. num_valence_bands .le. 0) &
          call io_error('If writing vdw data and disentangling then num_valence_bands must be defined')
 
@@ -1906,7 +1906,7 @@ contains
       do i = 1, kubo_nfreq
          kubo_freq_list(i) = kubo_freq_min &
                              + (i - 1)*(kubo_freq_max - kubo_freq_min)/(kubo_nfreq - 1)
-      enddo
+      end do
       !
       ! TODO: Alternatively, read list of (complex) frequencies; kubo_nfreq is
       !       the length of the list
@@ -1926,7 +1926,7 @@ contains
          gyrotropic_freq_list(i) = gyrotropic_freq_min &
                                    + (i - 1)*(gyrotropic_freq_max - gyrotropic_freq_min)/(gyrotropic_nfreq - 1) &
                                    + cmplx_i*gyrotropic_smr_fixed_en_width
-      enddo
+      end do
 
       if (frozen_states) then
          kubo_eigval_max = dis_froz_max + 0.6667_dp
@@ -1946,7 +1946,7 @@ contains
       if (found) then
          translation_centre_frac = rv_temp
          automatic_translation = .false.
-      endif
+      end if
 
       sc_eta = 0.04
       call param_get_keyword('sc_eta', found, r_value=sc_eta)
@@ -2026,7 +2026,7 @@ contains
          do nkp = 1, num_kpts
             kpt_cart(:, nkp) = matmul(kpt_latt(:, nkp), recip_lattice(:, :))
          end do
-      endif
+      end if
 
       ! get the nnkpts block -- this is allowed only in postproc-setup mode
       call param_get_block_length('nnkpts', explicit_nnkpts, rows)
@@ -2154,7 +2154,7 @@ contains
          if (num_atoms > 0) then
             call param_get_atoms(lunits)
          end if
-      endif
+      end if
 
       ! Projections
       auto_projections = .false.
@@ -2205,13 +2205,13 @@ contains
          do i = 1, num_proj
             do j = 1, num_wann
                if (select_projections(j) == i) proj2wann_map(i) = j
-            enddo
-         enddo
+            end do
+         end do
       else
          do i = 1, num_wann
             proj2wann_map(i) = i
-         enddo
-      endif
+         end do
+      end if
 
       if (lhasproj) call param_get_projections(num_proj, lcount=.false.)
 
@@ -2281,7 +2281,7 @@ contains
          if (allocated(lwindow)) deallocate (lwindow)
          allocate (lwindow(num_bands, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating lwindow in param_read')
-      endif
+      end if
 
 !    if ( wannier_plot .and. (index(wannier_plot_format,'cub').ne.0) ) then
 !       cosa(1)=dot_product(real_lattice(1,:),real_lattice(2,:))
@@ -2522,13 +2522,13 @@ contains
          ic = ichar(atoms_label(nsp) (1:1))
          if ((ic .ge. ichar('a')) .and. (ic .le. ichar('z'))) &
             atoms_label(nsp) (1:1) = char(ic + ichar('Z') - ichar('z'))
-      enddo
+      end do
 
       do nsp = 1, num_species
          ic = ichar(atoms_symbol(nsp) (1:1))
          if ((ic .ge. ichar('a')) .and. (ic .le. ichar('z'))) &
             atoms_symbol(nsp) (1:1) = char(ic + ichar('Z') - ichar('z'))
-      enddo
+      end do
 
       ! Bands labels (eg, x --> X)
       do loop = 1, bands_num_spec_points
@@ -2536,8 +2536,8 @@ contains
             ic = ichar(bands_label(loop) (inner_loop:inner_loop))
             if ((ic .ge. ichar('a')) .and. (ic .le. ichar('z'))) &
                bands_label(loop) (inner_loop:inner_loop) = char(ic + ichar('Z') - ichar('z'))
-         enddo
-      enddo
+         end do
+      end do
 
       ! Length unit (ang --> Ang, bohr --> Bohr)
       ic = ichar(length_unit(1:1))
@@ -2572,7 +2572,7 @@ contains
          write (stdout, '(30x,a21)') 'Lattice Vectors (Ang)'
       else
          write (stdout, '(28x,a22)') 'Lattice Vectors (Bohr)'
-      endif
+      end if
       write (stdout, 101) 'a_1', (real_lattice(1, I)*lenconfac, i=1, 3)
       write (stdout, 101) 'a_2', (real_lattice(2, I)*lenconfac, i=1, 3)
       write (stdout, 101) 'a_3', (real_lattice(3, I)*lenconfac, i=1, 3)
@@ -2583,13 +2583,13 @@ contains
          write (stdout, '(2x,a7)') '(Ang^3)'
       else
          write (stdout, '(2x,a8)') '(Bohr^3)'
-      endif
+      end if
       write (stdout, *)
       if (lenconfac .eq. 1.0_dp) then
          write (stdout, '(24x,a33)') 'Reciprocal-Space Vectors (Ang^-1)'
       else
          write (stdout, '(22x,a34)') 'Reciprocal-Space Vectors (Bohr^-1)'
-      endif
+      end if
       write (stdout, 101) 'b_1', (recip_lattice(1, I)/lenconfac, i=1, 3)
       write (stdout, 101) 'b_2', (recip_lattice(2, I)/lenconfac, i=1, 3)
       write (stdout, 101) 'b_3', (recip_lattice(3, I)/lenconfac, i=1, 3)
@@ -2601,7 +2601,7 @@ contains
             write (stdout, '(1x,a)') '|   Site       Fractional Coordinate          Cartesian Coordinate (Ang)     |'
          else
             write (stdout, '(1x,a)') '|   Site       Fractional Coordinate          Cartesian Coordinate (Bohr)    |'
-         endif
+         end if
          write (stdout, '(1x,a)') '+----------------------------------------------------------------------------+'
          do nsp = 1, num_species
             do nat = 1, atoms_species_num(nsp)
@@ -2680,7 +2680,7 @@ contains
             write (stdout, '(1x,a)') '| k-point      Fractional Coordinate        Cartesian Coordinate (Ang^-1)    |'
          else
             write (stdout, '(1x,a)') '| k-point      Fractional Coordinate        Cartesian Coordinate (Bohr^-1)   |'
-         endif
+         end if
          write (stdout, '(1x,a)') '+----------------------------------------------------------------------------+'
          do nkp = 1, num_kpts
             write (stdout, '(1x,a1,i6,1x,3F10.5,3x,a1,1x,3F10.5,4x,a1)') '|', nkp, kpt_latt(:, nkp), '|', &
@@ -2705,7 +2705,7 @@ contains
       if (lsitesymmetry) then
          write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Using symmetry-adapted WF mode            :', lsitesymmetry, '|'
          write (stdout, '(1x,a46,8x,E10.3,13x,a1)') '|  Tolerance for symmetry condition on U     :', symmetrize_eps, '|'
-      endif
+      end if
 
       if (cp_pp .or. iprint > 2) &
          write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  CP code post-processing                   :', cp_pp, '|'
@@ -2714,13 +2714,13 @@ contains
             write (stdout, '(1x,a46,9x,a9,13x,a1)') '|  Wavefunction (UNK) file-type              :', 'formatted', '|'
          else
             write (stdout, '(1x,a46,7x,a11,13x,a1)') '|  Wavefunction (UNK) file-type              :', 'unformatted', '|'
-         endif
+         end if
          if (spin == 1) then
             write (stdout, '(1x,a46,16x,a2,13x,a1)') '|  Wavefunction spin channel                 :', 'up', '|'
          else
             write (stdout, '(1x,a46,14x,a4,13x,a1)') '|  Wavefunction spin channel                 :', 'down', '|'
-         endif
-      endif
+         end if
+      end if
 
       write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
 
@@ -2732,7 +2732,7 @@ contains
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Fixed step length for minimisation        :', fixed_step, '|'
       else
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Trial step length for line search         :', trial_step, '|'
-      endif
+      end if
       write (stdout, '(1x,a46,8x,E10.3,13x,a1)') '|  Convergence tolerence                     :', conv_tol, '|'
       write (stdout, '(1x,a46,10x,I8,13x,a1)') '|  Convergence window                        :', conv_window, '|'
       write (stdout, '(1x,a46,10x,I8,13x,a1)') '|  Iterations between writing output         :', num_print_cycles, '|'
@@ -2771,9 +2771,9 @@ contains
             do nkp = 1, dis_spheres_num
                write (stdout, '(1x,a13,I4,a2,2x,3F8.3,a15,F8.3,9x,a1)') &
                   '|   center n.', nkp, ' :', dis_spheres(1:3, nkp), ',    radius   =', dis_spheres(4, nkp), '|'
-            enddo
+            end do
             write (stdout, '(1x,a46,10x,I8,13x,a1)') '|  Index of first Wannier band               :', dis_spheres_first_wann, '|'
-         endif
+         end if
          ! GS-end
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
       end if
@@ -2808,7 +2808,7 @@ contains
             if (index(wannier_plot_format, 'cub') > 0 .or. iprint > 2) then
                write (stdout, '(1x,a46,10x,F8.3,13x,a1)') '|   Plot radius                              :', wannier_plot_radius, '|'
                write (stdout, '(1x,a46,10x,F8.3,13x,a1)') '|   Plot scale                               :', wannier_plot_scale, '|'
-            endif
+            end if
             write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
          end if
          !
@@ -2835,7 +2835,7 @@ contains
                write (stdout, '(1x,a46,10x,F8.3,13x,a1)') '|   Hamiltonian cut-off value                :', hr_cutoff, '|'
                write (stdout, '(1x,a46,10x,F8.3,13x,a1)') '|   Hamiltonian cut-off distance             :', dist_cutoff, '|'
               write (stdout, '(1x,a46,10x,a8,13x,a1)') '|   Hamiltonian cut-off distance mode        :', trim(dist_cutoff_mode), '|'
-            endif
+            end if
             write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
             write (stdout, '(1x,a78)') '|   K-space path sections:                                                   |'
             if (bands_num_spec_points == 0) then
@@ -2852,13 +2852,13 @@ contains
          if (write_hr .or. iprint > 2) then
             write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Plotting Hamiltonian in WF basis          :', write_hr, '|'
             write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-         endif
+         end if
          if (write_vdw_data .or. iprint > 2) then
             write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Writing data for Van der Waals post-proc  :', write_vdw_data, '|'
             write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-         endif
+         end if
          !
-      endif
+      end if
 
 401   continue
       !
@@ -2896,7 +2896,7 @@ contains
          !
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
          !
-      endif
+      end if
 
 101   format(20x, a3, 2x, 3F11.6)
 
@@ -2924,7 +2924,7 @@ contains
          write (stdout, '(30x,a21)') 'Lattice Vectors (Ang)'
       else
          write (stdout, '(28x,a22)') 'Lattice Vectors (Bohr)'
-      endif
+      end if
       write (stdout, 101) 'a_1', (real_lattice(1, I)*lenconfac, i=1, 3)
       write (stdout, 101) 'a_2', (real_lattice(2, I)*lenconfac, i=1, 3)
       write (stdout, 101) 'a_3', (real_lattice(3, I)*lenconfac, i=1, 3)
@@ -2935,13 +2935,13 @@ contains
          write (stdout, '(2x,a7)') '(Ang^3)'
       else
          write (stdout, '(2x,a8)') '(Bohr^3)'
-      endif
+      end if
       write (stdout, *)
       if (lenconfac .eq. 1.0_dp) then
          write (stdout, '(24x,a33)') 'Reciprocal-Space Vectors (Ang^-1)'
       else
          write (stdout, '(22x,a34)') 'Reciprocal-Space Vectors (Bohr^-1)'
-      endif
+      end if
       write (stdout, 101) 'b_1', (recip_lattice(1, I)/lenconfac, i=1, 3)
       write (stdout, 101) 'b_2', (recip_lattice(2, I)/lenconfac, i=1, 3)
       write (stdout, 101) 'b_3', (recip_lattice(3, I)/lenconfac, i=1, 3)
@@ -2953,7 +2953,7 @@ contains
             write (stdout, '(1x,a)') '|   Site       Fractional Coordinate          Cartesian Coordinate (Ang)     |'
          else
             write (stdout, '(1x,a)') '|   Site       Fractional Coordinate          Cartesian Coordinate (Bohr)    |'
-         endif
+         end if
          write (stdout, '(1x,a)') '+----------------------------------------------------------------------------+'
          do nsp = 1, num_species
             do nat = 1, atoms_species_num(nsp)
@@ -2979,8 +2979,8 @@ contains
             write (stdout, '(1x,a46,10x,i8,13x,a1)') '|  Number of valence bands                   :', num_valence_bands, '|'
          else
             write (stdout, '(1x,a78)') '|  Number of valence bands                   :       not defined             |'
-         endif
-      endif
+         end if
+      end if
       if (spin_decomp .or. iprint > 2) &
          write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Spin decomposition                        :', spin_decomp, '|'
       if (spin_moment .or. iprint > 2) &
@@ -2992,12 +2992,12 @@ contains
             write (stdout, '(1x,a46,9x,a9,13x,a1)') '|  Spn file-type                   :', 'formatted', '|'
          else
             write (stdout, '(1x,a46,7x,a11,13x,a1)') '|  Spn file-type                   :', 'unformatted', '|'
-         endif
+         end if
          if (uHu_formatted) then
             write (stdout, '(1x,a46,9x,a9,13x,a1)') '|  uHu file-type                   :', 'formatted', '|'
          else
             write (stdout, '(1x,a46,7x,a11,13x,a1)') '|  uHu file-type                   :', 'unformatted', '|'
-         endif
+         end if
       end if
 
       if (size(fermi_energy_list) == 1) then
@@ -3022,7 +3022,7 @@ contains
       else
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Fixed width smearing                      :', '       T', '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Smearing width                            :', smr_fixed_en_width, '|'
-      endif
+      end if
       write (stdout, '(1x,a21,5x,a47,4x,a1)') '|  Smearing Function ', trim(param_get_smearing_type(smr_index)), '|'
       if (global_kmesh_set) then
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Global interpolation k-points defined     :', '       T', '|'
@@ -3032,10 +3032,10 @@ contains
          else
             write (stdout, '(1x,a46,2x,i4,1x,a1,i4,1x,a1,i4,13x,1a)') '|  Grid size                                 :' &
                , kmesh(1), 'x', kmesh(2), 'x', kmesh(3), '|'
-         endif
+         end if
       else
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Global interpolation k-points defined     :', '       F', '|'
-      endif
+      end if
       write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
 
       ! DOS
@@ -3046,7 +3046,7 @@ contains
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Wannier Projected DOS             :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Wannier Projected DOS             :', '       F', '|'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Minimum energy range for DOS plot         :', dos_energy_min, '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Maximum energy range for DOS plot         :', dos_energy_max, '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Energy step for DOS plot                  :', dos_energy_step, '|'
@@ -3061,9 +3061,9 @@ contains
             else
                write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Fixed width smearing                      :', '       T', '|'
             write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Smearing width                            :', dos_smr_fixed_en_width, '|'
-            endif
+            end if
             write (stdout, '(1x,a21,5x,a47,4x,a1)') '|  Smearing Function ', trim(param_get_smearing_type(dos_smr_index)), '|'
-         endif
+         end if
          if (kmesh(1) == dos_kmesh(1) .and. kmesh(2) == dos_kmesh(2) .and. kmesh(3) == dos_kmesh(3)) then
             write (stdout, '(1x,a78)') '|  Using global k-point set for interpolation                                |'
          else
@@ -3073,9 +3073,9 @@ contains
             else
                write (stdout, '(1x,a46,2x,i4,1x,a1,i4,1x,a1,i4,13x,1a)') '|  Grid size                                 :' &
                   , dos_kmesh(1), 'x', dos_kmesh(2), 'x', dos_kmesh(3), '|'
-            endif
-         endif
-      endif
+            end if
+         end if
+      end if
       write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
 
       if (kpath .or. iprint > 2) then
@@ -3086,17 +3086,17 @@ contains
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot energy bands                         :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot energy bands                         :', '       F', '|'
-         endif
+         end if
          if (index(kpath_task, 'curv') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot Berry curvature                      :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot Berry curvature                      :', '       F', '|'
-         endif
+         end if
          if (index(kpath_task, 'morb') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot orbital magnetisation contribution   :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot orbital magnetisation contribution   :', '       F', '|'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Property used to colour code the bands    :', trim(kpath_bands_colour), '|'
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
          write (stdout, '(1x,a78)') '|   K-space path sections:                                                   |'
@@ -3109,7 +3109,7 @@ contains
             end do
          end if
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-      endif
+      end if
 
       if (kslice .or. iprint > 2) then
          write (stdout, '(1x,a78)') '*--------------------------------- KSLICE -----------------------------------*'
@@ -3120,17 +3120,17 @@ contains
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot energy contours (fermi lines)        :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot energy contours (fermi lines)        :', '       F', '|'
-         endif
+         end if
          if (index(kslice_task, 'curv') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot Berry curvature (sum over occ states):', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot Berry curvature (sum over occ states):', '       F', '|'
-         endif
+         end if
          if (index(kslice_task, 'morb') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot orbital magnetisation contribution   :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Plot orbital magnetisation contribution   :', '       F', '|'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Property used to colour code the lines    :', &
             trim(kslice_fermi_lines_colour), '|'
          write (stdout, '(1x,a78)') '|  2D slice parameters (in reduced coordinates):                             |'
@@ -3140,7 +3140,7 @@ contains
          write (stdout, '(1x,a14,2x,3F8.3,10x,a12,2x,i4,9x,a1)') &
             '|    Vector2: ', (kslice_b2(i), i=1, 3), ' Divisions:', kslice_2dkmesh(1), '|'
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-      endif
+      end if
 
       if (berry .or. iprint > 2) then
          write (stdout, '(1x,a78)') '*--------------------------------- BERRY ------------------------------------*'
@@ -3149,22 +3149,22 @@ contains
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Optical Conductivity and JDOS     :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Optical Conductivity and JDOS     :', '       F', '|'
-         endif
+         end if
          if (index(berry_task, 'ahc') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Anomalous Hall Conductivity       :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Anomalous Hall Conductivity       :', '       F', '|'
-         endif
+         end if
          if (index(berry_task, 'sc') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Shift Current                     :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Shift Current                     :', '       F', '|'
-         endif
+         end if
          if (index(berry_task, 'kubo') > 0) then
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Orbital Magnetisation             :', '       T', '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Compute Orbital Magnetisation             :', '       F', '|'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Lower frequency for optical responses     :', kubo_freq_min, '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Upper frequency for optical responses     :', kubo_freq_max, '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Step size for optical responses           :', kubo_freq_step, '|'
@@ -3186,9 +3186,9 @@ contains
             else
                write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Fixed width smearing                      :', '       T', '|'
            write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Smearing width                            :', kubo_smr_fixed_en_width, '|'
-            endif
+            end if
             write (stdout, '(1x,a21,5x,a47,4x,a1)') '|  Smearing Function ', trim(param_get_smearing_type(kubo_smr_index)), '|'
-         endif
+         end if
          if (kmesh(1) == berry_kmesh(1) .and. kmesh(2) == berry_kmesh(2) .and. kmesh(3) == berry_kmesh(3)) then
             write (stdout, '(1x,a78)') '|  Using global k-point set for interpolation                                |'
          else
@@ -3198,17 +3198,17 @@ contains
             else
                write (stdout, '(1x,a46,2x,i4,1x,a1,i4,1x,a1,i4,13x,1a)') '|  Grid size                                 :' &
                   , berry_kmesh(1), 'x', berry_kmesh(2), 'x', berry_kmesh(3), '|'
-            endif
-         endif
+            end if
+         end if
          if (berry_curv_adpt_kmesh > 1) then
             write (stdout, '(1x,a46,10x,i8,13x,a1)') '|  Using an adaptive refinement mesh of size :', berry_curv_adpt_kmesh, '|'
             write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Threshold for adaptive refinement         :', &
                berry_curv_adpt_kmesh_thresh, '|'
          else
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Adaptive refinement                       :', '    none', '|'
-         endif
+         end if
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-      endif
+      end if
 
       if (gyrotropic .or. iprint > 2) then
          write (stdout, '(1x,a78)') '*--------------------------------- GYROTROPIC   ------------------------------------*'
@@ -3229,7 +3229,7 @@ contains
             write (stdout, '(1x,a78)') '|  Using global smearing parameters                                          |'
          else
             write (stdout, '(1x,a78)') '|  Using local  smearing parameters                                          |'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Fixed width smearing                      :', '       T', '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Smearing width                            :', &
             gyrotropic_smr_fixed_en_width, '|'
@@ -3245,10 +3245,10 @@ contains
          else
             write (stdout, '(1x,a46,2x,i4,1x,a1,i4,1x,a1,i4,13x,1a)') '|  Grid size                                 :' &
                , gyrotropic_kmesh(1), 'x', gyrotropic_kmesh(2), 'x', gyrotropic_kmesh(3), '|'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  Adaptive refinement                       :', '    not implemented', '|'
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-      endif
+      end if
 
       if (boltzwann .or. iprint > 2) then
          write (stdout, '(1x,a78)') '*------------------------------- BOLTZWANN ----------------------------------*'
@@ -3257,7 +3257,7 @@ contains
             write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  2d structure: non-periodic dimension  :', trim(boltz_2d_dir), '|'
          else
             write (stdout, '(1x,a78)') '|  3d Structure                              :                 T             |'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Relaxation Time (fs)                      :', boltz_relax_time, '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Minimum Value of Chemical Potential (eV)  :', boltz_mu_min, '|'
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Maximum Value of Chemical Potential (eV)  :', boltz_mu_max, '|'
@@ -3275,8 +3275,8 @@ contains
             else
                write (stdout, '(1x,a46,2x,i4,1x,a1,i4,1x,a1,i4,13x,1a)') '|  Grid size                                 :' &
                   , boltz_kmesh(1), 'x', boltz_kmesh(2), 'x', boltz_kmesh(3), '|'
-            endif
-         endif
+            end if
+         end if
          write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Step size for TDF (eV)                    :', boltz_tdf_energy_step, '|'
         write (stdout, '(1x,a25,5x,a43,4x,a1)') '|  TDF Smearing Function ', trim(param_get_smearing_type(boltz_tdf_smr_index)), '|'
          if (boltz_tdf_smr_fixed_en_width > 0.0_dp) then
@@ -3284,7 +3284,7 @@ contains
                '|  TDF fixed Smearing width (eV)             :', boltz_tdf_smr_fixed_en_width, '|'
          else
             write (stdout, '(1x,a78)') '|  TDF fixed Smearing width                  :         unsmeared             |'
-         endif
+         end if
          write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Compute DOS at same time                  :', boltz_calc_also_dos, '|'
          if (boltz_calc_also_dos .and. iprint > 2) then
             write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  Minimum energy range for DOS plot         :', boltz_dos_energy_min, '|'
@@ -3305,12 +3305,12 @@ contains
                   write (stdout, '(1x,a46,10x,a8,13x,a1)') '|  DOS Fixed width smearing                  :', '       T', '|'
                   write (stdout, '(1x,a46,10x,f8.3,13x,a1)') '|  DOS Smearing width                         :', &
                      boltz_dos_smr_fixed_en_width, '|'
-               endif
+               end if
             write (stdout, '(1x,a21,5x,a47,4x,a1)') '|  Smearing Function ', trim(param_get_smearing_type(boltz_dos_smr_index)), '|'
-            endif
-         endif
+            end if
+         end if
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-      endif
+      end if
 
       if (geninterp .or. iprint > 2) then
          write (stdout, '(1x,a78)') '*------------------------Generic Band Interpolation--------------------------*'
@@ -3318,7 +3318,7 @@ contains
          write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Calculate band gradients                  :', geninterp_alsofirstder, '|'
          write (stdout, '(1x,a46,10x,L8,13x,a1)') '|  Write data into a single file             :', geninterp_single_file, '|'
          write (stdout, '(1x,a78)') '*----------------------------------------------------------------------------*'
-      endif
+      end if
 
 101   format(20x, a3, 2x, 3F11.6)
 
@@ -3443,19 +3443,19 @@ contains
       if (allocated(eigval)) then
          deallocate (eigval, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating eigval in param_dealloc')
-      endif
+      end if
       if (allocated(shell_list)) then
          deallocate (shell_list, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating shell_list in param_dealloc')
-      endif
+      end if
       if (allocated(kpt_latt)) then
          deallocate (kpt_latt, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating kpt_latt in param_dealloc')
-      endif
+      end if
       if (allocated(kpt_cart)) then
          deallocate (kpt_cart, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating kpt_cart in param_dealloc')
-      endif
+      end if
       if (allocated(bands_label)) then
          deallocate (bands_label, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating bands_label in param_dealloc')
@@ -3571,31 +3571,31 @@ contains
       if (allocated(wannier_spreads)) then
          deallocate (wannier_spreads, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating wannier_spreads in param_dealloc')
-      endif
+      end if
       if (allocated(bands_plot_project)) then
          deallocate (bands_plot_project, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating bands_plot_project in param_dealloc')
-      endif
+      end if
       if (allocated(dos_project)) then
          deallocate (dos_project, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating dos_project in param_dealloc')
-      endif
+      end if
       if (allocated(fermi_energy_list)) then
          deallocate (fermi_energy_list, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating fermi_energy_list in param_dealloc')
-      endif
+      end if
       if (allocated(kubo_freq_list)) then
          deallocate (kubo_freq_list, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating kubo_freq_list in param_dealloc')
-      endif
+      end if
       if (allocated(dis_spheres)) then
          deallocate (dis_spheres, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating dis_spheres in param_dealloc')
-      endif
+      end if
       if (allocated(ccentres_frac)) then
          deallocate (ccentres_frac, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating ccentres_frac in param_dealloc')
-      endif
+      end if
       if (allocated(ccentres_cart)) then
          deallocate (ccentres_cart, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating ccentres_cart in param_dealloc')
@@ -3730,7 +3730,7 @@ contains
          write (chk_unit) ((lwindow(i, nkp), i=1, num_bands), nkp=1, num_kpts)
          write (chk_unit) (ndimwin(nkp), nkp=1, num_kpts)
          write (chk_unit) (((u_matrix_opt(i, j, nkp), i=1, num_bands), j=1, num_wann), nkp=1, num_kpts)
-      endif
+      end if
       write (chk_unit) (((u_matrix(i, j, k), i=1, num_wann), j=1, num_wann), k=1, num_kpts)               ! U_matrix
       write (chk_unit) ((((m_matrix(i, j, k, l), i=1, num_wann), j=1, num_wann), k=1, nntot), l=1, num_kpts) ! M_matrix
       write (chk_unit) ((wannier_centres(i, j), i=1, 3), j=1, num_wann)
@@ -3785,21 +3785,21 @@ contains
       do i = 1, num_exclude_bands
          if (tmp_excl_bands(i) .ne. exclude_bands(i)) &
             call io_error('param_read_chk: Mismatch in exclude_bands')
-      enddo
+      end do
       read (chk_unit) ((tmp_latt(i, j), i=1, 3), j=1, 3)  ! Real lattice
       do j = 1, 3
          do i = 1, 3
             if (abs(tmp_latt(i, j) - real_lattice(i, j)) .gt. eps6) &
                call io_error('param_read_chk: Mismatch in real_lattice')
-         enddo
-      enddo
+         end do
+      end do
       read (chk_unit) ((tmp_latt(i, j), i=1, 3), j=1, 3)  ! Reciprocal lattice
       do j = 1, 3
          do i = 1, 3
             if (abs(tmp_latt(i, j) - recip_lattice(i, j)) .gt. eps6) &
                call io_error('param_read_chk: Mismatch in recip_lattice')
-         enddo
-      enddo
+         end do
+      end do
       read (chk_unit) ntmp                ! K-points
       if (ntmp .ne. num_kpts) &
          call io_error('param_read_chk: Mismatch in num_kpts')
@@ -3807,14 +3807,14 @@ contains
       do i = 1, 3
          if (tmp_mp_grid(i) .ne. mp_grid(i)) &
             call io_error('param_read_chk: Mismatch in mp_grid')
-      enddo
+      end do
       read (chk_unit) ((tmp_kpt_latt(i, nkp), i=1, 3), nkp=1, num_kpts)
       do nkp = 1, num_kpts
          do i = 1, 3
             if (abs(tmp_kpt_latt(i, nkp) - kpt_latt(i, nkp)) .gt. eps6) &
                call io_error('param_read_chk: Mismatch in kpt_latt')
-         enddo
-      enddo
+         end do
+      end do
       read (chk_unit) ntmp                ! nntot
       if (ntmp .ne. nntot) &
          call io_error('param_read_chk: Mismatch in nntot')
@@ -3836,37 +3836,37 @@ contains
          if (.not. allocated(lwindow)) then
             allocate (lwindow(num_bands, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating lwindow in param_read_chkpt')
-         endif
+         end if
          read (chk_unit, err=122) ((lwindow(i, nkp), i=1, num_bands), nkp=1, num_kpts)
 
          ! ndimwin
          if (.not. allocated(ndimwin)) then
             allocate (ndimwin(num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating ndimwin in param_read_chkpt')
-         endif
+         end if
          read (chk_unit, err=123) (ndimwin(nkp), nkp=1, num_kpts)
 
          ! U_matrix_opt
          if (.not. allocated(u_matrix_opt)) then
             allocate (u_matrix_opt(num_bands, num_wann, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating u_matrix_opt in param_read_chkpt')
-         endif
+         end if
          read (chk_unit, err=124) (((u_matrix_opt(i, j, nkp), i=1, num_bands), j=1, num_wann), nkp=1, num_kpts)
 
-      endif
+      end if
 
       ! U_matrix
       if (.not. allocated(u_matrix)) then
          allocate (u_matrix(num_wann, num_wann, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating u_matrix in param_read_chkpt')
-      endif
+      end if
       read (chk_unit, err=125) (((u_matrix(i, j, k), i=1, num_wann), j=1, num_wann), k=1, num_kpts)
 
       ! M_matrix
       if (.not. allocated(m_matrix)) then
          allocate (m_matrix(num_wann, num_wann, nntot, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating m_matrix in param_read_chkpt')
-      endif
+      end if
       read (chk_unit, err=126) ((((m_matrix(i, j, k, l), i=1, num_wann), j=1, num_wann), k=1, nntot), l=1, num_kpts)
 
       ! wannier_centres
@@ -3919,7 +3919,7 @@ contains
          allocate (u_matrix(num_wann, num_wann, num_kpts), stat=ierr)
          if (ierr /= 0) &
             call io_error('Error allocating u_matrix in param_chkpt_dist')
-      endif
+      end if
       call comms_bcast(u_matrix(1, 1, 1), num_wann*num_wann*num_kpts)
 
 !    if (.not.on_root .and. .not.allocated(m_matrix)) then
@@ -3938,19 +3938,19 @@ contains
                allocate (u_matrix_opt(num_bands, num_wann, num_kpts), stat=ierr)
                if (ierr /= 0) &
                   call io_error('Error allocating u_matrix_opt in param_chkpt_dist')
-            endif
+            end if
 
             if (.not. allocated(lwindow)) then
                allocate (lwindow(num_bands, num_kpts), stat=ierr)
                if (ierr /= 0) &
                   call io_error('Error allocating lwindow in param_chkpt_dist')
-            endif
+            end if
 
             if (.not. allocated(ndimwin)) then
                allocate (ndimwin(num_kpts), stat=ierr)
                if (ierr /= 0) &
                   call io_error('Error allocating ndimwin in param_chkpt_dist')
-            endif
+            end if
 
          end if
 
@@ -4000,7 +4000,7 @@ contains
          tot_num_lines = tot_num_lines + 1
          if (.not. dummy(1:1) == '!' .and. .not. dummy(1:1) == '#') then
             if (len(trim(dummy)) > 0) num_lines = num_lines + 1
-         endif
+         end if
 
       end do
 
@@ -4080,7 +4080,7 @@ contains
              .and. in_data(loop) (itmp:itmp) /= ' ') cycle
          if (found) then
             call io_error('Error: Found keyword '//trim(keyword)//' more than once in input file')
-         endif
+         end if
          found = .true.
          dummy = in_data(loop) (kl + 1:)
          in_data(loop) (1:maxlen) = ' '
@@ -4100,8 +4100,8 @@ contains
                l_value = .false.
             else
                call io_error('Error: Problem reading logical keyword '//trim(keyword))
-            endif
-         endif
+            end if
+         end if
          if (present(i_value)) read (dummy, *, err=220, end=220) i_value
          if (present(r_value)) read (dummy, *, err=220, end=220) r_value
       end if
@@ -4151,7 +4151,7 @@ contains
          if (in == 0 .or. in > 1) cycle
          if (found) then
             call io_error('Error: Found keyword '//trim(keyword)//' more than once in input file')
-         endif
+         end if
          found = .true.
          dummy = in_data(loop) (kl + 1:)
          in_data(loop) (1:maxlen) = ' '
@@ -4168,7 +4168,7 @@ contains
             ! I don't think we need this. Maybe read into a dummy charater
             ! array and convert each element to logical
             call io_error('param_get_keyword_vector unimplemented for logicals')
-         endif
+         end if
          if (present(i_value)) read (dummy, *, err=230, end=230) (i_value(i), i=1, length)
          if (present(r_value)) read (dummy, *, err=230, end=230) (r_value(i), i=1, length)
       end if
@@ -4210,7 +4210,7 @@ contains
          if (in == 0 .or. in > 1) cycle
          if (found) then
             call io_error('Error: Found keyword '//trim(keyword)//' more than once in input file')
-         endif
+         end if
          found = .true.
          dummy = in_data(loop) (kl + 1:)
          dummy = adjustl(dummy)
@@ -4233,7 +4233,7 @@ contains
                length = length + 1
             else
                exit
-            endif
+            end if
 
          end do
 
@@ -4291,7 +4291,7 @@ contains
          line_s = loop
          if (found_s) then
             call io_error('Error: Found '//trim(start_st)//' more than once in input file')
-         endif
+         end if
          found_s = .true.
       end do
 
@@ -4308,7 +4308,7 @@ contains
          line_e = loop
          if (found_e) then
             call io_error('Error: Found '//trim(end_st)//' more than once in input file')
-         endif
+         end if
          found_e = .true.
       end do
 
@@ -4348,10 +4348,10 @@ contains
             lconvert = .true.
          else
             call io_error('Error: Units in block '//trim(keyword)//' not recognised')
-         endif
+         end if
          in_data(line_s) (1:maxlen) = ' '
          line_s = line_s + 1
-      endif
+      end if
 
 !    r_value=1.0_dp
       counter = 0
@@ -4363,7 +4363,7 @@ contains
             ! I don't think we need this. Maybe read into a dummy charater
             ! array and convert each element to logical
             call io_error('param_get_keyword_block unimplemented for logicals')
-         endif
+         end if
          if (present(i_value)) read (dummy, *, err=240, end=240) (i_value(i, counter), i=1, columns)
          if (present(r_value)) read (dummy, *, err=240, end=240) (r_value(i, counter), i=1, columns)
       end do
@@ -4371,8 +4371,8 @@ contains
       if (lconvert) then
          if (present(r_value)) then
             r_value = r_value*bohr
-         endif
-      endif
+         end if
+      end if
 
       in_data(line_s:line_e) (1:maxlen) = ' '
 
@@ -4424,7 +4424,7 @@ contains
          line_s = loop
          if (found_s) then
             call io_error('Error: Found '//trim(start_st)//' more than once in input file')
-         endif
+         end if
          found_s = .true.
       end do
 
@@ -4441,7 +4441,7 @@ contains
          line_e = loop
          if (found_e) then
             call io_error('Error: Found '//trim(end_st)//' more than once in input file')
-         endif
+         end if
          found_e = .true.
       end do
 
@@ -4461,8 +4461,8 @@ contains
       if (library) then
          if (trim(keyword) .eq. 'atoms_cart' .or. trim(keyword) .eq. 'atoms_frac') then
             in_data(line_s:line_e) (1:maxlen) = ' '
-         endif
-      endif
+         end if
+      end if
 
       if (present(lunits)) then
          dummy = in_data(line_s + 1)
@@ -4470,7 +4470,7 @@ contains
          !       write(stdout,*) trim(dummy)
          read (dummy, *, end=555) atsym, (atpos(i), i=1, 3)
          lunits = .false.
-      endif
+      end if
 
       if (rows <= 0) then !cope with empty blocks
          found = .false.
@@ -4539,7 +4539,7 @@ contains
          line_s = loop
          if (found_s) then
             call io_error('Error: Found '//trim(start_st)//' more than once in input file')
-         endif
+         end if
          found_s = .true.
       end do
 
@@ -4551,7 +4551,7 @@ contains
          line_e = loop
          if (found_e) then
             call io_error('Error: Found '//trim(end_st)//' more than once in input file')
-         endif
+         end if
          found_e = .true.
       end do
 
@@ -4572,10 +4572,10 @@ contains
             lconvert = .true.
          else
             call io_error('Error: Units in block atoms_cart not recognised in param_get_atoms')
-         endif
+         end if
          in_data(line_s) (1:maxlen) = ' '
          line_s = line_s + 1
-      endif
+      end if
 
       counter = 0
       do loop = line_s + 1, line_e - 1
@@ -4689,7 +4689,7 @@ contains
       do loop = 1, num_atoms
          call utility_cart_to_frac(atoms_pos_cart_tmp(:, loop), &
                                    atoms_pos_frac_tmp(:, loop), recip_lattice)
-      enddo
+      end do
 
       ! Now we sort the data into the proper structures
       num_species = 1
@@ -4795,7 +4795,7 @@ contains
          if (in == 0 .or. in > 1) cycle
          if (found) then
             call io_error('Error: Found keyword '//trim(keyword)//' more than once in input file')
-         endif
+         end if
          found = .true.
          dummy = in_data(loop) (kl + 1:)
          dummy = adjustl(dummy)
@@ -5030,7 +5030,7 @@ contains
             if (ierr /= 0) call io_error('Error allocating input_proj_s in param_get_projections')
             allocate (input_proj_s_qaxis(3, num_proj), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating input_proj_s_qaxis in param_get_projections')
-         endif
+         end if
 
          allocate (proj_site(3, num_wann), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating proj_site in param_get_projections')
@@ -5051,8 +5051,8 @@ contains
             if (ierr /= 0) call io_error('Error allocating proj_s in param_get_projections')
             allocate (proj_s_qaxis(3, num_wann), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating proj_s_qaxis in param_get_projections')
-         endif
-      endif
+         end if
+      end if
 
       do loop = 1, num_lines
          ins = index(in_data(loop), trim(keyword))
@@ -5062,7 +5062,7 @@ contains
          line_s = loop
          if (found_s) then
             call io_error('Error: Found '//trim(start_st)//' more than once in input file')
-         endif
+         end if
          found_s = .true.
       end do
 
@@ -5074,7 +5074,7 @@ contains
          line_e = loop
          if (found_e) then
             call io_error('param_get_projections: Found '//trim(end_st)//' more than once in input file')
-         endif
+         end if
          found_e = .true.
       end do
 
@@ -5111,9 +5111,9 @@ contains
                if (.not. lcount) in_data(line_s) (1:maxlen) = ' '
                line_s = line_s + 1
                lconvert = .true.
-            endif
-         endif
-      endif
+            end if
+         end if
+      end if
 
       counter = 0
       if (.not. lrandom) then
@@ -5131,7 +5131,7 @@ contains
                proj_d_tmp = .true.
             else
                spn_counter = 1
-            endif
+            end if
             ! Strip input line of all spaces
             dummy = utility_strip(in_data(line))
             dummy = adjustl(dummy)
@@ -5177,10 +5177,10 @@ contains
                   ctemp = ctemp(:pos2 - 1)
                   call utility_string_to_coord(ctemp, proj_s_qaxis_tmp)
                   dummy = dummy(:pos1 - 1) ! remove [ ] section
-               endif
+               end if
             else
                if (pos1 > 0) call io_error('param_get_projections: spin qdir is defined but spinors=.false.')
-            endif
+            end if
 
             ! scan for up or down
             pos1 = index(dummy, '(')
@@ -5199,12 +5199,12 @@ contains
                      call io_error('param_get_projections: found brackets but neither u or d')
                   else
                      spn_counter = 1
-                  endif
+                  end if
                   dummy = dummy(:pos1 - 1) ! remove ( ) section
-               endif
+               end if
             else
                if (pos1 > 0) call io_error('param_get_projections: spin is defined but spinors=.false.')
-            endif
+            end if
 
             !Now we know the sites for this line. Get the angular momentum states
             pos1 = index(dummy, ':')
@@ -5220,7 +5220,7 @@ contains
                   ctemp3 = ctemp2
                else
                   ctemp3 = ctemp2(:pos2 - 1)
-               endif
+               end if
                if (index(ctemp3, 'l=') == 1) then
                   mstate = index(ctemp3, ',')
                   if (mstate > 0) then
@@ -5244,7 +5244,7 @@ contains
                         ang_states(1:5, l_tmp) = 1
                      elseif (l_tmp == -5) then !sp3d2
                         ang_states(1:6, l_tmp) = 1
-                     endif
+                     end if
                   else
                      if (index(ctemp3, 'mr=') /= mstate + 1) &
                         call io_error('param_get_projection: Problem reading m state')
@@ -5255,7 +5255,7 @@ contains
                            ctemp5 = ctemp4
                         else
                            ctemp5 = ctemp4(:pos3 - 1)
-                        endif
+                        end if
                         read (ctemp5(1:), *, err=102, end=102) m_tmp
                         if (l_tmp >= 0) then
                            if ((m_tmp > 2*l_tmp + 1) .or. (m_tmp <= 0)) call io_error('param_get_projection: m is > l !')
@@ -5269,11 +5269,11 @@ contains
                            call io_error('param_get_projection: m has incorrect value (4)')
                         elseif (l_tmp == -5 .and. (m_tmp > 6 .or. m_tmp <= 0)) then
                            call io_error('param_get_projection: m has incorrect value (5)')
-                        endif
+                        end if
                         ang_states(m_tmp, l_tmp) = 1
                         if (pos3 == 0) exit
                         ctemp4 = ctemp4(pos3 + 1:)
-                     enddo
+                     end do
                   end if
                else
                   do
@@ -5282,7 +5282,7 @@ contains
                         ctemp4 = ctemp3
                      else
                         ctemp4 = ctemp3(:pos3 - 1)
-                     endif
+                     end if
                      read (ctemp4(1:), *, err=106, end=106) m_string
                      select case (trim(adjustl(m_string)))
                      case ('s')
@@ -5378,11 +5378,11 @@ contains
                      end select
                      if (pos3 == 0) exit
                      ctemp3 = ctemp3(pos3 + 1:)
-                  enddo
-               endif
+                  end do
+               end if
                if (pos2 == 0) exit
                ctemp2 = ctemp2(pos2 + 1:)
-            enddo
+            end do
             ! check for non-default values
             if (pos1 > 0) then
                dummy = dummy(pos1 + 1:)
@@ -5393,7 +5393,7 @@ contains
                   pos2 = index(ctemp, ':')
                   if (pos2 > 0) ctemp = ctemp(:pos2 - 1)
                   call utility_string_to_coord(ctemp, proj_z_tmp)
-               endif
+               end if
                ! x axis
                pos1 = index(dummy, 'x=')
                if (pos1 > 0) then
@@ -5401,7 +5401,7 @@ contains
                   pos2 = index(ctemp, ':')
                   if (pos2 > 0) ctemp = ctemp(:pos2 - 1)
                   call utility_string_to_coord(ctemp, proj_x_tmp)
-               endif
+               end if
                ! diffusivity of orbital
                pos1 = index(dummy, 'zona=')
                if (pos1 > 0) then
@@ -5409,7 +5409,7 @@ contains
                   pos2 = index(ctemp, ':')
                   if (pos2 > 0) ctemp = ctemp(:pos2 - 1)
                   read (ctemp, *, err=104, end=104) proj_zona_tmp
-               endif
+               end if
                ! nodes for the radial part
                pos1 = index(dummy, 'r=')
                if (pos1 > 0) then
@@ -5417,7 +5417,7 @@ contains
                   pos2 = index(ctemp, ':')
                   if (pos2 > 0) ctemp = ctemp(:pos2 - 1)
                   read (ctemp, *, err=105, end=105) proj_radial_tmp
-               endif
+               end if
             end if
             ! if (sites == -1) then
             !   if (counter + spn_counter*sum(ang_states) > num_proj) &
@@ -5448,11 +5448,11 @@ contains
                               else
                                  if (loop_s == 1) input_proj_s(counter) = 1
                                  if (loop_s == 2) input_proj_s(counter) = -1
-                              endif
+                              end if
                               input_proj_s_qaxis(:, counter) = proj_s_qaxis_tmp
-                           endif
+                           end if
                         end do
-                     endif
+                     end if
                   end do
                end do
             else
@@ -5477,9 +5477,9 @@ contains
                                  else
                                     if (loop_s == 1) input_proj_s(counter) = 1
                                     if (loop_s == 2) input_proj_s(counter) = -1
-                                 endif
+                                 end if
                                  input_proj_s_qaxis(:, counter) = proj_s_qaxis_tmp
-                              endif
+                              end if
                            end do
                         end if
                      end do
@@ -5501,9 +5501,9 @@ contains
             num_proj = num_wann
          else
             num_proj = counter
-         endif
+         end if
          return
-      endif
+      end if
 
       if (lpartrandom .or. lrandom) then
          call random_seed()  ! comment out this line for reproducible random positions!
@@ -5525,8 +5525,8 @@ contains
                input_proj_s_qaxis(2, loop) = 0.
                input_proj_s_qaxis(3, loop) = 1.
             end if
-         enddo
-      endif
+         end do
+      end if
 
       ! I shouldn't get here, but just in case
       if (.not. lcount) in_data(line_s:line_e) (1:maxlen) = ' '
@@ -5564,14 +5564,14 @@ contains
                xnorm_new = sqrt(sum(input_proj_x(:, loop)*input_proj_x(:, loop)))
                input_proj_x(:, loop) = input_proj_x(:, loop)/xnorm_new   ! normalise
                goto 555
-            endif
+            end if
 
             ! If projection axes non-orthogonal enough, then
             ! user may have made a mistake and should check
             if (abs(cosphi) .gt. eps2) then
                write (stdout, *) ' Projection:', loop
                call io_error(' Error in projections: z and x axes are not orthogonal')
-            endif
+            end if
 
             ! If projection axes are "reasonably orthogonal", project x-axis
             ! onto plane perpendicular to z-axis to make them more so
@@ -5586,11 +5586,11 @@ contains
             if (abs(cosphi_new) .gt. eps6) then
                write (stdout, *) ' Projection:', loop
                call io_error(' Error: z and x axes are still not orthogonal after projection')
-            endif
+            end if
 
-         endif
+         end if
 
-      enddo
+      end do
 
       do loop = 1, num_proj
          if (proj2wann_map(loop) < 0) cycle
@@ -5601,15 +5601,15 @@ contains
          proj_x(:, proj2wann_map(loop)) = input_proj_x(:, loop)
          proj_radial(proj2wann_map(loop)) = input_proj_radial(loop)
          proj_zona(proj2wann_map(loop)) = input_proj_zona(loop)
-      enddo
+      end do
 
       if (spinors) then
          do loop = 1, num_proj
             if (proj2wann_map(loop) < 0) cycle
             proj_s(proj2wann_map(loop)) = input_proj_s(loop)
             proj_s_qaxis(:, proj2wann_map(loop)) = input_proj_s_qaxis(:, loop)
-         enddo
-      endif
+         end do
+      end if
 
       return
 
@@ -5653,7 +5653,7 @@ contains
          line_s = loop
          if (found_s) then
             call io_error('Error: Found '//trim(start_st)//' more than once in input file')
-         endif
+         end if
          found_s = .true.
       end do
 
@@ -5665,7 +5665,7 @@ contains
          line_e = loop
          if (found_e) then
             call io_error('Error: Found '//trim(end_st)//' more than once in input file')
-         endif
+         end if
          found_e = .true.
       end do
 
@@ -5730,7 +5730,7 @@ contains
 
       if (disentanglement) then
          mem_param = mem_param + num_bands*num_wann*num_kpts*size_cmplx             ! u_matrix_opt
-      endif
+      end if
 
       if (allocated(atoms_species_num)) then
          mem_param = mem_param + (num_species)*size_int                               !atoms_species_num
@@ -5738,7 +5738,7 @@ contains
          mem_param = mem_param + (num_species)*size_real                              !atoms_symbol
          mem_param = mem_param + (3*maxval(atoms_species_num)*num_species)*size_real  !atoms_pos_frac
          mem_param = mem_param + (3*maxval(atoms_species_num)*num_species)*size_real  !atoms_pos_cart
-      endif
+      end if
 
       if (allocated(input_proj_site)) then
          mem_param = mem_param + (3*num_proj)*size_real              !input_proj_site
@@ -5748,7 +5748,7 @@ contains
          mem_param = mem_param + (3*num_proj)*size_real             !input_proj_x
          mem_param = mem_param + (num_proj)*size_real                !input_proj_radial
          mem_param = mem_param + (num_proj)*size_real                !input_proj_zona
-      endif
+      end if
 
       if (allocated(proj_site)) then
          mem_param = mem_param + (3*num_wann)*size_real              !proj_site
@@ -5758,7 +5758,7 @@ contains
          mem_param = mem_param + (3*num_wann)*size_real             !proj_x
          mem_param = mem_param + (num_wann)*size_real                !proj_radial
          mem_param = mem_param + (num_wann)*size_real                !proj_zona
-      endif
+      end if
 
       mem_param = mem_param + num_kpts*nntot*size_int                  !nnlist
       mem_param = mem_param + num_kpts*nntot/2*size_int                !neigh
@@ -5773,7 +5773,7 @@ contains
       if (disentanglement) then
          mem_param = mem_param + num_kpts*size_int                     !ndimwin
          mem_param = mem_param + num_bands*num_kpts*size_log           !lwindow
-      endif
+      end if
       mem_param = mem_param + 3*num_wann*size_real                     !wannier_centres
       mem_param = mem_param + num_wann*size_real                       !wannier_spreads
 
@@ -5813,19 +5813,19 @@ contains
             mem_dis = mem_dis + mem_dis1
          else
             mem_dis = mem_dis + max(mem_dis1, mem_dis2)
-         endif
+         end if
 
          mem_dis = mem_dis + num_bands*num_bands*nntot*num_kpts*size_cmplx      ! m_matrix_orig
          mem_dis = mem_dis + num_bands*num_wann*num_kpts*size_cmplx             ! a_matrix
 
-      endif
+      end if
 
       !Wannierise
 
       mem_wan1 = mem_wan1 + (num_wann*num_wann*nntot*num_kpts)*size_cmplx     !  'm0'
       if (optimisation > 0) then
          mem_wan = mem_wan + mem_wan1
-      endif
+      end if
       mem_wan = mem_wan + (num_wann*num_wann*num_kpts)*size_cmplx           !  'u0'
       mem_wan = mem_wan + (num_wann*nntot*num_kpts)*size_real               !  'rnkb'
       mem_wan = mem_wan + (num_wann*nntot*num_kpts)*size_real               !  'ln_tmp'
@@ -5933,7 +5933,7 @@ contains
                   (mem_param + mem_wan - mem_wan1)/(1024**2), ' Mb'
             end if
             write (stdout, '(1x,a)') '|   However, this will result in more i/o and slow down the calculation      |'
-         endif
+         end if
 
          if (ispostw90) then
             if (boltzwann) &
@@ -5943,7 +5943,7 @@ contains
          write (stdout, '(1x,"|",24x,a15,f16.2,a,18x,"|")') 'plot_wannier:', (mem_param + mem_wan)/(1024**2), ' Mb'
          write (stdout, '(1x,a)') '*----------------------------------------------------------------------------*'
          write (stdout, *) ' '
-      endif
+      end if
 
 !    if(disentanglement) then
 !       write(*,'(a12,f12.4,a)') 'Disentangle',(mem_param+mem_dis)/(1024**2),' Mb'
@@ -5976,7 +5976,7 @@ contains
          call comms_bcast(mp_grid(1), 3)
          call comms_bcast(num_kpts, 1)
          call comms_bcast(num_bands, 1)
-      endif
+      end if
       call comms_bcast(num_wann, 1)
       call comms_bcast(timing_level, 1)
       call comms_bcast(iprint, 1)
@@ -6011,7 +6011,7 @@ contains
             allocate (exclude_bands(num_exclude_bands), stat=ierr)
             if (ierr /= 0) &
                call io_error('Error in allocating exclude_bands in param_dist')
-         endif
+         end if
          call comms_bcast(exclude_bands(1), num_exclude_bands)
       end if
 
@@ -6031,7 +6031,7 @@ contains
             allocate (dis_spheres(4, dis_spheres_num), stat=ierr)
             if (ierr /= 0) &
                call io_error('Error in allocating dis_spheres in param_dist')
-         endif
+         end if
          call comms_bcast(dis_spheres(1, 1), 4*dis_spheres_num)
       end if
       call comms_bcast(num_iter, 1)
@@ -6046,7 +6046,7 @@ contains
             allocate (wannier_plot_list(num_wannier_plot), stat=ierr)
             if (ierr /= 0) &
                call io_error('Error in allocating wannier_plot_list in param_dist')
-         endif
+         end if
          call comms_bcast(wannier_plot_list(1), num_wannier_plot)
       end if
       call comms_bcast(wannier_plot_supercell(1), 3)
@@ -6066,7 +6066,7 @@ contains
             allocate (bands_plot_project(num_bands_project), stat=ierr)
             if (ierr /= 0) &
                call io_error('Error in allocating bands_plot_project in param_dist')
-         endif
+         end if
          call comms_bcast(bands_plot_project(1), num_bands_project)
       end if
       call comms_bcast(bands_plot_dim, 1)
@@ -6243,7 +6243,7 @@ contains
             if (ierr /= 0) call io_error('Error allocating ccentres_frac in param_get_centre_constraints')
             allocate (ccentres_cart(num_wann, 3), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating ccentres_cart in param_get_centre_constraints')
-         endif
+         end if
          call comms_bcast(ccentres_frac(1, 1), 3*num_wann)
          call comms_bcast(ccentres_cart(1, 1), 3*num_wann)
       end if
@@ -6259,10 +6259,10 @@ contains
             if (ierr /= 0) call io_error('Error allocating input_proj_site in param_dist')
             allocate (proj_site(3, num_wann), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating proj_site in param_dist')
-         endif
+         end if
          call comms_bcast(input_proj_site(1, 1), 3*num_proj)
          call comms_bcast(proj_site(1, 1), 3*num_wann)
-      endif
+      end if
 
       ! These variables are different from the ones above in that they are
       ! allocatable, and in param_read they were allocated on the root node only
@@ -6286,7 +6286,7 @@ contains
             allocate (kpt_latt(3, num_kpts), stat=ierr)
             if (ierr /= 0) &
                call io_error('Error allocating kpt_latt in postw90_param_dist')
-         endif
+         end if
          allocate (gyrotropic_band_list(gyrotropic_num_bands), stat=ierr)
          if (ierr /= 0) call io_error( &
             'Error allocating gyrotropic_num_bands in postw90_param_dist')
@@ -6305,7 +6305,7 @@ contains
             call comms_bcast(eigval(1, 1), num_bands*num_kpts)
          end if
          call comms_bcast(kpt_latt(1, 1), 3*num_kpts)
-      endif
+      end if
 
       if (.not. effective_model .and. .not. explicit_nnkpts) then
 
@@ -6341,7 +6341,7 @@ contains
          call comms_bcast(bka(1, 1), 3*nntot/2)
          call comms_bcast(bk(1, 1, 1), 3*nntot*num_kpts)
 
-      endif
+      end if
 
       call comms_bcast(omega_total, 1)
       call comms_bcast(omega_tilde, 1)
@@ -6360,8 +6360,8 @@ contains
             if (ierr /= 0) call io_error('Error allocating ndimwin in param_dist')
             allocate (lwindow(num_bands, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating lwindow in param_dist')
-         endif
-      endif
+         end if
+      end if
 
    end subroutine param_dist
 
@@ -6376,7 +6376,7 @@ contains
          write (stdout, '(1x,a2,a42,a2,10x,a8,13x,a1)') '| ', comment1, ' :', '       T', '|'
       else
          write (stdout, '(1x,a2,a42,a2,10x,a8,13x,a1)') '| ', comment1, ' :', '       F', '|'
-      endif
+      end if
    end subroutine parameters_gyro_write_task
 
 end module w90_parameters

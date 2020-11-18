@@ -110,7 +110,7 @@ contains
       read (chk_unit) num_exclude_bands                   ! Number of excluded bands
       if (num_exclude_bands < 0) then
          call io_error('Invalid value for num_exclude_bands')
-      endif
+      end if
       allocate (exclude_bands(num_exclude_bands), stat=ierr)
       if (ierr /= 0) call io_error('Error allocating exclude_bands in conv_read_chkpt')
       read (chk_unit) (exclude_bands(i), i=1, num_exclude_bands) ! Excluded bands
@@ -134,7 +134,7 @@ contains
       if (.not. allocated(kpt_latt)) then
          allocate (kpt_latt(3, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating kpt_latt in conv_read_chkpt')
-      endif
+      end if
       read (chk_unit) ((kpt_latt(i, nkp), i=1, 3), nkp=1, num_kpts)
       write (stdout, '(a)') "kpt_latt: read."
       read (chk_unit) nntot                ! nntot
@@ -158,7 +158,7 @@ contains
          if (.not. allocated(lwindow)) then
             allocate (lwindow(num_bands, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating lwindow in conv_read_chkpt')
-         endif
+         end if
          read (chk_unit, err=122) ((lwindow(i, nkp), i=1, num_bands), nkp=1, num_kpts)
          write (stdout, '(a)') "lwindow: read."
 
@@ -166,7 +166,7 @@ contains
          if (.not. allocated(ndimwin)) then
             allocate (ndimwin(num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating ndimwin in conv_read_chkpt')
-         endif
+         end if
          read (chk_unit, err=123) (ndimwin(nkp), nkp=1, num_kpts)
          write (stdout, '(a)') "ndimwin: read."
 
@@ -174,19 +174,19 @@ contains
          if (.not. allocated(u_matrix_opt)) then
             allocate (u_matrix_opt(num_bands, num_wann, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating u_matrix_opt in conv_read_chkpt')
-         endif
+         end if
          read (chk_unit, err=124) (((u_matrix_opt(i, j, nkp), i=1, num_bands), j=1, num_wann), nkp=1, num_kpts)
          write (stdout, '(a)') "U_matrix_opt: read."
 
       else
          write (stdout, '(a)') "have_disentangled: FALSE"
-      endif
+      end if
 
       ! U_matrix
       if (.not. allocated(u_matrix)) then
          allocate (u_matrix(num_wann, num_wann, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating u_matrix in conv_read_chkpt')
-      endif
+      end if
       read (chk_unit, err=125) (((u_matrix(i, j, k), i=1, num_wann), j=1, num_wann), k=1, num_kpts)
       write (stdout, '(a)') "U_matrix: read."
 
@@ -194,7 +194,7 @@ contains
       if (.not. allocated(m_matrix)) then
          allocate (m_matrix(num_wann, num_wann, nntot, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating m_matrix in conv_read_chkpt')
-      endif
+      end if
       read (chk_unit, err=126) ((((m_matrix(i, j, k, l), i=1, num_wann), j=1, num_wann), k=1, nntot), l=1, num_kpts)
       write (stdout, '(a)') "M_matrix: read."
 
@@ -261,7 +261,7 @@ contains
       read (chk_unit, *) num_exclude_bands                   ! Number of excluded bands
       if (num_exclude_bands < 0) then
          call io_error('Invalid value for num_exclude_bands')
-      endif
+      end if
       allocate (exclude_bands(num_exclude_bands), stat=ierr)
       if (ierr /= 0) call io_error('Error allocating exclude_bands in conv_read_chkpt_fmt')
       do i = 1, num_exclude_bands
@@ -287,7 +287,7 @@ contains
       if (.not. allocated(kpt_latt)) then
          allocate (kpt_latt(3, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating kpt_latt in conv_read_chkpt_fmt')
-      endif
+      end if
       do nkp = 1, num_kpts
          read (chk_unit, *, err=115) (kpt_latt(i, nkp), i=1, 3)
       end do
@@ -321,7 +321,7 @@ contains
          if (.not. allocated(lwindow)) then
             allocate (lwindow(num_bands, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating lwindow in conv_read_chkpt_fmt')
-         endif
+         end if
          do nkp = 1, num_kpts
             do i = 1, num_bands
                read (chk_unit, *) idum
@@ -341,7 +341,7 @@ contains
          if (.not. allocated(ndimwin)) then
             allocate (ndimwin(num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating ndimwin in conv_read_chkpt_fmt')
-         endif
+         end if
          do nkp = 1, num_kpts
             read (chk_unit, *, err=123) ndimwin(nkp)
          end do
@@ -351,7 +351,7 @@ contains
          if (.not. allocated(u_matrix_opt)) then
             allocate (u_matrix_opt(num_bands, num_wann, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error allocating u_matrix_opt in conv_read_chkpt_fmt')
-         endif
+         end if
          do nkp = 1, num_kpts
             do j = 1, num_wann
                do i = 1, num_bands
@@ -364,13 +364,13 @@ contains
 
       else
          write (stdout, '(a)') "have_disentangled: FALSE"
-      endif
+      end if
 
       ! U_matrix
       if (.not. allocated(u_matrix)) then
          allocate (u_matrix(num_wann, num_wann, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating u_matrix in conv_read_chkpt_fmt')
-      endif
+      end if
       do k = 1, num_kpts
          do j = 1, num_wann
             do i = 1, num_wann
@@ -385,7 +385,7 @@ contains
       if (.not. allocated(m_matrix)) then
          allocate (m_matrix(num_wann, num_wann, nntot, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating m_matrix in conv_read_chkpt_fmt')
-      endif
+      end if
       do l = 1, num_kpts
          do k = 1, nntot
             do j = 1, num_wann
@@ -474,7 +474,7 @@ contains
          write (chk_unit) ((lwindow(i, nkp), i=1, num_bands), nkp=1, num_kpts)
          write (chk_unit) (ndimwin(nkp), nkp=1, num_kpts)
          write (chk_unit) (((u_matrix_opt(i, j, nkp), i=1, num_bands), j=1, num_wann), nkp=1, num_kpts)
-      endif
+      end if
       write (chk_unit) (((u_matrix(i, j, k), i=1, num_wann), j=1, num_wann), k=1, num_kpts)               ! U_matrix
       write (chk_unit) ((((m_matrix(i, j, k, l), i=1, num_wann), j=1, num_wann), k=1, nntot), l=1, num_kpts) ! M_matrix
       write (chk_unit) ((wannier_centres(i, j), i=1, 3), j=1, num_wann)
@@ -546,7 +546,7 @@ contains
                end do
             end do
          end do
-      endif
+      end if
       do k = 1, num_kpts
          do j = 1, num_wann
             do i = 1, num_wann
@@ -599,7 +599,7 @@ program w90chk2chk
 
    if (num_nodes /= 1) then
       call io_error('w90chk2chk can only be used in serial...')
-   endif
+   end if
 
    call conv_get_seedname
 

@@ -92,7 +92,7 @@ contains
       if (plot_morb) then
          call get_BB_R
          call get_CC_R
-      endif
+      end if
       if (plot_bands .and. kpath_bands_colour == 'spin') call get_SS_R
 
       if (on_root) then
@@ -695,7 +695,7 @@ contains
                write (stdout, '(/,3x,a)') '* Negative Berry curvature in Ang^2'
             else if (berry_curv_unit == 'bohr2') then
                write (stdout, '(/,3x,a)') '* Negative Berry curvature in Bohr^2'
-            endif
+            end if
             if (nfermi /= 1) call io_error( &
                'Must specify one Fermi level when kpath_task=curv')
          end if

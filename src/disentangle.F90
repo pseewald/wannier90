@@ -106,7 +106,7 @@ contains
          call dis_proj_froz()
       else
          if (on_root) write (stdout, '(3x,a)') 'No inner window (linner = F)'
-      endif
+      end if
 
       ! Debug
       call internal_check_orthonorm()
@@ -151,8 +151,8 @@ contains
                        cwb, num_wann, u_matrix_opt(:, :, nkp2), num_bands, &
                        cmplx_0, cww, num_wann)
             m_matrix_orig_local(1:num_wann, 1:num_wann, nn, nkp) = cww(:, :)
-         enddo
-      enddo
+         end do
+      end do
 
       ! Find the initial u_matrix
       if (lsitesymmetry) call sitesym_replace_d_matrix_band() !RS: replace d_matrix_band here
@@ -179,15 +179,15 @@ contains
                           cwb, num_wann, u_matrix(:, :, nkp2), num_wann, &
                           cmplx_0, cww, num_wann)
                write (page_unit) cww(:, :)
-            enddo
-         enddo
+            end do
+         end do
          rewind (page_unit)
          deallocate (m_matrix_orig_local, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating m_matrix_orig_local in dis_main')
          if (on_root) then
             allocate (m_matrix(num_wann, num_wann, nntot, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error in allocating m_matrix in dis_main')
-         endif
+         end if
          allocate (m_matrix_local(num_wann, num_wann, nntot, counts(my_node_id)), stat=ierr)
          if (ierr /= 0) call io_error('Error in allocating m_matrix_local in dis_main')
          do nkp = 1, counts(my_node_id)
@@ -204,7 +204,7 @@ contains
          if (on_root) then
             allocate (m_matrix(num_wann, num_wann, nntot, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error in allocating m_matrix in dis_main')
-         endif
+         end if
          allocate (m_matrix_local(num_wann, num_wann, nntot, counts(my_node_id)), stat=ierr)
          if (ierr /= 0) call io_error('Error in allocating m_matrix_local in dis_main')
          ! Update the m_matrix accordingly
@@ -219,14 +219,14 @@ contains
                           cwb, num_wann, u_matrix(:, :, nkp2), num_wann, &
                           cmplx_0, cww, num_wann)
                m_matrix_local(:, :, nn, nkp) = cww(:, :)
-            enddo
-         enddo
+            end do
+         end do
          call comms_gatherv(m_matrix_local, num_wann*num_wann*nntot*counts(my_node_id), &
                             m_matrix, num_wann*num_wann*nntot*counts, num_wann*num_wann*nntot*displs)
          deallocate (m_matrix_orig_local, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating m_matrix_orig_local in dis_main')
 
-      endif
+      end if
 
       deallocate (a_matrix, stat=ierr)
       if (ierr /= 0) call io_error('Error deallocating a_matrix in dis_main')
@@ -242,8 +242,8 @@ contains
          do j = 1, num_wann
             if (ndimwin(nkp) < num_bands) &
                u_matrix_opt(ndimwin(nkp) + 1:, j, nkp) = cmplx_0
-         enddo
-      enddo
+         end do
+      end do
 
 !~![ysl-b]
 !~!   Apply phase factor ph_g if gamma_only
@@ -301,7 +301,7 @@ contains
                   ctmp = cmplx_0
                   do j = 1, ndimwin(nkp)
                      ctmp = ctmp + conjg(u_matrix_opt(j, m, nkp))*u_matrix_opt(j, l, nkp)
-                  enddo
+                  end do
                   if (l .eq. m) then
                      if (abs(ctmp - cmplx_1) .gt. eps8) then
                         if (on_root) write (stdout, '(3i6,2f16.12)') nkp, l, m, ctmp
@@ -310,7 +310,7 @@ contains
 !                     write(stdout,'(1x,a)') '  devel_flag=orth-fix'
 !                     write(stdout,'(1x,a)') 'Please report the sucess or failure of this to the Wannier90 developers'
                         call io_error('Error in dis_main: orthonormal error 1')
-                     endif
+                     end if
                   else
                      if (abs(ctmp) .gt. eps8) then
                         if (on_root) write (stdout, '(3i6,2f16.12)') nkp, l, m, ctmp
@@ -319,11 +319,11 @@ contains
 !                     write(stdout,'(1x,a)') '  devel_flag=orth-fix'
 !                     write(stdout,'(1x,a)') 'Please report the sucess or failure of this to the Wannier90 developers'
                         call io_error('Error in dis_main: orthonormal error 2')
-                     endif
-                  endif
-               enddo
-            enddo
-         enddo
+                     end if
+                  end if
+               end do
+            end do
+         end do
 
          if (timing_level > 1 .and. on_root) call io_stopwatch('dis: main: check_orthonorm', 2)
 
@@ -366,16 +366,16 @@ contains
                   do i = 1, ndimwin(nkp_global)
                      m = nfirstwin(nkp_global) + i - 1
                      cmtmp(i, j) = m_matrix_orig_local(m, n, nn, nkp)
-                  enddo
-               enddo
+                  end do
+               end do
                m_matrix_orig_local(:, :, nn, nkp) = cmplx_0
                do j = 1, ndimwin(nkp2)
                   do i = 1, ndimwin(nkp_global)
                      m_matrix_orig_local(i, j, nn, nkp) = cmtmp(i, j)
-                  enddo
-               enddo
-            enddo
-         enddo
+                  end do
+               end do
+            end do
+         end do
 
          deallocate (cmtmp, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating cmtmp in dis_main')
@@ -441,7 +441,7 @@ contains
             do nkp = 1, num_kpts
                if (lsitesymmetry) then                 !YN: RS:
                   if (ir2ik(ik2ir(nkp)) .ne. nkp) cycle  !YN: RS:
-               endif                                   !YN: RS:
+               end if                                   !YN: RS:
                call zgemm('C', 'N', num_wann, num_wann, ndimwin(nkp), cmplx_1, &
                           u_matrix_opt(:, :, nkp), num_bands, a_matrix(:, :, nkp), num_bands, &
                           cmplx_0, caa(:, :, nkp), num_wann)
@@ -453,15 +453,15 @@ contains
                   if (on_root) write (stdout, *) 'K-POINT NKP=', nkp, ' INFO=', info
                   if (info .lt. 0) then
                      if (on_root) write (stdout, *) 'THE ', -info, '-TH ARGUMENT HAD ILLEGAL VALUE'
-                  endif
+                  end if
                   call io_error('dis_main: problem in ZGESVD 1')
-               endif
+               end if
                ! u_matrix is the initial guess for the unitary rotation of the
                ! basis states given by the subroutine extract
                call zgemm('N', 'N', num_wann, num_wann, num_wann, cmplx_1, &
                           cz, num_wann, cv, num_wann, cmplx_0, u_matrix(:, :, nkp), num_wann)
-            enddo
-         endif
+            end do
+         end if
          call comms_bcast(u_matrix(1, 1, 1), num_wann*num_wann*num_kpts)
 !      if (lsitesymmetry) call sitesym_symmetrize_u_matrix(num_wann,u_matrix) !RS:
 
@@ -479,7 +479,7 @@ contains
             if (ierr /= 0) call io_error('Error deallocating rwork in dis_main')
             deallocate (svals, stat=ierr)
             if (ierr /= 0) call io_error('Error deallocating svals in dis_main')
-         endif
+         end if
 
          if (lsitesymmetry) call sitesym_symmetrize_u_matrix(num_wann, u_matrix) !RS:
 
@@ -546,9 +546,9 @@ contains
             write (stdout, *) 'K-POINT = Gamma', ' INFO=', info
             if (info .lt. 0) then
                write (stdout, *) 'THE ', -info, '-TH ARGUMENT HAD ILLEGAL VALUE'
-            endif
+            end if
             call io_error('dis_main: problem in DGESVD 1')
-         endif
+         end if
          ! u_matrix is the initial guess for the unitary rotation of the
          ! basis states given by the subroutine extract
          call dgemm('N', 'N', num_wann, num_wann, num_wann, 1.0_dp, &
@@ -691,7 +691,7 @@ contains
       else
          if (on_root) write (stdout, '(1x,a)') &
             '|                   No frozen states were specified                          |'
-      endif
+      end if
       if (on_root) write (stdout, '(1x,a)') &
          '+----------------------------------------------------------------------------+'
 
@@ -704,7 +704,7 @@ contains
             if (on_root) write (stdout, *) ' EIGENVALUE RANGE (eV): [', &
                eigval_opt(1, nkp), ',', eigval_opt(num_bands, nkp), ']'
             call io_error('dis_windows: The outer energy window contains no eigenvalues')
-         endif
+         end if
 
          ! Note: we assume that eigvals are ordered from the bottom up
          imin = 0
@@ -713,9 +713,9 @@ contains
                if ((eigval_opt(i, nkp) .ge. dis_win_min) .and. &
                    (eigval_opt(i, nkp) .le. dis_win_max)) imin = i
                imax = i
-            endif
+            end if
             if (eigval_opt(i, nkp) .le. dis_win_max) imax = i
-         enddo
+         end do
 
          ndimwin(nkp) = imax - imin + 1
 
@@ -735,14 +735,14 @@ contains
                if (abs(dot_product(dk, dk)) .lt. dis_spheres(4, i)**2) then
                   dis_ok = .true.
                   exit
-               endif
-            enddo
+               end if
+            end do
             ! this kpoint is not included in any sphere: no disentaglement
             if (.not. dis_ok) then
                ndimwin(nkp) = num_wann
                nfirstwin(nkp) = dis_spheres_first_wann
-            endif
-         endif
+            end if
+         end if
          !~~ GS-end
 
          if (ndimwin(nkp) .lt. num_wann) then
@@ -750,11 +750,11 @@ contains
                ' ndimwin=', ndimwin(nkp), ' num_wann=', num_wann
 483         format(1x, a17, i4, a8, i3, a9, i3)
             call io_error('dis_windows: Energy window contains fewer states than number of target WFs')
-         endif
+         end if
 
          do i = 1, ndimwin(nkp)
             lfrozen(i, nkp) = .false.
-         enddo
+         end do
 
          ! Check which eigenvalues fall within the inner window
          kifroz_min = 0
@@ -769,15 +769,15 @@ contains
                      ! Relative to bottom of outer window
                      kifroz_min = i - imin + 1
                      kifroz_max = i - imin + 1
-                  endif
+                  end if
                elseif (eigval_opt(i, nkp) .le. dis_froz_max) then
                   kifroz_max = kifroz_max + 1
                   ! DEBUG
                   ! if(kifroz_max.ne.i-imin+1) stop 'something wrong...'
                   ! ENDDEBUG
-               endif
-            enddo
-         endif
+               end if
+            end do
+         end if
 
          ndimfroz(nkp) = kifroz_max - kifroz_min + 1
 
@@ -789,7 +789,7 @@ contains
             if (on_root) write (stdout, 402) (eigval_opt(i, nkp), i=imin, imax)
 402         format('BANDS: (eV)', 10(F10.5, 1X))
             call io_error('dis_windows: More states in the frozen window than target WFs')
-         endif
+         end if
 
          if (ndimfroz(nkp) .gt. 0) linner = .true.
          ! DEBUG
@@ -802,7 +802,7 @@ contains
             do i = 1, ndimfroz(nkp)
                indxfroz(i, nkp) = kifroz_min + i - 1
                lfrozen(indxfroz(i, nkp), nkp) = .true.
-            enddo
+            end do
             if (indxfroz(ndimfroz(nkp), nkp) .ne. kifroz_max) then
                if (on_root) write (stdout, *) ' Error at k-point ', nkp, ' frozen band #', i
                if (on_root) write (stdout, *) ' ndimfroz=', ndimfroz(nkp)
@@ -810,8 +810,8 @@ contains
                if (on_root) write (stdout, *) ' kifroz_max=', kifroz_max
                if (on_root) write (stdout, *) ' indxfroz(i,nkp)=', indxfroz(i, nkp)
                call io_error('dis_windows: Something fishy...')
-            endif
-         endif
+            end if
+         end if
 
          ! Generate index array for non-frozen states
          i = 0
@@ -820,27 +820,27 @@ contains
             if (.not. lfrozen(j, nkp)) then
                i = i + 1
                indxnfroz(i, nkp) = j
-            endif
-         enddo
+            end if
+         end do
 
          if (i .ne. ndimwin(nkp) - ndimfroz(nkp)) then
             if (on_root) write (stdout, *) ' Error at k-point: ', nkp
             if (on_root) write (stdout, '(3(a,i5))') ' i: ', i, ' ndimwin: ', ndimwin(nkp), &
                ' ndimfroz: ', ndimfroz(nkp)
             call io_error('dis_windows: i .ne. (ndimwin-ndimfroz) at k-point')
-         endif
+         end if
 
          ! Slim down eigval vector at present k
          do i = 1, ndimwin(nkp)
             j = nfirstwin(nkp) + i - 1
             eigval_opt(i, nkp) = eigval_opt(j, nkp)
-         enddo
+         end do
 
          do i = ndimwin(nkp) + 1, num_bands
             eigval_opt(i, nkp) = 0.0_dp
-         enddo
+         end do
 
-      enddo
+      end do
       ! [k-point loop (nkp)]
 
 ![ysl-b]
@@ -877,18 +877,18 @@ contains
                else if (i .eq. 12) then
                   if (on_root) write (stdout, '(i6,a)') nkp, '    |'
                   i = 0
-               endif
-            endif
-         enddo
+               end if
+            end if
+         end do
          if (i .ne. 0) then
             do j = 1, 12 - i
                if (on_root) write (stdout, '(6x)', advance='no')
-            enddo
+            end do
             if (on_root) write (stdout, '(a)') '    |'
-         endif
+         end if
          if (on_root) write (stdout, '(1x,a)') &
             '+----------------------------------------------------------------------------+'
-      endif
+      end if
 
       if (on_root) write (stdout, '(3x,a,i4)') 'Number of target bands to extract: ', num_wann
       if (iprint > 1) then
@@ -904,11 +904,11 @@ contains
             '|               ----------------------------------------------               |'
          do nkp = 1, num_kpts
             if (on_root) write (stdout, 403) nkp, ndimwin(nkp), ndimfroz(nkp), nfirstwin(nkp)
-         enddo
+         end do
 403      format(1x, '|', 14x, i6, 7x, i6, 7x, i6, 6x, i6, 18x, '|')
          if (on_root) write (stdout, '(1x,a)') &
             '+----------------------------------------------------------------------------+'
-      endif
+      end if
 
       if (timing_level > 1) call io_stopwatch('dis: windows', 2)
 
@@ -1022,11 +1022,11 @@ contains
                do i = 1, ndimwin(nkp)
                   ctmp2 = a_matrix(nfirstwin(nkp) + i - 1, j, nkp)
                   a_matrix(i, j, nkp) = ctmp2
-               enddo
+               end do
                a_matrix(ndimwin(nkp) + 1:num_bands, j, nkp) = cmplx_0
-            enddo
-         endif
-      enddo
+            end do
+         end if
+      end do
 
       do nkp = 1, num_kpts
          ! SINGULAR VALUE DECOMPOSITION
@@ -1038,9 +1038,9 @@ contains
             if (on_root) write (stdout, *) ' K-POINT NKP=', nkp, ' INFO=', info
             if (info .lt. 0) then
                if (on_root) write (stdout, *) ' THE ', -info, '-TH ARGUMENT HAD ILLEGAL VALUE'
-            endif
+            end if
             call io_error('dis_project: problem in ZGESVD 1')
-         endif
+         end if
 
          ! NOTE THAT - AT LEAST FOR LINUX MKL LAPACK - THE OUTPUT OF ZGESVD
          ! GIVES ALREADY Vdagger, SO A=Z.S.Vdagger IS ACTUALLY GIVEN BY cz.s.cvda
@@ -1067,9 +1067,9 @@ contains
                do l = 1, num_wann
                   u_matrix_opt(i, j, nkp) = u_matrix_opt(i, j, nkp) + cz(i, l)*cvdag(l, j)
                   a_matrix(i, j, nkp) = a_matrix(i, j, nkp) + cz(i, l)*svals(l)*cvdag(l, j)
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
          !
          ! CHECK UNITARITY
@@ -1084,7 +1084,7 @@ contains
                ctmp2 = cmplx_0
                do m = 1, ndimwin(nkp)
                   ctmp2 = ctmp2 + u_matrix_opt(m, j, nkp)*conjg(u_matrix_opt(m, i, nkp))
-               enddo
+               end do
                if ((i .eq. j) .and. (abs(ctmp2 - cmplx_1) .gt. eps5)) then
                   if (on_root) write (stdout, *) ' ERROR: unitarity of initial U'
                   if (on_root) write (stdout, '(1x,a,i2)') 'nkp= ', nkp
@@ -1093,7 +1093,7 @@ contains
                      '[u_matrix_opt.transpose(u_matrix_opt)]_ij= ', &
                      real(ctmp2, dp), aimag(ctmp2)
                   call io_error('dis_project: Error in unitarity of initial U in dis_project')
-               endif
+               end if
                if ((i .ne. j) .and. (abs(ctmp2) .gt. eps5)) then
                   if (on_root) write (stdout, *) ' ERROR: unitarity of initial U'
                   if (on_root) write (stdout, '(1x,a,i2)') 'nkp= ', nkp
@@ -1102,10 +1102,10 @@ contains
                      '[u_matrix_opt.transpose(u_matrix_opt)]_ij= ', &
                      real(ctmp2, dp), aimag(ctmp2)
                   call io_error('dis_project: Error in unitarity of initial U in dis_project')
-               endif
-            enddo
-         enddo
-      enddo
+               end if
+            end do
+         end do
+      end do
       ! NKP
 
       deallocate (cwork, stat=ierr)
@@ -1241,28 +1241,28 @@ contains
                do m = 1, ndimwin(nkp)
                   do l = 1, num_wann
                      cp_s(m, n) = cp_s(m, n) + u_matrix_opt(m, l, nkp)*conjg(u_matrix_opt(n, l, nkp))
-                  enddo
-               enddo
+                  end do
+               end do
                if (.not. lfrozen(n, nkp)) cq_froz(n, n) = cmplx_1
-            enddo
+            end do
 
             cpq = cmplx_0
             do n = 1, ndimwin(nkp)
                do m = 1, ndimwin(nkp)
                   do l = 1, ndimwin(nkp)
                      cpq(m, n) = cpq(m, n) + cp_s(m, l)*cq_froz(l, n)
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
 
             cqpq = cmplx_0
             do n = 1, ndimwin(nkp)
                do m = 1, ndimwin(nkp)
                   do l = 1, ndimwin(nkp)
                      cqpq(m, n) = cqpq(m, n) + cq_froz(m, l)*cpq(l, n)
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
 
             ! DEBUG
             ! check hermiticity of cqpq
@@ -1272,17 +1272,17 @@ contains
                      if (on_root) write (stdout, *) ' matrix CQPQ is not hermitian'
                      if (on_root) write (stdout, *) ' k-point ', nkp
                      call io_error('dis_proj_froz: error')
-                  endif
-               enddo
-            enddo
+                  end if
+               end do
+            end do
             ! ENDDEBUG
 
             cap = cmplx_0
             do n = 1, ndimwin(nkp)
                do m = 1, n
                   cap(m + (n - 1)*n/2) = cqpq(m, n)
-               enddo
-            enddo
+               end do
+            end do
             il = ndimwin(nkp) - (num_wann - ndimfroz(nkp)) + 1
             iu = ndimwin(nkp)
             call ZHPEVX('V', 'A', 'U', ndimwin(nkp), cap, 0.0_dp, 0.0_dp, il, &
@@ -1306,7 +1306,7 @@ contains
                if (on_root) write (stdout, *) ' *** ERROR *** ZHPEVX WHILE DIAGONALIZING CQPQ MATRIX'
                if (on_root) write (stdout, *) info, 'EIGENVECTORS FAILED TO CONVERGE'
                call io_error('dis_proj_frozen: error')
-            endif
+            end if
             ! ENDDEBUG
 
             ! DEBUG
@@ -1315,7 +1315,7 @@ contains
                if (on_root) write (stdout, *) ' Number of eigenvalues/vectors obtained is', &
                   m, ' not equal to the number asked,', ndimwin(nkp)
                call io_error('dis_proj_frozen: error')
-            endif
+            end if
             ! ENDDEBUG
 
             ! DEBUG
@@ -1324,14 +1324,14 @@ contains
                if (on_root) write (stdout, '(/a,i3,a,i3,a,i3,a)') ' K-point ', nkp, ' ndimwin: ', &
                   ndimwin(nkp), ' we want the', num_wann - ndimfroz(nkp), &
                   ' leading eigenvector(s) of QPQ'
-            endif
+            end if
             do j = 1, ndimwin(nkp)
                if (iprint > 2 .and. on_root) write (stdout, '(a,i3,a,f16.12)') '  lambda(', j, ')=', w(j)
 !~[aam]        if ( (w(j).lt.eps8).or.(w(j).gt.1.0_dp + eps8) ) then
                if ((w(j) .lt. -eps8) .or. (w(j) .gt. 1.0_dp + eps8)) then
                   call io_error('dis_proj_frozen: error - Eigenvalues not between 0 and 1')
-               endif
-            enddo
+               end if
+            end do
             ! ENDDEBUG
 
             ! [ aam: sometimes the leading eigenvalues form a degenerate set that is
@@ -1364,7 +1364,7 @@ contains
                         , nkp, '. Using safety check.'
                      write (stdout, '(1x,a,i4,a,i4)') 'We must find ', nzero, &
                         ' eigenvectors with zero eigenvalues out of a set of ', ndimwin(nkp) - goods
-                  endif
+                  end if
                   !First lets put the 'good' states into vamp
                   vmap = 0
                   counter = 1
@@ -1394,11 +1394,11 @@ contains
                            ctmp = cmplx_0
                            do j = 1, ndimwin(nkp)
                               ctmp = ctmp + conjg(u_matrix_opt(j, m, nkp))*cz(j, loop_v)
-                           enddo
+                           end do
                            if (abs(ctmp) .gt. eps8) then
                               take = .false.
-                           endif
-                        enddo
+                           end if
+                        end do
                         if (take) then !vector is good and we add it to vmap
                            vmap(goods + loop_f) = loop_v
                            exit
@@ -1420,18 +1420,18 @@ contains
                   do l = ndimfroz(nkp) + 1, num_wann
                      u_matrix_opt(1:ndimwin(nkp), l, nkp) = cz(1:ndimwin(nkp), vmap(counter))
                      counter = counter + 1
-                  enddo
+                  end do
 
                else ! we don't need to use the fix
 
                   do l = ndimfroz(nkp) + 1, num_wann
                      u_matrix_opt(1:ndimwin(nkp), l, nkp) = cz(1:ndimwin(nkp), il)
                      il = il + 1
-                  enddo
+                  end do
 
                   if (il - 1 .ne. iu) then
                      call io_error('dis_proj_frozen: error -  il-1.ne.iu  (in ortho-fix)')
-                  endif
+                  end if
 
                end if
 
@@ -1443,25 +1443,25 @@ contains
                   if (on_root) write (stdout, *) 'il=', il
                   u_matrix_opt(1:ndimwin(nkp), l, nkp) = cz(1:ndimwin(nkp), il)
                   il = il + 1
-               enddo
+               end do
 
                ! DEBUG
                if (il - 1 .ne. iu) then
                   call io_error('dis_proj_frozen: error -  il-1.ne.iu')
-               endif
+               end if
                ! ENDDEBUG
 
             end if
 
-         endif   ! num_wann>nDIMFROZ(NKP)
+         end if   ! num_wann>nDIMFROZ(NKP)
 
          ! Put the frozen states in the lowest columns of u_matrix_opt
          if (ndimfroz(nkp) .gt. 0) then
             do l = 1, ndimfroz(nkp)
                u_matrix_opt(:, l, nkp) = cmplx_0
                u_matrix_opt(indxfroz(l, nkp), l, nkp) = cmplx_1
-            enddo
-         endif
+            end do
+         end if
 
 !~         write(stdout,*) 'u_matrix_opt:'
 !~         do m=1,ndimwin(nkp)
@@ -1469,7 +1469,7 @@ contains
 !~                 u_matrix_opt(m,ndimfroz(nkp),nkp), u_matrix_opt(m,num_wann,nkp)
 !~         enddo
 
-      enddo   ! NKP
+      end do   ! NKP
 
       deallocate (cqpq, stat=ierr)
       if (ierr /= 0) call io_error('Error deallocating cqpq in dis_proj_froz')
@@ -1628,7 +1628,7 @@ contains
       do nkp_loc = 1, counts(my_node_id)
          nkp = nkp_loc + displs(my_node_id)
          u_matrix_opt_loc(:, :, nkp_loc) = u_matrix_opt(:, :, nkp)
-      enddo
+      end do
       allocate (wkomegai1_loc(max(1, counts(my_node_id))), stat=ierr)
       if (ierr /= 0) call io_error('Error allocating wkomegai1_loc in dis_extract')
       allocate (czmat_in_loc(num_bands, num_bands, max(1, counts(my_node_id))), stat=ierr)
@@ -1682,8 +1682,8 @@ contains
          do nkp = 1, num_kpts
             if (on_root) write (stdout, '(a,i3,3x,20(f9.5,1x))') '  K-point ', nkp, &
                (eigval_opt(i, nkp), i=1, ndimwin(nkp))
-         enddo
-      endif
+         end do
+      end if
       ! ENDDEBUG
 
       ! TO DO: Check if this is the best place to initialize icompflag
@@ -1710,7 +1710,7 @@ contains
             do nkp_loc = 1, counts(my_node_id)
                nkp = nkp_loc + displs(my_node_id)
                if (num_wann .gt. ndimfroz(nkp)) call internal_zmatrix(nkp, nkp_loc, czmat_in_loc(:, :, nkp_loc))
-            enddo
+            end do
 
             if (lsitesymmetry) call sitesym_symmetrize_zmatrix(czmat_in_loc, lwindow) !RS:
 
@@ -1721,7 +1721,7 @@ contains
                nkp = nkp_loc + displs(my_node_id)
                if (lsitesymmetry) then                !YN: RS:
                   if (ir2ik(ik2ir(nkp)) .ne. nkp) cycle !YN: RS:
-               endif                                  !YN: RS:
+               end if                                  !YN: RS:
                if (num_wann .gt. ndimfroz(nkp)) then
                   ndimk = ndimwin(nkp) - ndimfroz(nkp)
                   do i = 1, ndimk
@@ -1731,11 +1731,11 @@ contains
                            + cmplx(1.0_dp - dis_mix_ratio, 0.0_dp, dp)*czmat_in_loc(j, i, nkp_loc)
                         ! hermiticity
                         czmat_in_loc(i, j, nkp_loc) = conjg(czmat_in_loc(j, i, nkp_loc))
-                     enddo
-                  enddo
-               endif
-            enddo
-         endif
+                     end do
+                  end do
+               end if
+            end do
+         end if
          ! [if iter=1]
          if (timing_level > 1 .and. on_root) call io_stopwatch('dis: extract_1', 2)
 
@@ -1751,8 +1751,8 @@ contains
          if (lsitesymmetry) then                                                                        !RS:
             do nkp = 1, nkptirr                                                                            !RS:
                wkomegai1_loc(ir2ik(nkp)) = wkomegai1_loc(ir2ik(nkp))*nsymmetry/count(kptsym(:, nkp) .eq. ir2ik(nkp)) !RS:
-            enddo                                                                                       !RS:
-         endif                                                                                          !RS:
+            end do                                                                                       !RS:
+         end if                                                                                          !RS:
          do nkp_loc = 1, counts(my_node_id)
             nkp = nkp_loc + displs(my_node_id)
             if (ndimfroz(nkp) .gt. 0) then
@@ -1768,12 +1768,12 @@ contains
                   do n = 1, num_wann
                      do m = 1, ndimfroz(nkp)
                         rsum = rsum + real(cww(m, n), dp)**2 + aimag(cww(m, n))**2
-                     enddo
-                  enddo
+                     end do
+                  end do
                   wkomegai1_loc(nkp_loc) = wkomegai1_loc(nkp_loc) - wb(nn)*rsum
-               enddo
-            endif
-         enddo
+               end do
+            end if
+         end do
          if (timing_level > 1 .and. on_root) call io_stopwatch('dis: extract_2', 2)
 
          if (timing_level > 1 .and. on_root) call io_stopwatch('dis: extract_3', 1)
@@ -1795,15 +1795,15 @@ contains
 
                do j = 1, num_wann                                                          !RS:
                   wkomegai1_loc(nkp_loc) = wkomegai1(nkp_loc) - real(lambda(j, j), kind=dp)               !RS:
-               enddo                                                                    !RS:
+               end do                                                                    !RS:
             else                                                                        !RS:
                if (num_wann .gt. ndimfroz(nkp)) then
                   ! Diagonalize Z matrix
                   do j = 1, ndimwin(nkp) - ndimfroz(nkp)
                      do i = 1, j
                         cap(i + ((j - 1)*j)/2) = czmat_in_loc(i, j, nkp_loc)
-                     enddo
-                  enddo
+                     end do
+                  end do
                   ndiff = ndimwin(nkp) - ndimfroz(nkp)
                   call ZHPEVX('V', 'A', 'U', ndiff, cap, 0.0_dp, 0.0_dp, 0, 0, &
                               -1.0_dp, m, w, cz, num_bands, cwork, rwork, iwork, ifail, info)
@@ -1811,12 +1811,12 @@ contains
                      if (on_root) write (stdout, *) ' *** ERROR *** ZHPEVX WHILE DIAGONALIZING Z MATRIX'
                      if (on_root) write (stdout, *) ' THE ', -info, ' ARGUMENT OF ZHPEVX HAD AN ILLEGAL VALUE'
                      call io_error(' dis_extract: error')
-                  endif
+                  end if
                   if (info .gt. 0) then
                      if (on_root) write (stdout, *) ' *** ERROR *** ZHPEVX WHILE DIAGONALIZING Z MATRIX'
                      if (on_root) write (stdout, *) info, ' EIGENVECTORS FAILED TO CONVERGE'
                      call io_error(' dis_extract: error')
-                  endif
+                  end if
 
                   ! Update the optimal subspace by incorporating the num_wann-ndimfroz(nkp) l
                   ! eigenvectors of the Z matrix into u_matrix_opt. Also, add contribution from
@@ -1830,11 +1830,11 @@ contains
                      do i = 1, ndimk
                         p = indxnfroz(i, nkp)
                         u_matrix_opt_loc(p, m, nkp_loc) = cz(i, j)
-                     enddo
-                  enddo
-               endif
+                     end do
+                  end do
+               end if
                ! [if num_wann>ndimfroz(nkp)]
-            endif !RS:
+            end if !RS:
 
             ! Now that we have contribs. from both frozen and non-frozen states to
             ! wkomegai1(nkp), add it to womegai1
@@ -1862,17 +1862,17 @@ contains
                            do i = 1, ndimwin(nkp)
                               camp_loc(i, j, nkp_loc) = cmplx_0
                               if (i .eq. indxnfroz(j, nkp)) camp_loc(i, j, nkp_loc) = cmplx_1
-                           enddo
-                        endif
-                     enddo
+                           end do
+                        end if
+                     end do
                   else
                      icompflag = 1
-                  endif
-               endif
+                  end if
+               end if
 
             end if ! index(devel_flag,'compspace')>0
 
-         enddo
+         end do
          ! [Loop over k points (nkp)]
 
          if (lsitesymmetry) call sitesym_symmetrize_u_matrix(num_bands, u_matrix_opt, lwindow) !RS:
@@ -1894,8 +1894,8 @@ contains
                                   camp, num_bands*num_bands*counts, num_bands*num_bands*displs)
 
                call comms_bcast(camp(1, 1, 1), num_bands*num_bands*num_kpts)
-            endif
-         endif
+            end if
+         end if
 
          if (timing_level > 1 .and. on_root) call io_stopwatch('dis: extract_3', 2)
 
@@ -1954,13 +1954,13 @@ contains
                do n = 1, num_wann
                   do m = 1, num_wann
                      rsum = rsum + real(cww(m, n), dp)**2 + aimag(cww(m, n))**2
-                  enddo
-               enddo
+                  end do
+               end do
                wkomegai = wkomegai + wb(nn)*rsum
-            enddo
+            end do
             wkomegai = real(num_wann, dp)*wbtot - wkomegai
             womegai = womegai + wkomegai
-         enddo
+         end do
 
          call comms_allreduce(womegai, 1, 'SUM')
 
@@ -1979,7 +1979,7 @@ contains
          do nkp_loc = 1, counts(my_node_id)
             nkp = nkp_loc + displs(my_node_id)
             if (num_wann .gt. ndimfroz(nkp)) call internal_zmatrix(nkp, nkp_loc, czmat_out_loc(:, :, nkp_loc))
-         enddo
+         end do
 
          if (lsitesymmetry) call sitesym_symmetrize_zmatrix(czmat_out_loc, lwindow) !RS:
 
@@ -1991,9 +1991,9 @@ contains
                '  over ', dis_conv_window, ' iterations     >>>'
             if (on_root) write (stdout, '(13x,a)') '<<< Disentanglement convergence criteria satisfied >>>'
             exit
-         endif
+         end if
 
-      enddo
+      end do
       ! [BIG ITERATION LOOP (iter)]
 
       deallocate (czmat_out_loc, stat=ierr)
@@ -2006,13 +2006,13 @@ contains
          if (ierr /= 0) call io_error('Error allocating ceamp in dis_extract')
          allocate (cham(num_bands, num_bands, num_kpts), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating cham in dis_extract')
-      endif
+      end if
 
       if (.not. dis_converged) then
          if (on_root) write (stdout, '(/5x,a)') &
             '<<< Warning: Maximum number of disentanglement iterations reached >>>'
          if (on_root) write (stdout, '(10x,a)') '<<< Disentanglement convergence criteria not satisfied >>>'
-      endif
+      end if
 
       if (index(devel_flag, 'compspace') > 0) then
 
@@ -2031,13 +2031,13 @@ contains
                         i = 1
                         if (on_root) write (stdout, '(/4x)', advance='no')
                         if (on_root) write (stdout, '(i6)', advance='no') nkp
-                     endif
-                  endif
-               enddo
-            endif
-         endif
+                     end if
+                  end if
+               end do
+            end if
+         end if
 
-      endif
+      end if
 
       ! Write the final womegai. This should remain unchanged during the
       ! subsequent minimization of Omega_tilde in wannierise.f90
@@ -2059,15 +2059,15 @@ contains
                   do l = 1, ndimwin(nkp)
                      cham(i, j, nkp) = cham(i, j, nkp) + conjg(u_matrix_opt(l, i, nkp)) &
                                        *u_matrix_opt(l, j, nkp)*eigval_opt(l, nkp)
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
 
             do j = 1, num_wann
                do i = 1, j
                   cap(i + ((j - 1)*j)/2) = cham(i, j, nkp)
-               enddo
-            enddo
+               end do
+            end do
 
             call ZHPEVX('V', 'A', 'U', num_wann, cap, 0.0_dp, 0.0_dp, 0, 0, -1.0_dp, &
                         m, w, cz, num_bands, cwork, rwork, iwork, ifail, info)
@@ -2076,12 +2076,12 @@ contains
                if (on_root) write (stdout, *) ' *** ERROR *** ZHPEVX WHILE DIAGONALIZING HAMILTONIAN'
                if (on_root) write (stdout, *) ' THE ', -info, ' ARGUMENT OF ZHPEVX HAD AN ILLEGAL VALUE'
                call io_error(' dis_extract: error')
-            endif
+            end if
             if (info .gt. 0) then
                if (on_root) write (stdout, *) ' *** ERROR *** ZHPEVX WHILE DIAGONALIZING HAMILTONIAN'
                if (on_root) write (stdout, *) info, 'EIGENVECTORS FAILED TO CONVERGE'
                call io_error(' dis_extract: error')
-            endif
+            end if
 
             ! Store the energy eigenvalues of the optimal subspace (used in wann_ban
             eigval_opt(1:num_wann, nkp) = w(1:num_wann)
@@ -2093,11 +2093,11 @@ contains
                   ceamp(i, j, nkp) = cmplx_0
                   do l = 1, num_wann
                      ceamp(i, j, nkp) = ceamp(i, j, nkp) + cz(l, j)*u_matrix_opt(i, l, nkp)
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
             ! NKP
-         enddo
+         end do
 
          ! DEBUG
          if (iprint > 2) then
@@ -2105,8 +2105,8 @@ contains
             do nkp = 1, num_kpts
                if (on_root) write (stdout, '(a,i3,2x,20(f9.5,1x))') '  K-point ', &
                   nkp, (eigval_opt(i, nkp), i=1, num_wann)
-            enddo
-         endif
+            end do
+         end if
          ! ENDDEBUG
 
          ! Replace u_matrix_opt by ceamp. Both span the
@@ -2116,14 +2116,14 @@ contains
             do nkp = 1, num_kpts
                do j = 1, num_wann
                   u_matrix_opt(1:ndimwin(nkp), j, nkp) = ceamp(1:ndimwin(nkp), j, nkp)
-               enddo
-            enddo
+               end do
+            end do
             !else                                                                                                        !YN:
             ! Above is skipped as we require Uopt(Rk) to be related to Uopt(k)                                        !YN: RS:
             !write(stdout,"(a)")  &                                                                                   !YN: RS:
             !  'Note(symmetry-adapted mode): u_matrix_opt are no longer the eigenstates of the subspace Hamiltonian.' !RS:
-         endif                                                                                                        !YN:
-      endif
+         end if                                                                                                        !YN:
+      end if
       call comms_bcast(eigval_opt(1, 1), num_bands*num_kpts)
       call comms_bcast(u_matrix_opt(1, 1, 1), num_bands*num_wann*num_kpts)
 
@@ -2133,7 +2133,7 @@ contains
             if (iprint > 2) then
                if (on_root) write (stdout, *) 'AT SOME K-POINT(S) COMPLEMENT SUBSPACE HAS ZERO DIMENSIONALITY'
                if (on_root) write (stdout, *) '=> DID NOT CREATE FILE COMPSPACE.DAT'
-            endif
+            end if
          else
             ! DIAGONALIZE THE HAMILTONIAN IN THE COMPLEMENT SUBSPACE, WRITE THE
             ! CORRESPONDING EIGENFUNCTIONS AND ENERGY EIGENVALUES
@@ -2144,14 +2144,14 @@ contains
                      do l = 1, ndimwin(nkp)
                         cham(i, j, nkp) = cham(i, j, nkp) + conjg(camp(l, i, nkp)) &
                                           *camp(l, j, nkp)*eigval_opt(l, nkp)
-                     enddo
-                  enddo
-               enddo
+                     end do
+                  end do
+               end do
                do j = 1, ndimwin(nkp) - num_wann
                   do i = 1, j
                      cap(i + ((j - 1)*j)/2) = cham(i, j, nkp)
-                  enddo
-               enddo
+                  end do
+               end do
                ndiff = ndimwin(nkp) - num_wann
                call ZHPEVX('V', 'A', 'U', ndiff, cap, 0.0_dp, 0.0_dp, 0, 0, &
                            -1.0_dp, m, w, cz, num_bands, cwork, rwork, iwork, ifail, info)
@@ -2159,12 +2159,12 @@ contains
                   if (on_root) write (stdout, *) '*** ERROR *** ZHPEVX WHILE DIAGONALIZING HAMILTONIAN'
                   if (on_root) write (stdout, *) 'THE ', -info, ' ARGUMENT OF ZHPEVX HAD AN ILLEGAL VALUE'
                   call io_error(' dis_extract: error')
-               endif
+               end if
                if (info .gt. 0) then
                   if (on_root) write (stdout, *) '*** ERROR *** ZHPEVX WHILE DIAGONALIZING HAMILTONIAN'
                   if (on_root) write (stdout, *) info, 'EIGENVECTORS FAILED TO CONVERGE'
                   call io_error(' dis_extract: error')
-               endif
+               end if
                ! CALCULATE AMPLITUDES OF THE ENERGY EIGENVECTORS IN THE COMPLEMENT SUBS
                ! TERMS OF THE ORIGINAL ENERGY EIGENVECTORS
                do j = 1, ndimwin(nkp) - num_wann
@@ -2179,14 +2179,14 @@ contains
 ! aam: 20/10/2006 -- the second dimension of u_matrix_opt is out of bounds (allocated as num_wann)!
 ! commenting this line out.
 !                     camp(i,j,nkp) = camp(i,j,nkp) + cz(l,j) * u_matrix_opt(i,l,nkp)
-                     enddo
-                  enddo
-               enddo
-            enddo   ! [loop over k points (nkp)]
+                     end do
+                  end do
+               end do
+            end do   ! [loop over k points (nkp)]
 
-         endif   ! [if icompflag=1]
+         end if   ! [if icompflag=1]
 
-      endif     ![if(index(devel_flag,'compspace')>0)]
+      end if     ![if(index(devel_flag,'compspace')>0)]
 
       deallocate (history, stat=ierr)
       if (ierr /= 0) call io_error('Error deallocating history in dis_extract')
@@ -2194,7 +2194,7 @@ contains
       if (on_root) then
          deallocate (cham, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating cham in dis_extract')
-      endif
+      end if
       if (allocated(camp)) then
          deallocate (camp, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating camp in dis_extract')
@@ -2202,11 +2202,11 @@ contains
       if (allocated(camp_loc)) then
          deallocate (camp_loc, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating camp_loc in dis_extract')
-      endif
+      end if
       if (on_root) then
          deallocate (ceamp, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating ceamp in dis_extract')
-      endif
+      end if
       deallocate (u_matrix_opt_loc, stat=ierr)
       if (ierr /= 0) call io_error('Error deallocating u_matrix_opt_loc in dis_extract')
       deallocate (wkomegai1_loc, stat=ierr)
@@ -2261,12 +2261,12 @@ contains
          else
             temp_hist = eoshift(history, 1, delta_womegai)
             history = temp_hist
-         endif
+         end if
 
          dis_converged = .false.
          if (iter .ge. dis_conv_window) then
             dis_converged = all(abs(history) .lt. dis_conv_tol)
-         endif
+         end if
 
          deallocate (temp_hist, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating temp_hist in dis_extract')
@@ -2313,12 +2313,12 @@ contains
                   csum = cmplx_0
                   do l = 1, num_wann
                      csum = csum + cbw(p, l)*conjg(cbw(q, l))
-                  enddo
+                  end do
                   cmtrx(m, n) = cmtrx(m, n) + cmplx(wb(nn), 0.0_dp, kind=dp)*csum
                   cmtrx(n, m) = conjg(cmtrx(m, n))
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
          if (timing_level > 1 .and. on_root) call io_stopwatch('dis: extract: zmatrix', 2)
 
@@ -2546,8 +2546,8 @@ contains
          do nkp = 1, num_kpts
             write (stdout, '(a,i3,3x,20(f9.5,1x))') '  K-point ', nkp, &
                (eigval_opt(i, nkp), i=1, ndimwin(nkp))
-         enddo
-      endif
+         end do
+      end if
       ! ENDDEBUG
 
       ! TO DO: Check if this is the best place to initialize icompflag
@@ -2571,7 +2571,7 @@ contains
             ! Initialize Z matrix at k points w/ non-frozen states
             do nkp = 1, num_kpts
                if (num_wann .gt. ndimfroz(nkp)) call internal_zmatrix_gamma(nkp, rzmat_in(:, :, nkp))
-            enddo
+            end do
          else
             ! [iter.ne.1]
             ! Update Z matrix at k points with non-frozen states, using a mixing sch
@@ -2585,11 +2585,11 @@ contains
                            + (1.0_dp - dis_mix_ratio)*rzmat_in(j, i, nkp)
                         ! hermiticity
                         rzmat_in(i, j, nkp) = rzmat_in(j, i, nkp)
-                     enddo
-                  enddo
-               endif
-            enddo
-         endif
+                     end do
+                  end do
+               end if
+            end do
+         end if
          ! [if iter=1]
 
          womegai1 = 0.0_dp
@@ -2612,12 +2612,12 @@ contains
                   do n = 1, num_wann
                      do m = 1, ndimfroz(nkp)
                         rsum = rsum + real(cww(m, n), dp)**2 + aimag(cww(m, n))**2
-                     enddo
-                  enddo
+                     end do
+                  end do
                   wkomegai1(nkp) = wkomegai1(nkp) - wb(nn)*rsum
-               enddo
-            endif
-         enddo
+               end do
+            end if
+         end do
 
          ! Refine optimal subspace at k points w/ non-frozen states
          do nkp = 1, num_kpts
@@ -2626,8 +2626,8 @@ contains
                do j = 1, ndimwin(nkp) - ndimfroz(nkp)
                   do i = 1, j
                      cap_r(i + ((j - 1)*j)/2) = rzmat_in(i, j, nkp)
-                  enddo
-               enddo
+                  end do
+               end do
                ndiff = ndimwin(nkp) - ndimfroz(nkp)
                call DSPEVX('V', 'A', 'U', ndiff, cap_r, 0.0_dp, 0.0_dp, 0, 0, &
                            -1.0_dp, m, w, rz, num_bands, work, iwork, ifail, info)
@@ -2635,12 +2635,12 @@ contains
                   write (stdout, *) ' *** ERROR *** DSPEVX WHILE DIAGONALIZING Z MATRIX'
                   write (stdout, *) ' THE ', -info, ' ARGUMENT OF DSPEVX HAD AN ILLEGAL VALUE'
                   call io_error(' dis_extract_gamma: error')
-               endif
+               end if
                if (info .gt. 0) then
                   write (stdout, *) ' *** ERROR *** DSPEVX WHILE DIAGONALIZING Z MATRIX'
                   write (stdout, *) info, ' EIGENVECTORS FAILED TO CONVERGE'
                   call io_error(' dis_extract_gamma: error')
-               endif
+               end if
                cz(:, :) = cmplx(rz(:, :), 0.0_dp, dp)
                !
                ! Update the optimal subspace by incorporating the num_wann-ndimfroz(nkp) l
@@ -2655,9 +2655,9 @@ contains
                   do i = 1, ndimk
                      p = indxnfroz(i, nkp)
                      u_matrix_opt(p, m, nkp) = cz(i, j)
-                  enddo
-               enddo
-            endif
+                  end do
+               end do
+            end if
             ! [if num_wann>ndimfroz(nkp)]
 
             ! Now that we have contribs. from both frozen and non-frozen states to
@@ -2683,16 +2683,16 @@ contains
                            do i = 1, ndimwin(nkp)
                               camp(i, j, nkp) = cmplx_0
                               if (i .eq. indxnfroz(j, nkp)) camp(i, j, nkp) = cmplx_1
-                           enddo
-                        endif
-                     enddo
+                           end do
+                        end if
+                     end do
                   else
                      icompflag = 1
-                  endif
-               endif
+                  end if
+               end if
             end if
 
-         enddo
+         end do
          ! [Loop over k points (nkp)]
 
          womegai1 = womegai1/real(num_kpts, dp)
@@ -2748,13 +2748,13 @@ contains
                do n = 1, num_wann
                   do m = 1, num_wann
                      rsum = rsum + real(cww(m, n), dp)**2 + aimag(cww(m, n))**2
-                  enddo
-               enddo
+                  end do
+               end do
                wkomegai = wkomegai + wb(nn)*rsum
-            enddo
+            end do
             wkomegai = real(num_wann, dp)*wbtot - wkomegai
             womegai = womegai + wkomegai
-         enddo
+         end do
          womegai = womegai/real(num_kpts, dp)
          ! [Loop over k (nkp)]
 
@@ -2768,7 +2768,7 @@ contains
          ! Construct the updated Z matrix, CZMAT_OUT, at k points w/ non-frozen s
          do nkp = 1, num_kpts
             if (num_wann .gt. ndimfroz(nkp)) call internal_zmatrix_gamma(nkp, rzmat_out(:, :, nkp))
-         enddo
+         end do
 
          call internal_test_convergence()
 
@@ -2778,9 +2778,9 @@ contains
                '  over ', dis_conv_window, ' iterations     >>>'
             write (stdout, '(13x,a)') '<<< Disentanglement convergence criteria satisfied >>>'
             exit
-         endif
+         end if
 
-      enddo
+      end do
       ! [BIG ITERATION LOOP (iter)]
 
       deallocate (rzmat_out, stat=ierr)
@@ -2797,7 +2797,7 @@ contains
          write (stdout, '(/5x,a)') &
             '<<< Warning: Maximum number of disentanglement iterations reached >>>'
          write (stdout, '(10x,a)') '<<< Disentanglement convergence criteria not satisfied >>>'
-      endif
+      end if
 
       if (icompflag .eq. 1) then
          if (iprint > 2) then
@@ -2814,11 +2814,11 @@ contains
                      i = 1
                      write (stdout, '(/4x)', advance='no')
                      write (stdout, '(i6)', advance='no') nkp
-                  endif
-               endif
-            enddo
-         endif
-      endif
+                  end if
+               end if
+            end do
+         end if
+      end if
 
       ! Write the final womegai. This should remain unchanged during the
       ! subsequent minimization of Omega_tilde in wannierise.f90
@@ -2838,15 +2838,15 @@ contains
                do l = 1, ndimwin(nkp)
                   cham(i, j, nkp) = cham(i, j, nkp) + conjg(u_matrix_opt(l, i, nkp)) &
                                     *u_matrix_opt(l, j, nkp)*eigval_opt(l, nkp)
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 !@@@
          do j = 1, num_wann
             do i = 1, j
                cap_r(i + ((j - 1)*j)/2) = real(cham(i, j, nkp), dp)
-            enddo
-         enddo
+            end do
+         end do
 
          call DSPEVX('V', 'A', 'U', num_wann, cap_r, 0.0_dp, 0.0_dp, 0, 0, -1.0_dp, &
                      m, w, rz, num_bands, work, iwork, ifail, info)
@@ -2855,12 +2855,12 @@ contains
             write (stdout, *) ' *** ERROR *** DSPEVX WHILE DIAGONALIZING HAMILTONIAN'
             write (stdout, *) ' THE ', -info, ' ARGUMENT OF DSPEVX HAD AN ILLEGAL VALUE'
             call io_error(' dis_extract_gamma: error')
-         endif
+         end if
          if (info .gt. 0) then
             write (stdout, *) ' *** ERROR *** DSPEVX WHILE DIAGONALIZING HAMILTONIAN'
             write (stdout, *) info, 'EIGENVECTORS FAILED TO CONVERGE'
             call io_error(' dis_extract_gamma: error')
-         endif
+         end if
 
          cz = cmplx_0
          cz(1:num_wann, 1:num_wann) = cmplx(rz(1:num_wann, 1:num_wann), 0.0_dp, dp)
@@ -2876,19 +2876,19 @@ contains
                ceamp(i, j, nkp) = cmplx_0
                do l = 1, num_wann
                   ceamp(i, j, nkp) = ceamp(i, j, nkp) + cz(l, j)*u_matrix_opt(i, l, nkp)
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
          ! NKP
-      enddo
+      end do
       ! DEBUG
       if (iprint > 2) then
          write (stdout, '(/,a,/)') '  Eigenvalues inside optimal subspace:'
          do nkp = 1, num_kpts
             write (stdout, '(a,i3,2x,20(f9.5,1x))') '  K-point ', &
                nkp, (eigval_opt(i, nkp), i=1, num_wann)
-         enddo
-      endif
+         end do
+      end if
       ! ENDDEBUG
 
       ! Replace u_matrix_opt by ceamp. Both span the
@@ -2897,8 +2897,8 @@ contains
       do nkp = 1, num_kpts
          do j = 1, num_wann
             u_matrix_opt(1:ndimwin(nkp), j, nkp) = ceamp(1:ndimwin(nkp), j, nkp)
-         enddo
-      enddo
+         end do
+      end do
 
       ! aam: 01/05/2009: added devel_flag if statement as the complementary
       !      subspace code was causing catastrophic seg-faults
@@ -2909,7 +2909,7 @@ contains
             if (iprint > 2) then
                write (stdout, *) 'AT SOME K-POINT(S) COMPLEMENT SUBSPACE HAS ZERO DIMENSIONALITY'
                write (stdout, *) '=> DID NOT CREATE FILE COMPSPACE.DAT'
-            endif
+            end if
          else
             ! DIAGONALIZE THE HAMILTONIAN IN THE COMPLEMENT SUBSPACE, WRITE THE
             ! CORRESPONDING EIGENFUNCTIONS AND ENERGY EIGENVALUES
@@ -2920,15 +2920,15 @@ contains
                      do l = 1, ndimwin(nkp)
                         cham(i, j, nkp) = cham(i, j, nkp) + conjg(camp(l, i, nkp)) &
                                           *camp(l, j, nkp)*eigval_opt(l, nkp)
-                     enddo
-                  enddo
-               enddo
+                     end do
+                  end do
+               end do
 !@@@
                do j = 1, ndimwin(nkp) - num_wann
                   do i = 1, j
                      cap_r(i + ((j - 1)*j)/2) = real(cham(i, j, nkp), dp)
-                  enddo
-               enddo
+                  end do
+               end do
                ndiff = ndimwin(nkp) - num_wann
 
                call DSPEVX('V', 'A', 'U', ndiff, cap_r, 0.0_dp, 0.0_dp, 0, 0, -1.0_dp, &
@@ -2938,12 +2938,12 @@ contains
                   write (stdout, *) '*** ERROR *** DSPEVX WHILE DIAGONALIZING HAMILTONIAN'
                   write (stdout, *) 'THE ', -info, ' ARGUMENT OF DSPEVX HAD AN ILLEGAL VALUE'
                   call io_error(' dis_extract_gamma: error')
-               endif
+               end if
                if (info .gt. 0) then
                   write (stdout, *) '*** ERROR *** DSPEVX WHILE DIAGONALIZING HAMILTONIAN'
                   write (stdout, *) info, 'EIGENVECTORS FAILED TO CONVERGE'
                   call io_error(' dis_extract_gamma: error')
-               endif
+               end if
 
                cz = cmplx_0
                cz(1:ndiff, 1:ndiff) = cmplx(rz(1:ndiff, 1:ndiff), 0.0_dp, dp)
@@ -2963,16 +2963,16 @@ contains
 ! aam: 20/10/2006 -- the second dimension of u_matrix_opt is out of bounds (allocated as num_wann)!
 ! commenting this line out.
 !                     camp(i,j,nkp) = camp(i,j,nkp) + cz(l,j) * u_matrix_opt(i,l,nkp)
-                     enddo
-                  enddo
-               enddo
-            enddo
+                     end do
+                  end do
+               end do
+            end do
             ! [loop over k points (nkp)]
 
-         endif
+         end if
          ! [if icompflag=1]
 
-      endif
+      end if
       ! [if index(devel_flag,'compspace')>0]
 
       deallocate (history, stat=ierr)
@@ -3038,12 +3038,12 @@ contains
          else
             temp_hist = eoshift(history, 1, delta_womegai)
             history = temp_hist
-         endif
+         end if
 
          dis_converged = .false.
          if (iter .ge. dis_conv_window) then
             dis_converged = all(abs(history) .lt. dis_conv_tol)
-         endif
+         end if
 
          deallocate (temp_hist, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating temp_hist in dis_extract_gamma')
@@ -3089,12 +3089,12 @@ contains
                   csum = cmplx_0
                   do l = 1, num_wann
                      csum = csum + cbw(p, l)*conjg(cbw(q, l))
-                  enddo
+                  end do
                   rmtrx(m, n) = rmtrx(m, n) + wb(nn)*real(csum, dp)
                   rmtrx(n, m) = rmtrx(m, n)
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
          if (timing_level > 1) call io_stopwatch('dis: extract_gamma: zmatrix_gamma', 2)
 

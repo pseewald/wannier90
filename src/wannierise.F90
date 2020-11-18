@@ -218,8 +218,8 @@ contains
                do loop_kpt = 1, num_kpts
                   rdotk = twopi*dot_product(kpt_latt(:, loop_kpt), real(irvec(:, irpt), dp))
                   k_to_r(loop_kpt, irpt) = exp(-cmplx_i*rdotk)
-               enddo
-            enddo
+               end do
+            end do
          end if
       end if
 
@@ -309,7 +309,7 @@ contains
       if (guiding_centres) then
          do n = 1, num_proj
             call utility_frac_to_cart(proj_site(:, n), rguide(:, n), real_lattice)
-         enddo
+         end do
 !       if(spinors) then ! not needed with new changes to spinor proj 2013 JRY
 !          do n=1,num_proj
 !             call utility_frac_to_cart(proj_site(:,n),rguide(:,n+num_proj),real_lattice)
@@ -325,16 +325,16 @@ contains
             write (stdout, '(1x,a)') '| Iter  Delta Spread     RMS Gradient      Spread (Ang^2)      Time  |<-- CONV'
          else
             write (stdout, '(1x,a)') '| Iter  Delta Spread     RMS Gradient      Spread (Bohr^2)     Time  |<-- CONV'
-         endif
+         end if
          write (stdout, '(1x,a)') '+--------------------------------------------------------------------+<-- CONV'
          write (stdout, *)
-      endif
+      end if
 
       irguide = 0
       if (guiding_centres .and. (num_no_guide_iter .le. 0)) then
          call wann_phases(csheet, sheet, rguide, irguide)
          irguide = 1
-      endif
+      end if
 
       ! constrained centres part
       lambda_loc = 0.0_dp
@@ -402,7 +402,7 @@ contains
                ' O_TOT=', wann_spread%om_tot*lenconfac**2, ' <-- SPRD'
             write (stdout, '(1x,a78)') repeat('-', 78)
          end if
-      endif
+      end if
 
       lconverged = .false.; lfirst = .true.; lrandom = .false.
       conv_count = 0; noise_count = 0
@@ -410,7 +410,7 @@ contains
       if (.not. lfixstep .and. optimisation <= 0) then
          page_unit = io_file_unit()
          open (unit=page_unit, status='scratch', form='unformatted')
-      endif
+      end if
 
       ! main iteration loop
       do iter = 1, num_iter
@@ -428,7 +428,7 @@ contains
              .and. (mod(iter, num_guide_cycles) .eq. 0)) then
             call wann_phases(csheet, sheet, rguide, irguide)
             irguide = 1
-         endif
+         end if
 
          ! calculate gradient of omega
 
@@ -436,7 +436,7 @@ contains
             call wann_domega(csheet, sheet, rave, cdodq)
          else
             call wann_domega(csheet, sheet, rave)!,cdodq)  fills only cdodq_loc
-         endif
+         end if
 
          if (lprint .and. iprint > 2 .and. on_root) &
             write (stdout, *) ' LINE --> Iteration                     :', iter
@@ -468,7 +468,7 @@ contains
                rewind (page_unit)
             else
                m0_loc = m_matrix_loc
-            endif
+            end if
 
             ! update U and M
             call internal_new_u_and_m()
@@ -479,7 +479,7 @@ contains
             ! Calculate optimal step (alphamin)
             call internal_optimal_step()
 
-         endif
+         end if
 
          ! print line search information
          if (lprint .and. iprint > 2 .and. on_root) then
@@ -493,12 +493,12 @@ contains
                if (lquad) then
                   write (stdout, *) ' LINE --> Optimal parabolic step length :', alphamin
                   write (stdout, *) ' LINE --> Spread at predicted minimum   :', falphamin*lenconfac**2
-               endif
+               end if
             else
                write (stdout, *) ' LINE --> Fixed step length             :', fixed_step
-            endif
+            end if
             write (stdout, *) ' LINE --> CG coefficient                :', gcfac
-         endif
+         end if
 
          ! if taking a fixed step or if parabolic line search was successful
          if (lfixstep .or. lquad) then
@@ -515,8 +515,8 @@ contains
                   rewind (page_unit)
                else
                   m_matrix_loc = m0_loc
-               endif
-            endif
+               end if
+            end if
 
             ! update U and M
             call internal_new_u_and_m()
@@ -532,7 +532,7 @@ contains
             call wann_spread_copy(wann_spread, old_spread)
             call wann_spread_copy(trial_spread, wann_spread)
 
-         endif
+         end if
 
          ! print the new centers and spreads
          if (lprint .and. on_root) then
@@ -612,9 +612,9 @@ contains
                '  over ', conv_window, ' iterations     >>>'
             write (stdout, '(13x,a/)') '<<< Wannierisation convergence criteria satisfied >>>'
             exit
-         endif
+         end if
 
-      enddo
+      end do
       ! end of the minimization loop
 
       ! the m matrix is sent by piece to avoid huge arrays
@@ -686,7 +686,7 @@ contains
                '       Omega Total  = ', wann_spread%om_tot*lenconfac**2
             write (stdout, '(1x,a78)') repeat('-', 78)
          end if
-      endif
+      end if
 
       if (write_xyz) call wann_write_xyz()
 
@@ -700,10 +700,10 @@ contains
             write (stdout, '(3x,a)') '-------------------------'
             do i = 1, num_wann
                write (stdout, '(3x,i3,5x,f12.6)') i, real(ham_r(i, i, rpt_origin), kind=dp)
-            enddo
+            end do
             write (stdout, *)
-         endif
-      endif
+         end if
+      end if
 
       if (guiding_centres) call wann_phases(csheet, sheet, rguide, irguide)
 
@@ -821,10 +821,10 @@ contains
       return
 
 1000  format(2x, 'WF centre and spread', &
- &       i5, 2x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
+  &       i5, 2x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
 
 1001  format(2x, 'Sum of centres and spreads', &
- &       1x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
+  &       1x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
 
    contains
 
@@ -853,7 +853,7 @@ contains
          else
             temp_hist = eoshift(history, 1, delta_omega)
             history = temp_hist
-         endif
+         end if
 
          conv_count = conv_count + 1
 
@@ -863,8 +863,8 @@ contains
 !~         write(stdout,*) (history(j),j=1,conv_window)
             do j = 1, conv_window
                if (abs(history(j)) .gt. conv_tol) return
-            enddo
-         endif
+            end do
+         end if
 
          if ((conv_noise_amp .gt. 0.0_dp) .and. (noise_count .lt. conv_noise_num)) then
             if (lfirst) then
@@ -880,11 +880,11 @@ contains
                   save_spread = wann_spread%om_tot
                   lrandom = .true.
                   conv_count = 0
-               endif
-            endif
+               end if
+            end if
          else
             lconverged = .true.
-         endif
+         end if
 
          if (lrandom) noise_count = noise_count + 1
 
@@ -930,20 +930,20 @@ contains
                call random_number(noise_real(:, iw))
                call random_seed()
                call random_number(noise_imag(:, iw))
-            enddo
+            end do
             do jw = 1, num_wann
                do iw = 1, jw
                   if (iw .eq. jw) then
                      cnoise(iw, jw) = cmplx(0.0_dp, noise_imag(iw, jw), dp)
                   else
                      cnoise(iw, jw) = cmplx(noise_real(iw, jw), noise_imag(iw, jw), dp)
-                  endif
+                  end if
                   cnoise(jw, iw) = -conjg(cnoise(iw, jw))
-               enddo
-            enddo
+               end do
+            end do
             ! Add noise to search direction
             cdq_loc(:, :, ikp) = cdq_loc(:, :, ikp) + conv_noise_amp*cnoise(:, :)
-         enddo
+         end do
 
          ! Deallocate
          deallocate (cnoise, stat=ierr)
@@ -998,8 +998,8 @@ contains
                      rdotk = twopi*dot_product(kpt_latt(:, loop_kpt), real(irvec(:, irpt), dp))
                      fac = exp(-cmplx_i*rdotk)/real(num_kpts, dp)
                      cdodq_r(:, :, irpt) = cdodq_r(:, :, irpt) + fac*cdodq(:, :, loop_kpt)
-                  enddo
-               enddo
+                  end do
+               end do
             end if
 
             ! filter cdodq_r in real space by 1/(1+R^2/alpha)
@@ -1031,8 +1031,8 @@ contains
                      rdotk = twopi*dot_product(kpt_latt(:, loop_kpt), real(irvec(:, irpt), dp))
                      fac = exp(cmplx_i*rdotk)/real(ndegen(irpt), dp)
                      cdodq_precond(:, :, loop_kpt) = cdodq_precond(:, :, loop_kpt) + fac*cdodq_r(:, :, irpt)
-                  enddo
-               enddo
+                  end do
+               end do
             end if
             cdodq_precond_loc(:, :, 1:counts(my_node_id)) = &
                cdodq_precond(:, :, 1 + displs(my_node_id):displs(my_node_id) + counts(my_node_id))
@@ -1063,12 +1063,12 @@ contains
                   ncg = 0
                else
                   ncg = ncg + 1
-               endif
+               end if
             else
                gcfac = 0.0_dp
                ncg = 0
-            endif
-         endif
+            end if
+         end if
 
          ! save for next iteration
          gcnorm0 = gcnorm1
@@ -1086,7 +1086,7 @@ contains
             if (on_root) write (stdout, '(a,i3,a,i3,a)') &
                ' [ Adding random noise to search direction. Time ', noise_count, ' / ', conv_noise_num, ' ]'
             call internal_random_noise()
-         endif
+         end if
          ! calculate gradient along search direction - Tr[gradient . search direction]
          ! NB gradient is anti-hermitian
          doda0 = -real(zdotc(counts(my_node_id)*num_wann*num_wann, cdodq_loc, 1, cdq_loc, 1), dp)
@@ -1117,15 +1117,15 @@ contains
                      write (stdout, *) ' LINE --> Search direction still uphill: reversing'
                   cdq_loc(:, :, :) = -cdq_loc(:, :, :)
                   doda0 = -doda0
-               endif
+               end if
                ! if doing a SD step then reverse search direction
             else
                if (lprint .and. iprint > 2 .and. on_root) &
                   write (stdout, *) ' LINE --> Search direction uphill: reversing'
                cdq_loc(:, :, :) = -cdq_loc(:, :, :)
                doda0 = -doda0
-            endif
-         endif
+            end if
+         end if
 
          !~     ! calculate search direction
          !~     cdq(:,:,:) = cdodq(:,:,:) + cdqkeep(:,:,:) * gcfac
@@ -1160,7 +1160,7 @@ contains
          else
             fac = 1.0e6_dp
             shift = fac*trial_spread%om_tot - fac*wann_spread%om_tot
-         endif
+         end if
          eqb = fac*doda0
          eqa = shift - eqb*trial_step
          if (abs(eqa/(fac*wann_spread%om_tot)) .gt. epsilon(1.0_dp)) then
@@ -1174,7 +1174,7 @@ contains
             lquad = .false.
             alphamin = trial_step
             falphamin = trial_spread%om_tot
-         endif
+         end if
 
          if (doda0*alphamin .gt. 0.0_dp) then
             if (lprint .and. iprint > 2 .and. on_root) write (stdout, *) &
@@ -1182,7 +1182,7 @@ contains
             lquad = .false.
             alphamin = trial_step
             falphamin = trial_spread%om_tot
-         endif
+         end if
 
          if (timing_level > 1 .and. on_root) call io_stopwatch('wann: main: optimal_step', 2)
 
@@ -1228,21 +1228,21 @@ contains
                if (info .ne. 0) then
                   if (on_root) write (stdout, *) 'wann_main: SCHUR failed, info= ', info
                   call io_error('wann_main: problem computing schur form 1')
-               endif
+               end if
                do i = 1, num_wann
                   tmp_cdq(:, i) = cz(:, i)*exp(cwschur1(i))
-               enddo
+               end do
                ! cmtmp   = tmp_cdq . cz^{dagger}
                call utility_zgemm(cmtmp, tmp_cdq, 'N', cz, 'C', num_wann)
                cdq_loc(:, :, nkp_loc) = cmtmp(:, :)
             else
                do i = 1, num_wann
                   cmtmp(:, i) = tmp_cdq(:, i)*exp(-cmplx_i*evals(i))
-               enddo
+               end do
                ! cdq(nkp)   = cmtmp . tmp_cdq^{dagger}
                call utility_zgemm(cdq_loc(:, :, nkp_loc), cmtmp, 'N', tmp_cdq, 'C', num_wann)
-            endif
-         enddo
+            end if
+         end do
 
          ! each process communicates its result to other processes
          ! it would be enough to copy only next neighbors
@@ -1270,7 +1270,7 @@ contains
          if (lsitesymmetry) then
             call sitesym_symmetrize_rotation(cdq) !RS: calculate cdq(Rk) from k
             cdq_loc(:, :, 1:counts(my_node_id)) = cdq(:, :, 1 + displs(my_node_id):displs(my_node_id) + counts(my_node_id))
-         endif
+         end if
 
          ! the orbitals are rotated
          do nkp_loc = 1, counts(my_node_id)
@@ -1278,7 +1278,7 @@ contains
             ! cmtmp = U(k) . cdq(k)
             call utility_zgemm(cmtmp, u_matrix_loc(:, :, nkp_loc), 'N', cdq_loc(:, :, nkp_loc), 'N', num_wann)
             u_matrix_loc(:, :, nkp_loc) = cmtmp(:, :)
-         enddo
+         end do
 
          ! and the M_ij are updated
          do nkp_loc = 1, counts(my_node_id)
@@ -1290,8 +1290,8 @@ contains
                ! cmtmp = tmp_cdq . cdq
                call utility_zgemm(cmtmp, tmp_cdq, 'N', cdq(:, :, nkp2), 'N', num_wann)
                m_matrix_loc(:, :, nn, nkp_loc) = cmtmp(:, :)
-            enddo
-         enddo
+            end do
+         end do
 
          if (timing_level > 1) call io_stopwatch('wann: main: u_and_m', 2)
 
@@ -1536,8 +1536,8 @@ contains
                      nkp = nkp_loc + displs(my_node_id)
                      nn = neigh(nkp, na)
                      csum(na) = csum(na) + m_matrix(loop_wann, loop_wann, nn, nkp_loc)
-                  enddo
-               enddo
+                  end do
+               end do
             else
                do na = 1, nnh
                   csum(na) = cmplx_0
@@ -1545,9 +1545,9 @@ contains
                      nkp = nkp_loc + displs(my_node_id)
                      nn = neigh(nkp, na)
                      csum(na) = csum(na) + m_matrix_loc(loop_wann, loop_wann, nn, nkp_loc)
-                  enddo
-               enddo
-            endif
+                  end do
+               end do
+            end if
 
          else
 
@@ -1558,8 +1558,8 @@ contains
                   nn = neigh(nkp, na)
                   csum(na) = csum(na) &
                              + cmplx(m_w(loop_wann, loop_wann, 2*nn - 1), m_w(loop_wann, loop_wann, 2*nn), dp)
-               enddo
-            enddo
+               end do
+            end do
 
          end if
 
@@ -1605,13 +1605,13 @@ contains
                xx0 = 0.0_dp
                do j = 1, 3
                   xx0 = xx0 + bka(j, nn)*rguide(j, loop_wann)
-               enddo
+               end do
                !         xx0 is expected value for xx
 !             csumt = exp (ci * xx0)
                csumt = exp(cmplx_i*xx0)
                !         csumt has opposite of expected phase of csum(nn)
                xx(nn) = xx0 - aimag(log(csum(nn)*csumt))
-            endif
+            end if
 
             !       write(*,'(a,i5,3f7.3,2f10.5)') 'nn, bka, xx, mag =',
             !    1    nn,(bka(j,nn),j=1,3),xx(nn),abs(csum(nn))/float(num_kpts)
@@ -1619,9 +1619,9 @@ contains
             do j = 1, 3
                do i = 1, 3
                   smat(j, i) = smat(j, i) + bka(j, nn)*bka(i, nn)
-               enddo
+               end do
                svec(j) = svec(j) + bka(j, nn)*xx(nn)
-            enddo
+            end do
 
             if (nn .ge. 3) then
                !         determine rguide
@@ -1636,15 +1636,15 @@ contains
                         do i = 1, 3
                            rguide(j, loop_wann) = rguide(j, loop_wann) + sinv(j, i) &
                                                   *svec(i)/det
-                        enddo
-                     enddo
-                  endif
-               endif
-            endif
+                        end do
+                     end do
+                  end if
+               end if
+            end if
 
-         enddo
+         end do
 
-      enddo
+      end do
 
       !     obtain branch cut choice guided by rguid
       sheet = 0.0_dp
@@ -1655,11 +1655,11 @@ contains
                do j = 1, 3
                   sheet(loop_wann, nn, nkp) = sheet(loop_wann, nn, nkp) &
                                               + bk(j, nn, nkp)*rguide(j, loop_wann)
-               enddo
+               end do
                ! csheet (loop_wann, nn, nkp) = exp (ci * sheet (loop_wann, nn, nkp) )
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
       csheet = exp(cmplx_i*sheet)
 
       ! now check that we picked the proper sheet for the log
@@ -1676,11 +1676,11 @@ contains
                brn = 0.0_dp
                do ind = 1, 3
                   brn = brn + bk(ind, nn, nkp)*rguide(ind, m)
-               enddo
+               end do
                rnkb(m, nn, nkp) = rnkb(m, nn, nkp) + brn
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
 !    write ( stdout , * ) ' '
 !    write ( stdout , * ) ' PHASES ARE SET USING THE GUIDING CENTERS'
 !    write ( stdout , * ) ' '
@@ -1750,10 +1750,10 @@ contains
                do nn = 1, nntot
                   rave(ind, iw) = rave(ind, iw) + wb(nn)*bk(ind, nn, nkp) &
                                   *ln_tmp_loc(iw, nn, nkp_loc)
-               enddo
-            enddo
-         enddo
-      enddo
+               end do
+            end do
+         end do
+      end do
 
       call comms_allreduce(rave(1, 1), num_wann*3, 'SUM')
 
@@ -1762,7 +1762,7 @@ contains
       rave2 = 0.0_dp
       do iw = 1, num_wann
          rave2(iw) = sum(rave(:, iw)*rave(:, iw))
-      enddo
+      end do
 
       ! aam: is this useful?
 !~    rtot=0.0_dp
@@ -1779,9 +1779,9 @@ contains
             do nn = 1, nntot
                mnn2 = real(m_matrix_loc(iw, iw, nn, nkp_loc)*conjg(m_matrix_loc(iw, iw, nn, nkp_loc)), kind=dp)
                r2ave(iw) = r2ave(iw) + wb(nn)*(1.0_dp - mnn2 + ln_tmp_loc(iw, nn, nkp_loc)**2)
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
 
       call comms_allreduce(r2ave(1), num_wann, 'SUM')
 
@@ -1852,11 +1852,11 @@ contains
                      !! Centre constraint contribution. Zero if slwf_constrain=false
                      summ = summ - lambda_loc*ln_tmp_loc(n, nn, nkp_loc)**2
                   end if
-               enddo
+               end do
                wann_spread%om_iod = wann_spread%om_iod &
                                     + wb(nn)*(real(slwf_num, dp) - summ)
-            enddo
-         enddo
+            end do
+         end do
 
          call comms_allreduce(wann_spread%om_iod, 1, 'SUM')
 
@@ -1870,9 +1870,9 @@ contains
                   brn = sum(bk(:, nn, nkp)*rave(:, n))
                   wann_spread%om_d = wann_spread%om_d + (1.0_dp - lambda_loc)*wb(nn) &
                                      *(ln_tmp_loc(n, nn, nkp_loc) + brn)**2
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
          call comms_allreduce(wann_spread%om_d, 1, 'SUM')
 
@@ -1888,9 +1888,9 @@ contains
                      wann_spread%om_nu = wann_spread%om_nu + 2.0_dp*wb(nn)* &
                                          ln_tmp_loc(n, nn, nkp_loc)*lambda_loc* &
                                          sum(bk(:, nn, nkp)*ccentres_cart(n, :))
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
 
             call comms_allreduce(wann_spread%om_nu, 1, 'SUM')
 
@@ -1915,12 +1915,12 @@ contains
                      do n = 1, num_wann
                         summ = summ &
                                + real(m_matrix_loc(n, m, nn, nkp_loc)*conjg(m_matrix_loc(n, m, nn, nkp_loc)), kind=dp)
-                     enddo
-                  enddo
+                     end do
+                  end do
                   wann_spread%om_i = wann_spread%om_i &
                                      + wb(nn)*(real(num_wann, dp) - summ)
-               enddo
-            enddo
+               end do
+            end do
 
             call comms_allreduce(wann_spread%om_i, 1, 'SUM')
 
@@ -1928,7 +1928,7 @@ contains
             first_pass = .false.
          else
             wann_spread%om_i = omega_invariant
-         endif
+         end if
 
          wann_spread%om_od = 0.0_dp
          do nkp_loc = 1, counts(my_node_id)
@@ -1939,10 +1939,10 @@ contains
                      if (m .ne. n) wann_spread%om_od = wann_spread%om_od &
                                                        + wb(nn)*real(m_matrix_loc(n, m, nn, nkp_loc) &
                                                                      *conjg(m_matrix_loc(n, m, nn, nkp_loc)), kind=dp)
-                  enddo
-               enddo
-            enddo
-         enddo
+                  end do
+               end do
+            end do
+         end do
 
          call comms_allreduce(wann_spread%om_od, 1, 'SUM')
 
@@ -1956,9 +1956,9 @@ contains
                   brn = sum(bk(:, nn, nkp)*rave(:, n))
                   wann_spread%om_d = wann_spread%om_d + wb(nn) &
                                      *(ln_tmp_loc(n, nn, nkp_loc) + brn)**2
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
          call comms_allreduce(wann_spread%om_d, 1, 'SUM')
 
@@ -2040,10 +2040,10 @@ contains
                do nn = 1, nntot
                   rave(ind, iw) = rave(ind, iw) + bk(ind, nn, nkp) &
                                   *ln_tmp_loc(iw, nn, nkp_loc)
-               enddo
-            enddo
-         enddo
-      enddo
+               end do
+            end do
+         end do
+      end do
       rave = -rave/real(num_kpts, dp)
 
       call comms_allreduce(rave(1, 1), num_wann*3, 'SUM')
@@ -2056,9 +2056,9 @@ contains
             do nn = 1, nntot
                do n = 1, num_wann
                   r0kb(n, nn, nkp_loc) = sum(bk(:, nn, nkp)*ccentres_cart(n, :))
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
       end if
 
       rnkb_loc = 0.0_dp
@@ -2067,9 +2067,9 @@ contains
          do nn = 1, nntot
             do n = 1, num_wann
                rnkb_loc(n, nn, nkp_loc) = sum(bk(:, nn, nkp)*rave(:, n))
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
 
       ! cd0dq(m,n,nkp) is calculated
       cdodq_loc = cmplx_0
@@ -2082,7 +2082,7 @@ contains
                mnn = m_matrix_loc(n, n, nn, nkp_loc)
                crt(:, n) = m_matrix_loc(:, n, nn, nkp_loc)/mnn
                cr(:, n) = m_matrix_loc(:, n, nn, nkp_loc)*conjg(mnn)
-            enddo
+            end do
             if (selective_loc) then
                do n = 1, num_wann
                   do m = 1, num_wann
@@ -2152,8 +2152,8 @@ contains
                      else
                         cdodq_loc(m, n, nkp_loc) = cdodq_loc(m, n, nkp_loc)
                      end if
-                  enddo
-               enddo
+                  end do
+               end do
             else
                do n = 1, num_wann
                   do m = 1, num_wann
@@ -2170,11 +2170,11 @@ contains
                                                 *(crt(m, n)*rnkb_loc(n, nn, nkp_loc) &
                                                   + conjg(crt(n, m)*rnkb_loc(m, nn, nkp_loc))) &
                                                 *cmplx(0.0_dp, -0.5_dp, kind=dp)
-                  enddo
-               enddo
+                  end do
+               end do
             end if
-         enddo
-      enddo
+         end do
+      end do
       cdodq_loc = cdodq_loc/real(num_kpts, dp)*4.0_dp
 
       if (present(cdodq)) then
@@ -2185,7 +2185,7 @@ contains
          if (lsitesymmetry) then
             call sitesym_symmetrize_gradient(1, cdodq) !RS:
             cdodq_loc(:, :, 1:counts(my_node_id)) = cdodq(:, :, displs(my_node_id) + 1:displs(my_node_id) + counts(my_node_id))
-         endif
+         end if
       end if
 
       deallocate (cr, stat=ierr)
@@ -2252,7 +2252,7 @@ contains
          write (stdout, '(1x,8x,62a)') repeat('-', 62)
          write (stdout, '(1x,16x,a)') '   Kpt  Band      Eigval      |Projection|^2'
          write (stdout, '(1x,16x,a47)') repeat('-', 47)
-      endif
+      end if
 
       do nkp = 1, num_kpts
          counter = 0
@@ -2262,12 +2262,12 @@ contains
                summ = 0.0_dp
                do nw = 1, num_wann
                   summ = summ + abs(u_matrix_opt(counter, nw, nkp))**2
-               enddo
+               end do
                if (on_root) write (stdout, '(1x,16x,i5,1x,i5,1x,f14.6,2x,f14.8)') &
                   nkp, nb, eigval(nb, nkp), summ
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
       if (on_root) write (stdout, '(1x,a78/)') repeat('-', 78)
 
       if (timing_level > 1 .and. on_root) call io_stopwatch('wann: calc_projection', 2)
@@ -2302,8 +2302,8 @@ contains
       if (translate_home_cell) then
          do iw = 1, num_wann
             call utility_translate_home(wc(:, iw), real_lattice, recip_lattice)
-         enddo
-      endif
+         end do
+      end if
 
       if (iprint > 2) then
          write (stdout, '(1x,a)') 'Final centres (translated to home cell for writing xyz file)'
@@ -2312,7 +2312,7 @@ contains
          end do
          write (stdout, '(1x,a78)') repeat('-', 78)
          write (stdout, *)
-      endif
+      end if
 
       xyz_unit = io_file_unit()
       open (xyz_unit, file=trim(seedname)//'_centres.xyz', form='formatted')
@@ -2371,7 +2371,7 @@ contains
       ! translate Wannier centres to the home unit cell
       do iw = 1, num_wann
          call utility_translate_home(wc(:, iw), real_lattice, recip_lattice)
-      enddo
+      end do
 
       allocate (f_w(num_wann, num_wann), stat=ierr)
       if (ierr /= 0) call io_error('Error in allocating f_w in wann_write_vdw_data')
@@ -2400,18 +2400,18 @@ contains
             do k = 1, ndim
                do m = 1, num_wann
                   v_matrix(k, s) = v_matrix(k, s) + u_matrix_opt(k, m, 1)*u_matrix(m, s, 1)
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
          ! aam: calculate f = V^dagger . V
          do r = 1, num_wann
             do s = 1, num_wann
                do k = 1, ndim
                   f_w(r, s) = f_w(r, s) + v_matrix(k, s)*conjg(v_matrix(k, r))
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
 
 !~       ! original formulation
 !~       do r=1,num_wann
@@ -2446,7 +2446,7 @@ contains
       else
          ! for valence only, all occupancies are unity
          f_w(:, :) = 1.0_dp
-      endif
+      end if
 
       ! aam: write the seedname.vdw file directly here
       vdw_unit = io_file_unit()
@@ -2455,7 +2455,7 @@ contains
          write (vdw_unit, '(a)') 'disentangle T'
       else
          write (vdw_unit, '(a)') 'disentangle F'
-      endif
+      end if
       write (vdw_unit, '(a)') 'amalgamate F'
       write (vdw_unit, '(a,i3)') 'degeneracy', num_elec_per_state
       write (vdw_unit, '(a)') 'num_frag 2'
@@ -2478,7 +2478,7 @@ contains
       if (have_disentangled) then
          deallocate (v_matrix, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating v_matrix in wann_write_vdw_data')
-      endif
+      end if
 
 !~    deallocate(f_w2,stat=ierr)
 !~    if (ierr/=0) call io_error('Error in deallocating f_w2 in wann_write_vdw_data')
@@ -2513,32 +2513,32 @@ contains
                do m = 1, num_wann
                   ctmp1 = ctmp1 + u_matrix(i, m, nkp)*conjg(u_matrix(j, m, nkp))
                   ctmp2 = ctmp2 + u_matrix(m, j, nkp)*conjg(u_matrix(m, i, nkp))
-               enddo
+               end do
                if ((i .eq. j) .and. (abs(ctmp1 - cmplx_1) .gt. eps5)) &
                   then
                   if (on_root) write (stdout, *) ' ERROR: unitariety of final U', nkp, i, j, &
                      ctmp1
                   call io_error('wann_check_unitarity: error 1')
-               endif
+               end if
                if ((i .eq. j) .and. (abs(ctmp2 - cmplx_1) .gt. eps5)) &
                   then
                   if (on_root) write (stdout, *) ' ERROR: unitariety of final U', nkp, i, j, &
                      ctmp2
                   call io_error('wann_check_unitarity: error 2')
-               endif
+               end if
                if ((i .ne. j) .and. (abs(ctmp1) .gt. eps5)) then
                   if (on_root) write (stdout, *) ' ERROR: unitariety of final U', nkp, i, j, &
                      ctmp1
                   call io_error('wann_check_unitarity: error 3')
-               endif
+               end if
                if ((i .ne. j) .and. (abs(ctmp2) .gt. eps5)) then
                   if (on_root) write (stdout, *) ' ERROR: unitariety of final U', nkp, i, j, &
                      ctmp2
                   call io_error('wann_check_unitarity: error 4')
-               endif
-            enddo
-         enddo
-      enddo
+               end if
+            end do
+         end do
+      end do
 
       if (timing_level > 1 .and. on_root) call io_stopwatch('wann: check_unitarity', 2)
 
@@ -2580,12 +2580,12 @@ contains
                              (2.0_dp*delta - real(m_matrix(nw1, nw2, nn, nkp) + &
                                                   conjg(m_matrix(nw2, nw1, nn, nkp)), kind=dp))
                   ! [GP-end]
-               enddo
-            enddo
+               end do
+            end do
             r2ave_mn = r2ave_mn/real(num_kpts, dp)
             write (r2mnunit, '(2i6,f20.12)') nw1, nw2, r2ave_mn
-         enddo
-      enddo
+         end do
+      end do
       close (r2mnunit)
 
       return
@@ -2642,21 +2642,21 @@ contains
                do na = 1, num_wann
                   cpad1(ind) = m_matrix(na, nb, nn, nkp)
                   ind = ind + 1
-               enddo
-            enddo
+               end do
+            end do
             call zgesvd('A', 'A', num_wann, num_wann, cpad1, num_wann, singvd, cv1, &
                         num_wann, cv2, num_wann, cw1, 10*num_wann, cw2, info)
             if (info .ne. 0) then
                call io_error('ERROR: Singular value decomp. zgesvd failed')
-            endif
+            end if
 
             do nb = 1, num_wann
                omt1 = omt1 + wb(nn)*(1.0_dp - singvd(nb)**2)
                omt2 = omt2 - wb(nn)*(2.0_dp*log(singvd(nb)))
                omt3 = omt3 + wb(nn)*(acos(singvd(nb))**2)
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
       omt1 = omt1/real(num_kpts, dp)
       omt2 = omt2/real(num_kpts, dp)
       omt3 = omt3/real(num_kpts, dp)
@@ -2668,7 +2668,7 @@ contains
             omt2*lenconfac**2, '('//trim(length_unit)//'^2)'
          write (stdout, '(2x,a,f15.9,1x,a)') '                  acos^2 = ', &
             omt3*lenconfac**2, '('//trim(length_unit)//'^2)'
-      endif
+      end if
 
       deallocate (cpad1, stat=ierr)
       if (ierr /= 0) call io_error('Error in deallocating cpad1 in wann_svd_omega_i')
@@ -2821,9 +2821,9 @@ contains
 !~       else
          do n = 1, num_wann
             call utility_frac_to_cart(proj_site(:, n), rguide(:, n), real_lattice)
-         enddo
+         end do
 !~       endif
-      endif
+      end if
 
       write (stdout, *)
       write (stdout, '(1x,a)') '*------------------------------- WANNIERISE ---------------------------------*'
@@ -2832,7 +2832,7 @@ contains
          write (stdout, '(1x,a)') '| Iter  Delta Spread     RMS Gradient      Spread (Ang^2)      Time  |<-- CONV'
       else
          write (stdout, '(1x,a)') '| Iter  Delta Spread     RMS Gradient      Spread (Bohr^2)     Time  |<-- CONV'
-      endif
+      end if
       write (stdout, '(1x,a)') '+--------------------------------------------------------------------+<-- CONV'
       write (stdout, *)
 
@@ -2844,7 +2844,7 @@ contains
       if (guiding_centres .and. (num_no_guide_iter .le. 0)) then
          call wann_phases(csheet, sheet, rguide, irguide)
          irguide = 1
-      endif
+      end if
 
       !  weight m_matrix first to reduce number of operations
       !  m_w : weighted real matrix
@@ -2922,7 +2922,7 @@ contains
              .and. (mod(iter, num_guide_cycles) .eq. 0)) then
             call wann_phases(csheet, sheet, rguide, irguide, m_w)
             irguide = 1
-         endif
+         end if
 
          call internal_new_u_and_m_gamma()
 
@@ -2966,7 +2966,7 @@ contains
             uc_rot(:, :) = cmplx(ur_rot(:, :), 0.0_dp, dp)
             call utility_zgemm(u_matrix, u0, 'N', uc_rot, 'N', num_wann)
             call param_write_chkpt('postdis')
-         endif
+         end if
 
          if (conv_window .gt. 1) call internal_test_convergence_gamma()
 
@@ -2976,9 +2976,9 @@ contains
                '  over ', conv_window, ' iterations     >>>'
             write (stdout, '(13x,a/)') '<<< Wannierisation convergence criteria satisfied >>>'
             exit
-         endif
+         end if
 
-      enddo
+      end do
       ! end of the minimization loop
 
       ! update M
@@ -3068,10 +3068,10 @@ contains
       return
 
 1000  format(2x, 'WF centre and spread', &
- &       i5, 2x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
+  &       i5, 2x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
 
 1001  format(2x, 'Sum of centres and spreads', &
- &       1x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
+  &       1x, '(', f10.6, ',', f10.6, ',', f10.6, ' )', f15.8)
 
    contains
 
@@ -3110,7 +3110,7 @@ contains
                theta = 0.0_dp
             else
                theta = pifour
-            endif
+            end if
             cc = cos(theta)
             ss = sin(theta)
 
@@ -3172,7 +3172,7 @@ contains
          else
             temp_hist = eoshift(history, 1, delta_omega)
             history = temp_hist
-         endif
+         end if
 
          lconverged = .false.
 
@@ -3181,8 +3181,8 @@ contains
             do j = 1, conv_window
                if (abs(history(j)) .gt. conv_tol) exit
                lconverged = .true.
-            enddo
-         endif
+            end do
+         end if
 
          deallocate (temp_hist, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating temp_hist in wann_main_gamma')
@@ -3422,7 +3422,7 @@ contains
                                   - sheet(n, nn, 1)
             end do
          end do
-      endif
+      end if
 
       rave = 0.0_dp
       do iw = 1, num_wann
@@ -3430,14 +3430,14 @@ contains
             do nn = 1, nntot
                rave(ind, iw) = rave(ind, iw) - wb(nn)*bk(ind, nn, 1) &
                                *ln_tmp(iw, nn, 1)
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
 
       rave2 = 0.0_dp
       do iw = 1, num_wann
          rave2(iw) = sum(rave(:, iw)*rave(:, iw))
-      enddo
+      end do
 
       m_w_nn2 = 0.0_dp
       r2ave = wbtot
@@ -3447,9 +3447,9 @@ contains
             cn = 2*nn
             m_w_nn2(iw) = m_w_nn2(iw) + m_w(iw, iw, rn)**2 + m_w(iw, iw, cn)**2
             r2ave(iw) = r2ave(iw) + wb(nn)*ln_tmp(iw, nn, 1)**2
-         enddo
+         end do
          r2ave(iw) = r2ave(iw) - m_w_nn2(iw)
-      enddo
+      end do
 
       if (first_pass) then
          summ = 0.0_dp
@@ -3459,14 +3459,14 @@ contains
             do m = 1, num_wann
                do n = 1, num_wann
                   summ = summ + m_w(n, m, rn)**2 + m_w(n, m, cn)**2
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
          wann_spread%om_i = wbtot*real(num_wann, dp) - summ
          first_pass = .false.
       else
          wann_spread%om_i = omega_invariant
-      endif
+      end if
 
       wann_spread%om_od = wbtot*real(num_wann, dp) - sum(m_w_nn2(:)) - wann_spread%om_i
 
@@ -3479,8 +3479,8 @@ contains
                brn = sum(bk(:, nn, 1)*rave(:, n))
                wann_spread%om_d = wann_spread%om_d + wb(nn) &
                                   *(ln_tmp(n, nn, 1) + brn)**2
-            enddo
-         enddo
+            end do
+         end do
       end if
 
       wann_spread%om_tot = wann_spread%om_i + wann_spread%om_d + wann_spread%om_od

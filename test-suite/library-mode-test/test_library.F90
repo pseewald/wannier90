@@ -341,8 +341,8 @@ program test_library
             do m = 1, num_bands_loc
                read (mmn_in, *, err=103, end=103) m_real, m_imag
                mmn_tmp(m, n) = cmplx(m_real, m_imag, kind=dp)
-            enddo
-         enddo
+            end do
+         end do
          nn = 0
          nn_found = .false.
          do inn = 1, nntot_loc
@@ -357,8 +357,8 @@ program test_library
                   write (stdout, '(/a/)') '# Error reading '//trim(seed__name)// &
                      '.mmn. More than one matching nearest neighbour found'
                   stop 1
-               endif
-            endif
+               end if
+            end if
          end do
          if (nn .eq. 0) then
             write (stdout, '(/a,i8,2i5,i4,2x,3i3)') &
@@ -374,7 +374,7 @@ program test_library
             do inn = 1, nntot_loc
                write (stdout, '(a,I1,a,I10,a)', advance='no') '# nnlist(nkp,', inn, '):', nnlist_loc(nkp, inn), '  ---> '
                write (stdout, '(a,I1,a,3I5)') '# nncell(nkp,', inn, ',:):', nncell_loc(:, nkp, inn)
-            enddo
+            end do
 
             write (stdout, *) '# KPOINTS:'
             do i = 1, num_kpts_loc

@@ -175,7 +175,7 @@ contains
 
       do is = 1, 3
          call pw90common_fourier_R_to_k(kpt, SS_R(:, :, :, is), SS(:, :, is), 0)
-      enddo
+      end do
 
       ! Unit vector along the magnetization direction
       !
@@ -238,7 +238,7 @@ contains
          do i = 1, num_wann
             spn_k(is) = spn_k(is) + occ(i)*spn_nk(i, is)
          end do
-      enddo
+      end do
 
    end subroutine spin_get_moment_k
 
@@ -283,7 +283,7 @@ contains
       do i = 1, 3
          call pw90common_fourier_R_to_k(kpt, SS_R(:, :, :, i), SS(:, :, i), 0)
          S(:, i) = real(utility_rotate_diag(SS(:, :, i), UU, num_wann), dp)
-      enddo
+      end do
 
    end subroutine spin_get_S
 

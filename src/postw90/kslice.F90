@@ -106,7 +106,7 @@ contains
       if (plot_morb) then
          call get_BB_R
          call get_CC_R
-      endif
+      end if
       if (fermi_lines_color) call get_SS_R
 
       ! Set Cartesian components of the vectors (b1,b2) spanning the slice
@@ -168,8 +168,8 @@ contains
             my_spnmask = .false.
          else
             allocate (my_bandsdata(num_wann, my_nkpts))
-         endif
-      endif
+         end if
+      end if
 
       ! Loop over local portion of uniform mesh of k-points covering the slice,
       ! including all four borders
@@ -204,14 +204,14 @@ contains
                      spn_k(n) = 1.0_dp - eps8
                   elseif (spn_k(n) < -1.0_dp + eps8) then
                      spn_k(n) = -1.0_dp + eps8
-                  endif
-               enddo
+                  end if
+               end do
                call wham_get_eig_deleig(kpt, eig, del_eig, HH, delHH, UU)
                Delta_k = max(b1mod/kslice_2dkmesh(1), b2mod/kslice_2dkmesh(2))
             else
                call pw90common_fourier_R_to_k(kpt, HH_R, HH, 0)
                call utility_diagonalize(HH, num_wann, eig, UU)
-            endif
+            end if
 
             if (allocated(my_bandsdata)) then
                my_bandsdata(:, iloc) = eig(:)
@@ -331,8 +331,8 @@ contains
                   call write_coords_file(filename, '(3E16.8)', coords, &
                                          reshape(bandsdata(n, :), [1, 1, nkpts]), &
                                          blocklen=kslice_2dkmesh(1) + 1)
-               enddo
-            endif
+               end do
+            end if
          end if
 
          if (allocated(spndata)) then
@@ -349,7 +349,7 @@ contains
                   filename = trim(seedname)//'-kslice-morb.dat'
                elseif (plot_curv) then
                   filename = trim(seedname)//'-kslice-curv.dat'
-               endif
+               end if
                write (stdout, '(/,3x,a)') filename
                open (dataunit, file=filename, form='formatted')
                do loop_kpt = 1, nkpts
@@ -358,7 +358,7 @@ contains
                write (dataunit, *) ' '
                close (dataunit)
             end if
-         endif
+         end if
 
          if (plot_fermi_lines .and. .not. fermi_lines_color .and. .not. heatmap) then
             !
@@ -383,7 +383,7 @@ contains
                write (scriptunit, '(a)') "splot '"//trim(seedname)//"-bnd_" &
                   //achar(48 + n1)//achar(48 + n2)//achar(48 + n3)//".dat'"
                write (scriptunit, '(a)') "unset table"
-            enddo
+            end do
             write (scriptunit, '(a)') &
                "#Uncomment next two lines to create postscript"
             write (scriptunit, '(a)') "#set term post eps enh"
@@ -401,7 +401,7 @@ contains
             else
                write (scriptunit, '(a)') &
                   "plot 'bnd_001.dat' using 1:2 w lines ls 1,"//achar(92)
-            endif
+            end if
             do n = 2, num_wann - 1
                n1 = n/100
                n2 = (n - n1*100)/10
@@ -409,7 +409,7 @@ contains
                write (scriptunit, '(a)') "     'bnd_" &
                   //achar(48 + n1)//achar(48 + n2)//achar(48 + n3) &
                   //".dat' using 1:2 w lines ls 1,"//achar(92)
-            enddo
+            end do
             n = num_wann
             n1 = n/100
             n2 = (n - n1*100)/10
@@ -442,7 +442,7 @@ contains
             write (scriptunit, '(a)') "pl.savefig(outfile,bbox_inches='tight')"
             write (scriptunit, '(a)') "pl.show()"
             close (scriptunit)
-         endif !plot_fermi_lines .and. .not.fermi_lines_color .and. .not.heatmap
+         end if !plot_fermi_lines .and. .not.fermi_lines_color .and. .not.heatmap
 
          if (plot_fermi_lines .and. fermi_lines_color .and. .not. heatmap) then
             !
@@ -504,7 +504,7 @@ contains
                "-kslice-fermi_lines.pdf',bbox_inches='tight')"
             write (scriptunit, '(a)') "pl.show()"
             close (scriptunit)
-         endif ! plot_fermi_lines .and. fermi_lines_color .and. .not.heatmap
+         end if ! plot_fermi_lines .and. fermi_lines_color .and. .not.heatmap
 
          if (heatmap) then
             !
@@ -531,7 +531,7 @@ contains
                              '+fermi_lines.py'
                   write (stdout, '(/,3x,a)') filename
                   open (scriptunit, file=filename, form='formatted')
-               endif
+               end if
                call script_common(scriptunit, areab1b2, square)
                if (plot_fermi_lines) call script_fermi_lines(scriptunit)
 
@@ -604,7 +604,7 @@ contains
                      //"extent=(min(xint),max(xint),min(yint),max(yint)))"
                   write (scriptunit, '(a)') "cbar=pl.colorbar()"
 
-               endif
+               end if
 
                write (scriptunit, '(a)') " "
                write (scriptunit, '(a)') "ax = pl.gca()"
@@ -616,9 +616,9 @@ contains
 
                close (scriptunit)
 
-            enddo !i
+            end do !i
 
-         endif !heatmap
+         end if !heatmap
 
          write (stdout, *) ' '
 
@@ -652,13 +652,13 @@ contains
          end select
          write (stdout, '(/,7x,a,f10.4,1x,a)') &
             '(Fermi level: ', fermi_energy_list(1), 'eV)'
-      endif
+      end if
       if (plot_curv) then
          if (berry_curv_unit == 'ang2') then
             write (stdout, '(/,3x,a)') '* Negative Berry curvature in Ang^2'
          elseif (berry_curv_unit == 'bohr2') then
             write (stdout, '(/,3x,a)') '* Negative Berry curvature in Bohr^2'
-         endif
+         end if
          if (nfermi /= 1) call io_error( &
             'Must specify one Fermi level when kslice_task=curv')
       elseif (plot_morb) then
@@ -666,7 +666,7 @@ contains
             '* Orbital magnetization k-space integrand in eV.Ang^2'
          if (nfermi /= 1) call io_error( &
             'Must specify one Fermi level when kslice_task=morb')
-      endif
+      end if
 
    end subroutine kslice_print_info
 

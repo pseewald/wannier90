@@ -105,7 +105,7 @@ contains
                D_h(n, m, i) = delHH_bar_i(n, m)/(eig(m) - eig(n))
             end do
          end do
-      enddo
+      end do
 
    end subroutine wham_get_D_h
 
@@ -150,7 +150,7 @@ contains
                D_h(n, m, i) = delHH_bar_i(n, m)*(deltaE/(deltaE**(2) + sc_eta**(2)))
             end do
          end do
-      enddo
+      end do
 
    end subroutine wham_get_D_h_P_value
 
@@ -187,7 +187,7 @@ contains
          nfermi_loc = 1
       else
          nfermi_loc = nfermi
-      endif
+      end if
 
       call utility_rotate_new(delHH, UU, num_wann)
       do ife = 1, nfermi_loc
@@ -209,10 +209,10 @@ contains
                   else
                      JJp_list(n, m, ife) = cmplx_0
                      JJm_list(m, n, ife) = cmplx_0
-                  endif
-               endif
-            enddo
-         enddo
+                  end if
+               end if
+            end do
+         end do
          call utility_rotate_new(JJp_list(:, :, ife), UU, num_wann, reverse=.true.)
          call utility_rotate_new(JJm_list(:, :, ife), UU, num_wann, reverse=.true.)
       end do
@@ -249,7 +249,7 @@ contains
          nfermi_loc = 1
       else
          nfermi_loc = nfermi
-      endif
+      end if
       allocate (occ_list(num_wann, nfermi_loc))
 
       if (present(occ) .and. present(eig)) then
@@ -258,15 +258,15 @@ contains
       elseif (.not. present(occ) .and. .not. present(eig)) then
          call io_error( &
             'either occ_list or eig must be passed as arguments to get_occ_mat_list')
-      endif
+      end if
 
       if (present(occ)) then
          occ_list(:, 1) = occ(:)
       else
          do if = 1, nfermi_loc
             call pw90common_get_occ(eig, occ_list(:, if), fermi_energy_list(if))
-         enddo
-      endif
+         end do
+      end if
 
       f_list = cmplx_0
       do if = 1, nfermi_loc
@@ -275,12 +275,12 @@ contains
                do i = 1, num_wann
                   f_list(n, m, if) = f_list(n, m, if) &
                                      + UU(n, i)*occ_list(i, if)*conjg(UU(m, i))
-               enddo
+               end do
                g_list(n, m, if) = -f_list(n, m, if)
                if (m == n) g_list(n, n, if) = g_list(n, n, if) + cmplx_1
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
 
    end subroutine wham_get_occ_mat_list
 
@@ -483,8 +483,8 @@ contains
             call wham_get_JJp_JJm_list(delHH(:, :, i), UU, eig, JJp_list(:, :, :, i), JJm_list(:, :, :, i), occ=occ)
          else
             call wham_get_JJp_JJm_list(delHH(:, :, i), UU, eig, JJp_list(:, :, :, i), JJm_list(:, :, :, i))
-         endif
-      enddo
+         end if
+      end do
 
    end subroutine wham_get_eig_UU_HH_JJlist
 

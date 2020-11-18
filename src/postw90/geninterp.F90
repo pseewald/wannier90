@@ -217,7 +217,7 @@ contains
             write (outdat_filename, '(a,a,I0,a)') trim(seedname), '_geninterp_', my_node_id, '.dat'
          else
             write (outdat_filename, '(a,a,I5.5,a)') trim(seedname), '_geninterp_', my_node_id, '.dat'
-         endif
+         end if
          outdat_unit = io_file_unit()
          open (unit=outdat_unit, file=trim(outdat_filename), form='formatted', err=107)
 

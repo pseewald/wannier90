@@ -118,7 +118,7 @@ contains
                   write (stdout, *) 'num_wann=', num_wann, '  i=', i, '  j=', j
                   call io_error &
                      ('Error in get_HH_R: orbital indices out of bounds')
-               endif
+               end if
                if (n > 1) then
                   if (ivdum(1) /= ivdum_old(1) .or. ivdum(2) /= ivdum_old(2) .or. &
                       ivdum(3) /= ivdum_old(3)) then
@@ -126,8 +126,8 @@ contains
                      new_ir = .true.
                   else
                      new_ir = .false.
-                  endif
-               endif
+                  end if
+               end if
                ivdum_old = ivdum
                ! Note that the same (j,i,ir) may occur more than once in
                ! the file seedname_HH_R.dat, hence the addition instead
@@ -138,14 +138,14 @@ contains
                if (new_ir) then
                   irvec(:, ir) = ivdum(:)
                   if (ivdum(1) == 0 .and. ivdum(2) == 0 .and. ivdum(3) == 0) rpt_origin = ir
-               endif
+               end if
                n = n + 1
-            enddo
+            end do
             close (file_unit)
             if (ir /= nrpts) then
                write (stdout, *) 'ir=', ir, '  nrpts=', nrpts
                call io_error('Error in get_HH_R: inconsistent nrpts values')
-            endif
+            end if
             do ir = 1, nrpts
                crvec(:, ir) = matmul(transpose(real_lattice), irvec(:, ir))
             end do
@@ -162,14 +162,14 @@ contains
                call io_error( &
                'Error in get_HH_R: scissors shift not implemented for ' &
                //'effective_model=T')
-         endif
+         end if
          call comms_bcast(HH_R(1, 1, 1), num_wann*num_wann*nrpts)
          call comms_bcast(ndegen(1), nrpts)
          call comms_bcast(irvec(1, 1), 3*nrpts)
          call comms_bcast(crvec(1, 1), 3*nrpts)
          if (timing_level > 1 .and. on_root) call io_stopwatch('get_oper: get_HH_R', 2)
          return
-      endif
+      end if
 
       ! Everything below is only executed if effective_model==False (default)
 
@@ -185,7 +185,7 @@ contains
             num_states(ik) = ndimwin(ik)
          else
             num_states(ik) = num_wann
-         endif
+         end if
          call get_win_min(ik, winmin_q)
          do m = 1, num_wann
             do n = 1, m
@@ -194,11 +194,11 @@ contains
                   HH_q(n, m, ik) = HH_q(n, m, ik) &
                                    + conjg(v_matrix(i, n, ik))*eigval(ii, ik) &
                                    *v_matrix(i, m, ik)
-               enddo
+               end do
                HH_q(m, n, ik) = conjg(HH_q(n, m, ik))
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
       call fourier_q_to_R(HH_q, HH_R)
 
       ! Scissors correction for an insulator: shift conduction bands upwards by
@@ -214,18 +214,18 @@ contains
                   do m = 1, num_valence_bands
                      sciss_q(i, j, ik) = sciss_q(i, j, ik) - &
                                          conjg(u_matrix(m, i, ik))*u_matrix(m, j, ik)
-                  enddo
+                  end do
                   sciss_q(j, i, ik) = conjg(sciss_q(i, j, ik))
-               enddo
-            enddo
-         enddo
+               end do
+            end do
+         end do
          call fourier_q_to_R(sciss_q, sciss_R)
          do n = 1, num_wann
             sciss_R(n, n, rpt_origin) = sciss_R(n, n, rpt_origin) + 1.0_dp
          end do
          sciss_R = sciss_R*scissors_shift
          HH_R = HH_R + sciss_R
-      endif
+      end if
 
       if (timing_level > 1 .and. on_root) call io_stopwatch('get_oper: get_HH_R', 2)
       return
@@ -302,17 +302,17 @@ contains
                if (i < 1 .or. i > num_wann .or. j < 1 .or. j > num_wann) then
                   write (stdout, *) 'num_wann=', num_wann, '  i=', i, '  j=', j
                   call io_error('Error in get_AA_R: orbital indices out of bounds')
-               endif
+               end if
                if (n > 1) then
                   if (ivdum(1) /= ivdum_old(1) .or. ivdum(2) /= ivdum_old(2) .or. &
                       ivdum(3) /= ivdum_old(3)) ir = ir + 1
-               endif
+               end if
                ivdum_old = ivdum
                AA_R(j, i, ir, 1) = AA_R(j, i, ir, 1) + cmplx(rdum1_real, rdum1_imag, kind=dp)
                AA_R(j, i, ir, 2) = AA_R(j, i, ir, 2) + cmplx(rdum2_real, rdum2_imag, kind=dp)
                AA_R(j, i, ir, 3) = AA_R(j, i, ir, 3) + cmplx(rdum3_real, rdum3_imag, kind=dp)
                n = n + 1
-            enddo
+            end do
             close (file_unit)
             ! AA_R may not contain the same number of R-vectors as HH_R
             ! (e.g., if a diagonal representation of the position matrix
@@ -320,12 +320,12 @@ contains
             if (ir > nrpts) then
                write (stdout, *) 'ir=', ir, '  nrpts=', nrpts
                call io_error('Error in get_AA_R: inconsistent nrpts values')
-            endif
-         endif
+            end if
+         end if
          call comms_bcast(AA_R(1, 1, 1, 1), num_wann*num_wann*nrpts*3)
          if (timing_level > 1 .and. on_root) call io_stopwatch('get_oper: get_AA_R', 2)
          return
-      endif
+      end if
 
       ! Real-space position matrix elements calculated by Fourier
       ! transforming overlap matrices defined on the ab-initio
@@ -346,8 +346,8 @@ contains
                num_states(ik) = ndimwin(ik)
             else
                num_states(ik) = num_wann
-            endif
-         enddo
+            end if
+         end do
 
          mmn_in = io_file_unit()
          open (unit=mmn_in, file=trim(seedname)//'.mmn', &
@@ -382,8 +382,8 @@ contains
                do m = 1, num_bands
                   read (mmn_in, *, err=102, end=102) m_real, m_imag
                   S_o(m, n) = cmplx(m_real, m_imag, kind=dp)
-               enddo
-            enddo
+               end do
+            end do
             !debug
             !OK
             !if(ik.ne.ik_prev .and.ik_prev.ne.0) then
@@ -405,8 +405,8 @@ contains
                   else
                      call io_error('Error reading '//trim(seedname)//'.mmn.&
                           & More than one matching nearest neighbour found')
-                  endif
-               endif
+                  end if
+               end if
             end do
             if (nn .eq. 0) then
                write (stdout, '(/a,i8,2i5,i4,2x,3i3)') &
@@ -437,8 +437,8 @@ contains
                   do i = 1, num_wann
                      AA_q_diag(i, idir) = AA_q_diag(i, idir) &
                                           - wb(nn)*bk(idir, nn, ik)*aimag(log(S(i, i)))
-                  enddo
-               endif
+                  end do
+               end if
             end do
             ! Assuming all neighbors of a given point are read in sequence!
             if (nn_count == nntot) then !looped over all neighbors
@@ -446,8 +446,8 @@ contains
                   if (transl_inv) then
                      do n = 1, num_wann
                         AA_q(n, n, ik, idir) = AA_q_diag(n, idir)
-                     enddo
-                  endif
+                     end do
+                  end if
                   !
                   ! Since Eq.(44) WYSV06 does not preserve the Hermiticity of the
                   ! Berry potential matrix, take Hermitean part (whether this
@@ -458,11 +458,11 @@ contains
                   AA_q(:, :, ik, idir) = &
                      0.5_dp*(AA_q(:, :, ik, idir) &
                              + conjg(transpose(AA_q(:, :, ik, idir))))
-               enddo
+               end do
             end if
 
             ik_prev = ik
-         enddo !ncount
+         end do !ncount
 
          close (mmn_in)
 
@@ -470,7 +470,7 @@ contains
          call fourier_q_to_R(AA_q(:, :, :, 2), AA_R(:, :, :, 2))
          call fourier_q_to_R(AA_q(:, :, :, 3), AA_R(:, :, :, 3))
 
-      endif !on_root
+      end if !on_root
 
       call comms_bcast(AA_R(1, 1, 1, 1), num_wann*num_wann*nrpts*3)
 
@@ -540,8 +540,8 @@ contains
                num_states(ik) = ndimwin(ik)
             else
                num_states(ik) = num_wann
-            endif
-         enddo
+            end if
+         end do
 
          mmn_in = io_file_unit()
          open (unit=mmn_in, file=trim(seedname)//'.mmn', &
@@ -574,8 +574,8 @@ contains
                do m = 1, num_bands
                   read (mmn_in, *, err=104, end=104) m_real, m_imag
                   S_o(m, n) = cmplx(m_real, m_imag, kind=dp)
-               enddo
-            enddo
+               end do
+            end do
             nn = 0
             nn_found = .false.
             do inn = 1, nntot
@@ -589,8 +589,8 @@ contains
                   else
                      call io_error('Error reading '//trim(seedname)//'.mmn.&
                           & More than one matching nearest neighbour found')
-                  endif
-               endif
+                  end if
+               end if
             end do
             if (nn .eq. 0) then
                write (stdout, '(/a,i8,2i5,i4,2x,3i3)') &
@@ -608,8 +608,8 @@ contains
             do idir = 1, 3
                BB_q(:, :, ik, idir) = BB_q(:, :, ik, idir) &
                                       + cmplx_i*wb(nn)*bk(idir, nn, ik)*H_q_qb(:, :)
-            enddo
-         enddo !ncount
+            end do
+         end do !ncount
 
          close (mmn_in)
 
@@ -617,7 +617,7 @@ contains
          call fourier_q_to_R(BB_q(:, :, :, 2), BB_R(:, :, :, 2))
          call fourier_q_to_R(BB_q(:, :, :, 3), BB_R(:, :, :, 3))
 
-      endif !on_root
+      end if !on_root
 
       call comms_bcast(BB_R(1, 1, 1, 1), num_wann*num_wann*nrpts*3)
 
@@ -684,8 +684,8 @@ contains
                num_states(ik) = ndimwin(ik)
             else
                num_states(ik) = num_wann
-            endif
-         enddo
+            end if
+         end do
 
          uHu_in = io_file_unit()
          if (uHu_formatted) then
@@ -704,7 +704,7 @@ contains
             read (uHu_in, err=106, end=106) header
             write (stdout, '(a)') trim(header)
             read (uHu_in, err=106, end=106) nb_tmp, nkp_tmp, nntot_tmp
-         endif
+         end if
          if (nb_tmp .ne. num_bands) &
             call io_error &
             (trim(seedname)//'.uHu has not the right number of bands')
@@ -737,7 +737,7 @@ contains
                   else
                      read (uHu_in, err=106, end=106) &
                         ((Ho_qb1_q_qb2(n, m), n=1, num_bands), m=1, num_bands)
-                  endif
+                  end if
                   ! pw2wannier90 is coded a bit strangely, so here we take the transpose
                   Ho_qb1_q_qb2 = transpose(Ho_qb1_q_qb2)
                   ! old code here
@@ -757,26 +757,26 @@ contains
                      do a = 1, b
                         CC_q(:, :, ik, a, b) = CC_q(:, :, ik, a, b) + wb(nn1)*bk(a, nn1, ik) &
                                                *wb(nn2)*bk(b, nn2, ik)*H_qb1_q_qb2(:, :)
-                     enddo
-                  enddo
-               enddo !nn1
-            enddo !nn2
+                     end do
+                  end do
+               end do !nn1
+            end do !nn2
             do b = 1, 3
                do a = 1, b
                   CC_q(:, :, ik, b, a) = conjg(transpose(CC_q(:, :, ik, a, b)))
-               enddo
-            enddo
-         enddo !ik
+               end do
+            end do
+         end do !ik
 
          close (uHu_in)
 
          do b = 1, 3
             do a = 1, 3
                call fourier_q_to_R(CC_q(:, :, :, a, b), CC_R(:, :, :, a, b))
-            enddo
-         enddo
+            end do
+         end do
 
-      endif !on_root
+      end if !on_root
 
       call comms_bcast(CC_R(1, 1, 1, 1, 1), num_wann*num_wann*nrpts*3*3)
 
@@ -838,8 +838,8 @@ contains
                num_states(ik) = ndimwin(ik)
             else
                num_states(ik) = num_wann
-            endif
-         enddo
+            end if
+         end do
 
          uIu_in = io_file_unit()
          open (unit=uIu_in, file=TRIM(seedname)//".uIu", form='unformatted', &
@@ -897,34 +897,34 @@ contains
                                                   + conjg(v_matrix(i, n, qb1)) &
                                                   *Lo_qb1_q_qb2(ii, jj) &
                                                   *v_matrix(j, m, qb2)
-                           enddo
-                        enddo
-                     enddo
-                  enddo
+                           end do
+                        end do
+                     end do
+                  end do
                   do b = 1, 3
                      do a = 1, b
                         FF_q(:, :, ik, a, b) = FF_q(:, :, ik, a, b) + wb(nn1)*bk(a, nn1, ik) &
                                                *wb(nn2)*bk(b, nn2, ik)*L_qb1_q_qb2(:, :)
-                     enddo
-                  enddo
-               enddo !nn1
-            enddo !nn2
+                     end do
+                  end do
+               end do !nn1
+            end do !nn2
             do b = 1, 3
                do a = 1, b
                   FF_q(:, :, ik, b, a) = conjg(transpose(FF_q(:, :, ik, a, b)))
-               enddo
-            enddo
-         enddo !ik
+               end do
+            end do
+         end do !ik
 
          close (uIu_in)
 
          do b = 1, 3
             do a = 1, 3
                call fourier_q_to_R(FF_q(:, :, :, a, b), FF_R(:, :, :, a, b))
-            enddo
-         enddo
+            end do
+         end do
 
-      endif !on_root
+      end if !on_root
 
       call comms_bcast(FF_R(1, 1, 1, 1, 1), num_wann*num_wann*nrpts*3*3)
 
@@ -983,8 +983,8 @@ contains
                num_states(ik) = ndimwin(ik)
             else
                num_states(ik) = num_wann
-            endif
-         enddo
+            end if
+         end do
 
          ! Read from .spn file the original spin matrices <psi_nk|sigma_i|psi_mk>
          ! (sigma_i = Pauli matrix) between ab initio eigenstates
@@ -1006,7 +1006,7 @@ contains
             read (spn_in, err=110, end=110) header
             write (stdout, '(a)') trim(header)
             read (spn_in, err=110, end=110) nb_tmp, nkp_tmp
-         endif
+         end if
          if (nb_tmp .ne. num_bands) &
             call io_error(trim(seedname)//'.spn has wrong number of bands')
          if (nkp_tmp .ne. num_kpts) &
@@ -1027,7 +1027,7 @@ contains
                      spn_o(m, n, ik, 3) = conjg(spn_o(n, m, ik, 3))
                   end do
                end do
-            enddo
+            end do
          else
             allocate (spn_temp(3, (num_bands*(num_bands + 1))/2), stat=ierr)
             if (ierr /= 0) call io_error('Error in allocating spm_temp in get_SS_R')
@@ -1048,7 +1048,7 @@ contains
             end do
             deallocate (spn_temp, stat=ierr)
             if (ierr /= 0) call io_error('Error in deallocating spm_temp in get_SS_R')
-         endif
+         end if
 
          close (spn_in)
 
@@ -1061,14 +1061,14 @@ contains
                   ik, num_states(ik), &
                   ik, num_states(ik), &
                   spn_o(:, :, ik, is), SS_q(:, :, ik, is))
-            enddo !is
-         enddo !ik
+            end do !is
+         end do !ik
 
          call fourier_q_to_R(SS_q(:, :, :, 1), SS_R(:, :, :, 1))
          call fourier_q_to_R(SS_q(:, :, :, 2), SS_R(:, :, :, 2))
          call fourier_q_to_R(SS_q(:, :, :, 3), SS_R(:, :, :, 3))
 
-      endif !on_root
+      end if !on_root
 
       call comms_bcast(SS_R(1, 1, 1, 1), num_wann*num_wann*nrpts*3)
 
@@ -1120,8 +1120,8 @@ contains
             rdotq = twopi*dot_product(kpt_latt(:, ik), irvec(:, ir))
             phase_fac = exp(-cmplx_i*rdotq)
             op_R(:, :, ir) = op_R(:, :, ir) + phase_fac*op_q(:, :, ik)
-         enddo
-      enddo
+         end do
+      end do
       op_R = op_R/real(num_kpts, dp)
 
    end subroutine fourier_q_to_R
@@ -1152,7 +1152,7 @@ contains
       if (.not. have_disentangled) then
          win_min = 1
          return
-      endif
+      end if
 
       do j = 1, num_bands
          if (lwindow(j, ik)) then

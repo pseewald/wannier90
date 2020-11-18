@@ -69,17 +69,17 @@ contains
             if (lwindow_in(i, ik)) then
                j = j + 1
                nindx(j) = i
-            endif
-         enddo
+            end if
+         end do
          nb = j
          do j = 1, nb
             i = nindx(j)
             d_matrix_band(1:nb, j, :, ir) = d_matrix_band(nindx(1:nb), i, :, ir)
             if (nb .lt. num_bands) then
                d_matrix_band(nb + 1:, j, :, ir) = 0
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
 
       return
    end subroutine sitesym_slim_d_matrix_band
@@ -129,7 +129,7 @@ contains
       if (present(lwindow_in) .and. (ndim .ne. num_bands)) call io_error('ndim!=num_bands')
       if (.not. present(lwindow_in)) then
          if (ndim .ne. num_wann) call io_error('ndim!=num_wann')
-      endif
+      end if
 
       ldone = .false.
       do ir = 1, nkptirr
@@ -139,12 +139,12 @@ contains
             n = count(lwindow_in(:, ik))
          else
             n = ndim
-         endif
+         end if
          if (present(lwindow_in)) then
             call symmetrize_ukirr(ir, ndim, umat(:, :, ik), n)
          else
             call symmetrize_ukirr(ir, ndim, umat(:, :, ik))
-         endif
+         end if
          do isym = 2, nsymmetry
             irk = kptsym(isym, ir)
             if (ldone(irk)) cycle
@@ -157,8 +157,8 @@ contains
             ! umat(Rk) = cmat*D^{+}(R,k) = d(R,k) * U(k) * D^{+}(R,k)
             call zgemm('N', 'C', n, num_wann, num_wann, cmplx_1, cmat, ndim, &
                        d_matrix_wann(:, :, isym, ir), num_wann, cmplx_0, umat(:, :, irk), ndim)
-         enddo
-      enddo
+         end do
+      end do
       if (any(.not. ldone)) call io_error('error in sitesym_symmetrize_u_matrix')
 
       return
@@ -201,13 +201,13 @@ contains
                call utility_zgemm(cmat1, cmat2, 'N', &
                                   d_matrix_wann(:, :, isym, ir), 'N', num_wann)
                grad_total = grad_total + cmat1
-            enddo
+            end do
             grad(:, :, ik) = grad_total
-         enddo
+         end do
          do ik = 1, num_kpts
             if (ir2ik(ik2ir(ik)) .ne. ik) grad(:, :, ik) = 0
-         enddo
-      endif ! if (imode.eq.1)
+         end do
+      end if ! if (imode.eq.1)
       !
       ! grad -> 1/N_{R'} \sum_{R'} D^{+}(R',k) grad D(R',k)
       ! where R' k = k
@@ -229,9 +229,9 @@ contains
             call utility_zgemm(cmat1, d_matrix_wann(:, :, isym, ir), 'C', &
                                cmat2, 'N', num_wann)
             grad_total = grad_total + cmat1
-         enddo
+         end do
          grad(:, :, ik) = grad_total/ngk
-      enddo
+      end do
 
       return
    end subroutine sitesym_symmetrize_gradient
@@ -268,8 +268,8 @@ contains
             call utility_zgemm(cmat1, d_matrix_wann(:, :, isym, ir), 'N', &
                                cmat2, 'N', num_wann)
             urot(:, :, irk) = cmat1(:, :)
-         enddo
-      enddo
+         end do
+      end do
       if (any(.not. ldone)) call io_error('error in sitesym_symmetrize_rotation')
 
       return
@@ -310,7 +310,7 @@ contains
             call zgemm('C', 'N', nd, nd, nd, cmplx_1, d_matrix_band(:, :, isym, ir), num_bands, &
                        cmat1, num_bands, cmplx_0, cmat2, num_bands)
             czmat(:, :, ik) = czmat(:, :, ik) + cmat2(:, :)
-         enddo
+         end do
 
          cztmp(:, :) = czmat(:, :, ik)
          do isym = 2, nsymmetry
@@ -322,9 +322,9 @@ contains
             call zgemm('C', 'N', nd, nd, nd, cmplx_1, d_matrix_band(:, :, isym, ir), num_bands, &
                        cmat1, num_bands, cmplx_0, cmat2, num_bands)
             czmat(:, :, ik) = czmat(:, :, ik) + cmat2(:, :)
-         enddo
+         end do
          czmat(:, :, ik) = czmat(:, :, ik)/count(kptsym(:, ir) .eq. ik)
-      enddo
+      end do
 
       return
    end subroutine sitesym_symmetrize_zmatrix
@@ -362,20 +362,20 @@ contains
       else
          if (ndim .ne. num_wann) call io_error('ndim!=num_wann')
          ntmp = ndim
-      endif
+      end if
 
       ngk = count(kptsym(:, ir) .eq. ir2ik(ir))
       if (ngk .eq. 1) then
          call orthogonalize_u(ndim, num_wann, umat, ntmp)
          return
-      endif
+      end if
 
       do iter = 1, niter
          usum(:, :) = 0
          cmat2(:, :) = 0
          do i = 1, num_wann
             cmat2(i, i) = cmat2(i, i) + ngk
-         enddo
+         end do
          do isym = 1, nsymmetry
             if (kptsym(isym, ir) .ne. ir2ik(ir)) cycle
             !
@@ -394,7 +394,7 @@ contains
             ! check
             cmat2(:, :) = cmat2(:, :) - &
                           matmul(conjg(transpose(umat(:ntmp, :))), cmat(:ntmp, :))
-         enddo ! isym
+         end do ! isym
          diff = sum(abs(cmat2))
          if (diff .lt. symmetrize_eps) exit
          if (iter .eq. niter) then
@@ -403,11 +403,11 @@ contains
             write (stdout, "(a)") '  compatible with the bands'
             write (stdout, "(a,2e20.10)") 'diff,eps=', diff, symmetrize_eps
             call io_error('symmetrize_ukirr: not converged')
-         endif
+         end if
          usum = usum/ngk
          call orthogonalize_u(ndim, num_wann, usum, ntmp)
          umat(:, :) = usum
-      enddo ! iter
+      end do ! iter
 
       return
    end subroutine symmetrize_ukirr
@@ -442,7 +442,7 @@ contains
                   eig, evecl, n, evecr, m, WORK, LWORK, RWORK, INFO)
       if (info .ne. 0) then
          call io_error(' ERROR: IN ZGESVD IN orthogonalize_u')
-      endif
+      end if
       deallocate (smat, eig, WORK, RWORK)
       ! u_matrix is the initial guess for the unitary rotation of the
       ! basis states given by the subroutine extract
@@ -451,9 +451,9 @@ contains
       do l = 1, m
          do i = 1, n
             u(i, j) = u(i, j) + evecl(i, l)*evecr(l, j)
-         enddo
-      enddo
-      enddo
+         end do
+      end do
+      end do
       deallocate (evecl, evecr)
 
       return
@@ -516,7 +516,7 @@ contains
             if (abs(sp3) .lt. 1e-10) then
                umatnew(:, i) = umat(:, i, ik)
                cycle
-            endif
+            end if
             call ZHPGVX(1, 'V', 'A', 'U', 2, HP, SP, 0.0_dp, 0.0_dp, 0, 0, &
                         -1.0_dp, m, W, V, 2, CWORK, RWORK, IWORK, IFAIL, INFO)
             if (INFO .ne. 0) then
@@ -528,16 +528,16 @@ contains
                   else
                      write (stdout, *) ' S is not positive definite'
                      write (stdout, *) 'sp3=', sp3
-                  endif
+                  end if
                   call io_error('error at sitesym_dis_extract_symmetry')
-               endif
-            endif
+               end if
+            end if
             ! choose the larger eigenstate
             umatnew(:, i) = V(1, 2)*umat(:, i, ik) + V(2, 2)*deltaU(:, i)
-         enddo ! i
+         end do ! i
          call symmetrize_ukirr(ik2ir(ik), num_bands, umatnew, n)
          umat(:, :, ik) = umatnew(:, :)
-      enddo ! iter
+      end do ! iter
 
       return
    end subroutine sitesym_dis_extract_symmetry

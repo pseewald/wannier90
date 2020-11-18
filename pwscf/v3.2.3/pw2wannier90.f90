@@ -154,7 +154,7 @@ program pw2wannier90
          write (stdout, *) ' *** A matrix is not computed '
          write (stdout, *) ' -----------------------------'
          write (stdout, *)
-      endif
+      end if
       if (write_mmn) then
          write (stdout, *) ' ---------------'
          write (stdout, *) ' *** Compute  M '
@@ -167,7 +167,7 @@ program pw2wannier90
          write (stdout, *) ' *** M matrix is not computed '
          write (stdout, *) ' -----------------------------'
          write (stdout, *)
-      endif
+      end if
       write (stdout, *) ' ----------------'
       write (stdout, *) ' *** Write bands '
       write (stdout, *) ' ----------------'
@@ -186,14 +186,14 @@ program pw2wannier90
          write (stdout, *) ' *** Plot info is not printed '
          write (stdout, *) ' -----------------------------'
          write (stdout, *)
-      endif
+      end if
       write (stdout, *) ' ------------'
       write (stdout, *) ' *** Stop pp '
       write (stdout, *) ' ------------'
       write (stdout, *)
       call stop_pp
       !
-   endif
+   end if
    !
    if (wan_mode .eq. 'library') then
       !
@@ -215,14 +215,14 @@ program pw2wannier90
       call lib_dealloc
       call stop_pp
       !
-   endif
+   end if
    !
    if (wan_mode .eq. 'wannier2sic') then
       !
       call read_nnkp
       call wan2sic
       !
-   endif
+   end if
    !
    stop
 end program pw2wannier90
@@ -306,7 +306,7 @@ subroutine setup_nnkp
    do ia = 1, nat
       type = ityp(ia)
       atsym(ia) = atm(type)
-   enddo
+   end do
 
    ! MP grid dimensions
    call find_mp_grid()
@@ -319,7 +319,7 @@ subroutine setup_nnkp
                          glatt, kpt_latt, nbnd, nat, atsym, atcart, gamma_only, noncolin, & ! input
                          nnb, kpb, g_kpb, num_bands, n_wannier, center_w, &               ! output
                          l_w, mr_w, r_w, zaxis, xaxis, alpha_w, exclude_bands)             ! output
-   endif
+   end if
 #endif
 
    call mp_bcast(nnb, ionode_id)
@@ -357,8 +357,8 @@ subroutine setup_nnkp
       else
          nexband = nexband + 1
          excluded_band(indexb) = .true.
-      endif
-   enddo band_loop
+      end if
+   end do band_loop
 
    if ((nbnd - nexband) .ne. num_bands) &
       call errore('setup_nnkp', ' something wrong with num_bands', 1)
@@ -378,7 +378,7 @@ subroutine setup_nnkp
          call errore('setup_nnkp', ' zona value must be positive', 1)
       ! convert wannier center in cartesian coordinates (in unit of alat)
       CALL cryst_to_cart(1, center_w(:, iw), at, 1)
-   enddo
+   end do
    write (stdout, *) ' - All guiding functions are given '
 
    nnbx = 0
@@ -443,7 +443,7 @@ subroutine run_wannier
                        glatt, kpt_latt, num_bands, n_wannier, nnb, nat, &              ! input
                        atsym, atcart, gamma_only, m_mat, a_mat, eigval, &              ! input
                        u_mat, u_mat_opt, lwindow, wann_centers, wann_spreads, spreads) ! output
-   endif
+   end if
 #endif
 
    call mp_bcast(u_mat, ionode_id)
@@ -476,8 +476,8 @@ subroutine find_mp_grid()
       if (kpt_latt(1, ik) .eq. min_k) then
          ii = ii + 1
          temp(:, ii) = kpt_latt(:, ik)
-      endif
-   enddo
+      end if
+   end do
    ntemp = ii
 
    min_k = minval(temp(2, 1:ntemp))
@@ -485,8 +485,8 @@ subroutine find_mp_grid()
    do ik = 1, ntemp
       if (temp(2, ik) .eq. min_k) then
          ii = ii + 1
-      endif
-   enddo
+      end if
+   end do
    mp_grid(3) = ii
 
    min_k = minval(temp(3, 1:ntemp))
@@ -494,8 +494,8 @@ subroutine find_mp_grid()
    do ik = 1, ntemp
       if (temp(3, ik) .eq. min_k) then
          ii = ii + 1
-      endif
-   enddo
+      end if
+   end do
    mp_grid(2) = ii
 
    if ((mp_grid(2) .eq. 0) .or. (mp_grid(3) .eq. 0)) &
@@ -552,7 +552,7 @@ subroutine read_nnkp
       iun_nnkp = find_free_unit()
       open (unit=iun_nnkp, file=TRIM(seedname)//".nnkp", form='formatted')
 
-   endif
+   end if
 
    nnbx = 0
 
@@ -567,17 +567,17 @@ subroutine read_nnkp
          read (iun_nnkp, *) (rlatt(i, j), i=1, 3)
          do i = 1, 3
             rlatt(i, j) = rlatt(i, j)/(alat*bohr)
-         enddo
-      enddo
+         end do
+      end do
       do j = 1, 3
          do i = 1, 3
             if (abs(rlatt(i, j) - at(i, j)) .gt. eps6) then
                write (stdout, *) ' Something wrong! '
                write (stdout, *) ' rlatt(i,j) =', rlatt(i, j), ' at(i,j)=', at(i, j)
                stop
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
       write (stdout, *) ' - Real lattice is ok'
 
       call scan_file_to('recip_lattice')
@@ -585,17 +585,17 @@ subroutine read_nnkp
          read (iun_nnkp, *) (glatt(i, j), i=1, 3)
          do i = 1, 3
             glatt(i, j) = (alat*bohr)*glatt(i, j)/tpi
-         enddo
-      enddo
+         end do
+      end do
       do j = 1, 3
          do i = 1, 3
             if (abs(glatt(i, j) - bg(i, j)) .gt. eps6) then
                write (stdout, *) ' Something wrong! '
                write (stdout, *) ' glatt(i,j)=', glatt(i, j), ' bg(i,j)=', bg(i, j)
                stop
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
       write (stdout, *) ' - Reciprocal lattice is ok'
 
       call scan_file_to('kpoints')
@@ -604,7 +604,7 @@ subroutine read_nnkp
          write (stdout, *) ' Something wrong! '
          write (stdout, *) ' numk=', numk, ' iknum=', iknum
          stop
-      endif
+      end if
       do i = 1, numk
          read (iun_nnkp, *) xx(1), xx(2), xx(3)
          CALL cryst_to_cart(1, xx, bg, 1)
@@ -616,11 +616,11 @@ subroutine read_nnkp
             write (stdout, *) xx(1), xx(2), xx(3)
             write (stdout, *) xk(1, i), xk(2, i), xk(3, i)
             stop
-         endif
-      enddo
+         end if
+      end do
       write (stdout, *) ' - K-points are ok'
 
-   endif ! ionode
+   end if ! ionode
 
    ! Broadcast
    call mp_bcast(rlatt, ionode_id)
@@ -629,7 +629,7 @@ subroutine read_nnkp
    if (ionode) then   ! read from ionode only
       call scan_file_to('projections')
       read (iun_nnkp, *) n_proj
-   endif
+   end if
 
    ! Broadcast
    call mp_bcast(n_proj, ionode_id)
@@ -664,8 +664,8 @@ subroutine read_nnkp
             call errore('read_nnkp', ' zona value must be positive', 1)
          ! convert wannier center in cartesian coordinates (in unit of alat)
          CALL cryst_to_cart(1, center_w(:, iw), at, 1)
-      enddo
-   endif
+      end do
+   end if
 
    write (stdout, *) ' - All guiding functions are given '
 
@@ -684,12 +684,12 @@ subroutine read_nnkp
    do iw = 1, n_proj
       write (stdout, '(3f12.6,3i3,f12.6)') &
          center_w(1:3, iw), l_w(iw), mr_w(iw), r_w(iw), alpha_w(iw)
-   enddo
+   end do
 
    if (ionode) then   ! read from ionode only
       call scan_file_to('nnkpts')
       read (iun_nnkp, *) nnb
-   endif
+   end if
 
    ! Broadcast
    call mp_bcast(nnb, ionode_id)
@@ -708,9 +708,9 @@ subroutine read_nnkp
       do ik = 1, iknum
          do ib = 1, nnb
             read (iun_nnkp, *) idum, kpb(ik, ib), (g_kpb(ipol, ik, ib), ipol=1, 3)
-         enddo
-      enddo
-   endif
+         end do
+      end do
+   end if
 
    ! Broadcast
    call mp_bcast(kpb, ionode_id)
@@ -756,8 +756,8 @@ subroutine read_nnkp
          if (indexb < 1 .or. indexb > nbnd) &
             call errore('read_nnkp', ' wrong excluded band index ', 1)
          excluded_band(indexb) = .true.
-      enddo
-   endif
+      end do
+   end if
 
    ! Broadcast
    call mp_bcast(nexband, ionode_id)
@@ -853,7 +853,7 @@ subroutine compute_mmn
    if (wan_mode .eq. 'standalone') then
       iun_mmn = find_free_unit()
       if (ionode) open (unit=iun_mmn, file=TRIM(seedname)//".mmn", form='formatted')
-   endif
+   end if
 
    if (write_spn .and. noncolin) then
       iun_spn = find_free_unit()
@@ -898,9 +898,9 @@ subroutine compute_mmn
          call trnvect(g_, at, bg, 1)
          dxk(:, ind) = xk(:, ikp) + g_(:) - xk(:, ik)
          qg(ind) = dxk(1, ind)*dxk(1, ind) + dxk(2, ind)*dxk(2, ind) + dxk(3, ind)*dxk(3, ind)
-      enddo
+      end do
 !      write (stdout,'(i3,12f8.4)')  ik, qg((ik-1)*nnb+1:ik*nnb)
-   enddo
+   end do
    !
    !  USPP
    !
@@ -918,10 +918,10 @@ subroutine compute_mmn
                do jh = 1, nh(nt)
                   CALL qvan2(nbt, ih, jh, nt, qg, qgm, ylm)
                   qb(ih, jh, nt, 1:nbt) = omega*qgm(1:nbt)
-               enddo
-            enddo
-         endif
-      enddo
+               end do
+            end do
+         end if
+      end do
       !
       deallocate (qg, qgm, ylm)
       !
@@ -934,15 +934,15 @@ subroutine compute_mmn
       if (ionode) then
          write (iun_mmn, *) header
          write (iun_mmn, *) nbnd - nexband, iknum, nnb
-      endif
-   endif
+      end if
+   end if
    if (write_spn .and. noncolin) then
       CALL date_and_tim(cdate, ctime)
       header = 'Created on '//cdate//' at '//ctime
       if (ionode) then
          write (iun_spn, *) header
          write (iun_spn, *) nbnd - nexband, iknum, nnb
-      endif
+      end if
    end if
    !
    allocate (Mkb(nbnd, nbnd))
@@ -968,7 +968,7 @@ subroutine compute_mmn
                if (ionode) write (iun_spn, '(3i7,2es22.12)') loop2, loop, ik, spin
             end do
          end do
-      endif
+      end if
 
       !
       !  USPP
@@ -1039,27 +1039,27 @@ subroutine compute_mmn
                                        Mkb(m, n) = Mkb(m, n) + &
                                                    phase1*qb(ih, jh, nt, ind)* &
                                                    rbecp(ikb, m)*rbecp2(jkb, n)
-                                    enddo
+                                    end do
                                  else
                                     do n = 1, nbnd
                                        if (excluded_band(n)) cycle
                                        Mkb(m, n) = Mkb(m, n) + &
                                                    phase1*qb(ih, jh, nt, ind)* &
                                                    CONJG(becp(ikb, m))*becp2(jkb, n)
-                                    enddo
-                                 endif
-                              enddo ! m
-                           enddo !ih
-                        enddo !jh
+                                    end do
+                                 end if
+                              end do ! m
+                           end do !ih
+                        end do !jh
                         ijkb0 = ijkb0 + nh(nt)
-                     endif  !ityp
-                  enddo  !nat
+                     end if  !ityp
+                  end do  !nat
                else  !tvanp
                   do na = 1, nat
                      if (ityp(na) == nt) ijkb0 = ijkb0 + nh(nt)
-                  enddo
-               endif !tvanp
-            enddo !ntyp
+                  end do
+               end if !tvanp
+            end do !ntyp
          end if ! any_uspp
          !
          !
@@ -1067,7 +1067,7 @@ subroutine compute_mmn
          !
          if (wan_mode .eq. 'standalone') then
             if (ionode) write (iun_mmn, '(7i5)') ik, ikp, (g_kpb(ipol, ik, ib), ipol=1, 3)
-         endif
+         end if
          !
          do m = 1, nbnd
             if (excluded_band(m)) cycle
@@ -1108,7 +1108,7 @@ subroutine compute_mmn
                   Mkb(m, n) = mmn + Mkb(m, n)
                   if (m .ne. n) Mkb(n, m) = Mkb(m, n) ! fill other half of matrix by symmetry
                   aa = aa + abs(mmn)**2
-               enddo
+               end do
             elseif (noncolin) then
                do n = 1, nbnd
                   if (excluded_band(n)) cycle
@@ -1119,7 +1119,7 @@ subroutine compute_mmn
                   call reduce(2, mmn)
                   Mkb(m, n) = mmn + Mkb(m, n)
                   aa = aa + abs(mmn)**2
-               enddo
+               end do
             else
                do n = 1, nbnd
                   if (excluded_band(n)) cycle
@@ -1127,8 +1127,8 @@ subroutine compute_mmn
                   call reduce(2, mmn)
                   Mkb(m, n) = mmn + Mkb(m, n)
                   aa = aa + abs(mmn)**2
-               enddo
-            endif
+               end do
+            end if
          end do   ! m
 
          do n = 1, nbnd
@@ -1141,9 +1141,9 @@ subroutine compute_mmn
                   m_mat(m, n, ib, ik) = Mkb(m, n)
                else
                   call errore('compute_mmn', ' value of wan_mode not recognised', 1)
-               endif
-            enddo
-         enddo
+               end if
+            end do
+         end do
 
       end do !ib
    end do  !ik
@@ -1220,7 +1220,7 @@ subroutine compute_amn
    if (wan_mode .eq. 'standalone') then
       iun_amn = find_free_unit()
       if (ionode) open (unit=iun_amn, file=TRIM(seedname)//".amn", form='formatted')
-   endif
+   end if
 
    write (stdout, *) "AMN"
 
@@ -1230,8 +1230,8 @@ subroutine compute_amn
       if (ionode) then
          write (iun_amn, *) header
          write (iun_amn, *) nbnd - nexband, iknum, n_wannier
-      endif
-   endif
+      end if
+   end if
    !
    allocate (sgf(npwx, n_proj))
    !
@@ -1271,7 +1271,7 @@ subroutine compute_amn
          call s_psi(npwx, npw, n_proj, gf, sgf)
       else
          sgf(:, :) = gf(:, :)
-      endif
+      end if
       !
       if (noncolin) then
          ! we do the projection as g(r)*a(r) and g(r)*b(r)
@@ -1290,7 +1290,7 @@ subroutine compute_amn
                      a_mat(ibnd1, iw + n_proj*(ipol - 1), ik) = amn
                   else
                      call errore('compute_amn', ' value of wan_mode not recognised', 1)
-                  endif
+                  end if
                end do
             end do
          end do
@@ -1313,7 +1313,7 @@ subroutine compute_amn
                   a_mat(ibnd1, iw, ik) = amn
                else
                   call errore('compute_amn', ' value of wan_mode not recognised', 1)
-               endif
+               end if
             end do
          end do
       end if
@@ -1364,7 +1364,7 @@ subroutine generate_guiding_functions(ik)
       gk(2, ig) = xk(2, ik) + g(2, igk(ig))
       gk(3, ig) = xk(3, ik) + g(3, igk(ig))
       qg(ig) = gk(1, ig)**2 + gk(2, ig)**2 + gk(3, ig)**2
-   enddo
+   end do
 
    call ylmr2(lmax2, npw, gk, qg, ylm)
    ! define qg as the norm of (k+g) in a.u.
@@ -1423,7 +1423,7 @@ subroutine write_band
    if (wan_mode .eq. 'standalone') then
       iun_band = find_free_unit()
       if (ionode) open (unit=iun_band, file=TRIM(seedname)//".eig", form='formatted')
-   endif
+   end if
 
    if (wan_mode .eq. 'library') allocate (eigval(num_bands, iknum))
 
@@ -1439,7 +1439,7 @@ subroutine write_band
             eigval(ibnd1, ikevc) = et(ibnd, ik)*rytoev
          else
             call errore('write_band', ' value of wan_mode not recognised', 1)
-         endif
+         end if
       end do
    end do
    return
@@ -1481,7 +1481,7 @@ subroutine write_plot
       n1by2 = (nr1s + 1)/2; n2by2 = (nr2s + 1)/2; n3by2 = (nr3s + 1)/2
       write (stdout, '(3(a,i5))') 'n1by2=', n1by2, 'n2by2=', n2by2, 'n3by2=', n3by2
       allocate (psic_small(n1by2*n2by2*n3by2))
-   endif
+   end if
 
    do ik = ikstart, ikstop
 
@@ -1501,15 +1501,15 @@ subroutine write_plot
                write (iun_plot, *) n1by2, n2by2, n3by2, ikevc, nbnd - nexband
             else
                write (iun_plot, *) nr1s, nr2s, nr3s, ikevc, nbnd - nexband
-            endif
+            end if
          else
             open (unit=iun_plot, file=wfnname, form='unformatted')
             if (reduce_unk) then
                write (iun_plot) n1by2, n2by2, n3by2, ikevc, nbnd - nexband
             else
                write (iun_plot) nr1s, nr2s, nr3s, ikevc, nbnd - nexband
-            endif
-         endif
+            end if
+         end if
       end if
 
       call davcio(evc, nwordwfc, iunwfc, ikevc, -1)
@@ -1533,24 +1533,24 @@ subroutine write_plot
                      idx = (k - 1)*nr2s*nr1s + (j - 1)*nr1s + i
                      pos = pos + 1
                      psic_small(pos) = psic_all(idx)
-                  enddo
-               enddo
-            enddo
-         endif
+                  end do
+               end do
+            end do
+         end if
          if (ionode) then
             if (wvfn_formatted) then
                if (reduce_unk) then
                   write (iun_plot, '(2ES20.10)') (psic_small(j), j=1, n1by2*n2by2*n3by2)
                else
                   write (iun_plot, *) (psic_all(j), j=1, nr1s*nr2s*nr3s)
-               endif
+               end if
             else
                if (reduce_unk) then
                   write (iun_plot) (psic_small(j), j=1, n1by2*n2by2*n3by2)
                else
                   write (iun_plot) (psic_all(j), j=1, nr1s*nr2s*nr3s)
-               endif
-            endif
+               end if
+            end if
          end if
 #else
          if (reduce_unk) then
@@ -1560,23 +1560,23 @@ subroutine write_plot
                      idx = (k - 1)*nr2s*nr1s + (j - 1)*nr1s + i
                      pos = pos + 1
                      psic_small(pos) = psic(idx)
-                  enddo
-               enddo
-            enddo
-         endif
+                  end do
+               end do
+            end do
+         end if
          if (wvfn_formatted) then
             if (reduce_unk) then
                write (iun_plot, '(2ES20.10)') (psic_small(j), j=1, n1by2*n2by2*n3by2)
             else
                write (iun_plot, *) (psic(j), j=1, nr1s*nr2s*nr3s)
-            endif
+            end if
          else
             if (reduce_unk) then
                write (iun_plot) (psic_small(j), j=1, n1by2*n2by2*n3by2)
             else
                write (iun_plot) (psic(j), j=1, nr1s*nr2s*nr3s)
-            endif
-         endif
+            end if
+         end if
 #endif
       end do !ibnd
 
@@ -1622,10 +1622,10 @@ subroutine wan2sic
             !do nn = 1, nnb(ik)
             do nn = 1, nnb
                read (20, *) ! m_matrix (i,j,nkp,nn)
-            enddo
-         enddo  !nkp
-      enddo !j
-   enddo !i
+            end do
+         end do  !nkp
+      end do !j
+   end do !i
    !
    orb(:, :) = (0.0d0, 0.0d0)
    do ik = 1, iknum
@@ -1640,7 +1640,7 @@ subroutine wan2sic
                orbital(j, iw) = orbital(j, iw) + u_matrix(iw, ibnd, ik)*evc(j, ibnd)
                write (stdout, *) j, iw, ibnd, ik, orbital(j, iw), &
                   u_matrix(iw, ibnd, ik), evc(j, ibnd)
-            enddo !ibnd
+            end do !ibnd
          end do  !j
       end do !wannier
       call davcio(orbital, nwordwann, iunatsicwfc, ikevc, +1)
@@ -1835,7 +1835,7 @@ subroutine ylm_wannier(ylm, l, mr, r, nr)
          if (mr == 3) ylm(ir) = dyz(cost, phi)
          if (mr == 4) ylm(ir) = dx2my2(cost, phi)
          if (mr == 5) ylm(ir) = dxy(cost, phi)
-      endif
+      end if
       if (l == 3) then   ! f orbitals
          if (mr == 1) ylm(ir) = fz3(cost, phi)
          if (mr == 2) ylm(ir) = fxz2(cost, phi)
@@ -1844,7 +1844,7 @@ subroutine ylm_wannier(ylm, l, mr, r, nr)
          if (mr == 5) ylm(ir) = fxyz(cost, phi)
          if (mr == 6) ylm(ir) = fxx2m3y2(cost, phi)
          if (mr == 7) ylm(ir) = fy3x2my2(cost, phi)
-      endif
+      end if
       if (l == -1) then  !  sp hybrids
          if (mr == 1) ylm(ir) = bs2*(s(cost, phi) + px(cost, phi))
          if (mr == 2) ylm(ir) = bs2*(s(cost, phi) - px(cost, phi))
@@ -2060,7 +2060,7 @@ subroutine radialpart(ng, q, alfa, rvalue, lmax, radial)
       x = xmin + DBLE(ir - 1)*dx
       r(ir) = exp(x)/alfa
       rij(ir) = dx*r(ir)
-   enddo
+   end do
    !
    if (rvalue == 1) func_r(:) = 2.d0*alfa**(3.d0/2.d0)*exp(-alfa*r(:))
    if (rvalue == 2) func_r(:) = 1.d0/sqrt(8.d0)*alfa**(3.d0/2.d0)* &
@@ -2076,8 +2076,8 @@ subroutine radialpart(ng, q, alfa, rvalue, lmax, radial)
          aux(:) = bes(:)*func_r(:)*r(:)
          call simpson(mesh_r, aux, rij, rad_int)
          radial(ig, l) = rad_int*pref
-      enddo
-   enddo
+      end do
+   end do
 
    deallocate (bes, func_r, r, rij, aux)
    return

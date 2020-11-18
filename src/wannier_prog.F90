@@ -109,9 +109,9 @@ program wannier
             stat = 'old'
          else
             stat = 'replace'
-         endif
+         end if
          pos = 'append'
-      endif
+      end if
 
       stdout = io_file_unit()
       open (unit=stdout, file=trim(seedname)//'.wout', status=trim(stat), position=trim(pos))
@@ -125,7 +125,7 @@ program wannier
       else
          write (stdout, '(/,1x,a,i3,a/)') &
             'Running in parallel on ', num_nodes, ' CPUs'
-      endif
+      end if
       call param_write()
 
       time1 = io_time()
@@ -146,9 +146,9 @@ program wannier
          write (stdout, *) '                                   DRYRUN             '
          write (stdout, *) '                       No problems found with win file'
          write (stdout, *) '                       ==============================='
-      endif
+      end if
       stop
-   endif
+   end if
 
    ! We now distribute the parameters to the other nodes
    call param_dist
@@ -177,7 +177,7 @@ program wannier
          else
             if (on_root) write (stdout, '(/a/)')
             call io_error('Value of checkpoint not recognised in wann_prog')
-         endif
+         end if
       case ('wannierise') ! continue from wann_main irrespective of value of last checkpoint
          if (on_root) write (stdout, '(1x,a/)') 'Restarting Wannier90 from wannierisation ...'
          goto 1001
@@ -190,7 +190,7 @@ program wannier
       case default        ! for completeness... (it is already trapped in param_read)
          call io_error('Value of restart not recognised in wann_prog')
       end select
-   endif
+   end if
 
    if (postproc_setup) then
       if (on_root) call kmesh_write()
@@ -200,7 +200,7 @@ program wannier
       if (on_root) write (stdout, '(/a)') ' Exiting... '//trim(seedname)//'.nnkp written.'
       call comms_end
       stop
-   endif
+   end if
 
    if (lsitesymmetry) call sitesym_read()   ! update this to read on root and bcast - JRY
    call overlap_allocate()
@@ -216,7 +216,7 @@ program wannier
       have_disentangled = .true.
       time2 = io_time()
       if (on_root) write (stdout, '(1x,a25,f11.3,a)') 'Time to disentangle bands', time2 - time1, ' (sec)'
-   endif
+   end if
 
    if (on_root) call param_write_chkpt('postdis')
 !~  call param_write_um
@@ -244,7 +244,7 @@ program wannier
       ! Now time is always printed, even if no plotting is done/required, but
       ! it shouldn't be a problem.
       write (stdout, '(1x,a25,f11.3,a)') 'Time for plotting        ', time1 - time2, ' (sec)'
-   endif
+   end if
 
 3003 continue
    if (on_root) then
@@ -255,7 +255,7 @@ program wannier
          write (stdout, '(1x,a25,f11.3,a)') 'Time for transport       ', time1 - time2, ' (sec)'
          if (tran_read_ht) goto 4004
       end if
-   endif
+   end if
 
    call tran_dealloc()
    call hamiltonian_dealloc()
@@ -275,7 +275,7 @@ program wannier
       write (stdout, '(1x,a)') 'All done: wannier90 exiting'
 
       close (stdout)
-   endif
+   end if
 
    call comms_end
 

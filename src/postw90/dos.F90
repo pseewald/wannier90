@@ -127,8 +127,8 @@ contains
             write (stdout, '(3x,a)') 'Selected WFs |Rn> are:'
             do i = 1, num_dos_project
                write (stdout, '(5x,a,2x,i3)') 'n =', dos_project(i)
-            enddo
-         endif
+            end do
+         end if
 
          write (stdout, '(/,5x,a,f9.4,a,f9.4,a)') &
             'Energy range: [', dos_energy_min, ',', dos_energy_max, '] eV'
@@ -224,7 +224,7 @@ contains
          do ifreq = 1, num_freq
             omega = dos_energyarray(ifreq)
             write (dos_unit, '(4E16.8)') omega, dos_all(ifreq, :)
-         enddo
+         end do
          close (dos_unit)
          if (timing_level > 1) call io_stopwatch('dos', 2)
       end if
@@ -608,9 +608,9 @@ contains
                      dos_k(loop_f, 3) = dos_k(loop_f, 3) &
                                         + rdum*beta_sq*abs(UU(dos_project(j), i))**2
                   end if
-               enddo
-            endif
-         enddo !loop_f
+               end do
+            end if
+         end do !loop_f
       end do !loop over bands
 
    end subroutine dos_get_k

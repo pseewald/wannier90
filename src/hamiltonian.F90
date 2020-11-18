@@ -196,7 +196,7 @@ contains
             goto 200
          else
             goto 100
-         endif
+         end if
       end if
 
       if (have_ham_k) go to 100
@@ -235,9 +235,9 @@ contains
                   do m = 1, ndimwin(loop_kpt)
                      eigval2(j, loop_kpt) = eigval2(j, loop_kpt) + eigval_opt(m, loop_kpt)* &
                                             real(conjg(u_matrix_opt(m, j, loop_kpt))*u_matrix_opt(m, j, loop_kpt), dp)
-                  enddo
-               enddo
-            enddo
+                  end do
+               end do
+            end do
          else                                                                                                     !YN:
             ! u_matrix_opt are not the eigenvectors of the Hamiltonian any more                                   !RS:
             ! so we have to calculate ham_k in the following way                                                  !RS:
@@ -248,12 +248,12 @@ contains
                   do i = 1, j                                                                                        !RS:
                      do m = 1, ndimwin(loop_kpt)                                                                     !RS:
                         ham_k(i, j, loop_kpt) = ham_k(i, j, loop_kpt) + eigval_opt(m, loop_kpt)*conjg(utmp(m, i))*utmp(m, j) !RS:
-                     enddo                                                                                        !RS:
+                     end do                                                                                        !RS:
                      if (i .lt. j) ham_k(j, i, loop_kpt) = conjg(ham_k(i, j, loop_kpt))                                   !RS:
-                  enddo                                                                                           !RS:
-               enddo                                                                                              !RS:
-            enddo                                                                                                 !RS:
-         endif                                                                                                    !YN:
+                  end do                                                                                           !RS:
+               end do                                                                                              !RS:
+            end do                                                                                                 !RS:
+         end if                                                                                                    !YN:
 
       else
          eigval2(1:num_wann, :) = eigval(1:num_wann, :)
@@ -272,12 +272,12 @@ contains
                   do m = 1, num_wann
                      ham_k(i, j, loop_kpt) = ham_k(i, j, loop_kpt) + eigval2(m, loop_kpt)* &
                                              conjg(u_matrix(m, i, loop_kpt))*u_matrix(m, j, loop_kpt)
-                  enddo
+                  end do
                   if (i .lt. j) ham_k(j, i, loop_kpt) = conjg(ham_k(i, j, loop_kpt))
-               enddo
-            enddo
-         enddo
-      endif                                                  !YN:
+               end do
+            end do
+         end do
+      end if                                                  !YN:
 
       have_ham_k = .true.
 
@@ -299,8 +299,8 @@ contains
                rdotk = twopi*dot_product(kpt_latt(:, loop_kpt), real(irvec(:, irpt), dp))
                fac = exp(-cmplx_i*rdotk)/real(num_kpts, dp)
                ham_r(:, :, irpt) = ham_r(:, :, irpt) + fac*ham_k(:, :, loop_kpt)
-            enddo
-         enddo
+            end do
+         end do
 
          have_translated = .false.
 
@@ -322,8 +322,8 @@ contains
                      ham_r(j, i, irpt) = ham_r(j, i, irpt) + fac*ham_k(j, i, loop_kpt)
                   end do
                end do
-            enddo
-         enddo
+            end do
+         end do
 
          have_translated = .true.
 
@@ -393,8 +393,8 @@ contains
             do nsp = 1, num_species
                do nat = 1, atoms_species_num(nsp)
                   c_pos_cart(:) = c_pos_cart(:) + atoms_pos_cart(:, nat, nsp)
-               enddo
-            enddo
+               end do
+            end do
             c_pos_cart = c_pos_cart/num_atoms
             ! Cartesian --> fractional
             call utility_cart_to_frac(c_pos_cart, translation_centre_frac, recip_lattice)
@@ -424,7 +424,7 @@ contains
             end do
             write (stdout, '(1x,a78)') repeat('-', 78)
             write (stdout, *)
-         endif
+         end if
          wannier_centres_translated = r_home
 
          deallocate (r_frac, stat=ierr)
@@ -566,11 +566,11 @@ contains
                            do j = 1, 3
                               dist(icnt) = dist(icnt) + real(ndiff(i), dp)*real_metric(i, j) &
                                            *real(ndiff(j), dp)
-                           enddo
-                        enddo
-                     enddo
-                  enddo
-               enddo
+                           end do
+                        end do
+                     end do
+                  end do
+               end do
                ! AAM: On first pass, we reference unallocated variables (ndegen,irvec)
                dist_min = minval(dist)
                if (abs(dist((dist_dim + 1)/2) - dist_min) .lt. ws_distance_tol**2) then
@@ -586,15 +586,15 @@ contains
                      !
                      ! Record index of r=0
                      if (n1 == 0 .and. n2 == 0 .and. n3 == 0) rpt_origin = nrpts
-                  endif
+                  end if
                end if
 
                !n3
-            enddo
+            end do
             !n2
-         enddo
+         end do
          !n1
-      enddo
+      end do
       !
       deallocate (dist, stat=ierr)
       if (ierr /= 0) call io_error('Error in deallocating dist hamiltonian_wigner_seitz')
@@ -604,20 +604,20 @@ contains
       tot = 0.0_dp
       do i = 1, nrpts
          tot = tot + 1.0_dp/real(ndegen(i), dp)
-      enddo
+      end do
 
       if (iprint >= 3 .and. on_root) then
          write (stdout, '(1x,i4,a,/)') nrpts, ' lattice points in Wigner-Seitz supercell:'
          do i = 1, nrpts
             write (stdout, '(4x,a,3(i3,1x),a,i2)') '  vector ', irvec(1, i), irvec(2, i), &
                irvec(3, i), '  degeneracy: ', ndegen(i)
-         enddo
+         end do
          write (stdout, '(1x,a,f12.3)') ' tot = ', tot
          write (stdout, '(1x,a,i12)') ' mp_grid product = ', mp_grid(1)*mp_grid(2)*mp_grid(3)
-      endif
+      end if
       if (abs(tot - real(mp_grid(1)*mp_grid(2)*mp_grid(3), dp)) > eps8) then
          call io_error('ERROR in hamiltonian_wigner_seitz: error in finding Wigner-Seitz points')
-      endif
+      end if
 
       if (timing_level > 1) call io_stopwatch('hamiltonian: wigner_seitz', 2)
 
@@ -674,7 +674,7 @@ contains
                            ! Eq.(44) Wang, Yates, Souza and Vanderbilt PRB 74, 195118 (2006)
                            position(ind) = position(ind) + &
                                            cmplx_i*wb(nn)*bk(ind, nn, nkp)*m_matrix(n, m, nn, nkp)*fac
-                        endif
+                        end if
                      end do
                   end do
                end do
@@ -773,7 +773,7 @@ contains
                            ! Eq.(44) Wang, Yates, Souza and Vanderbilt PRB 74, 195118 (2006)
                            pos_r(idir) = pos_r(idir) + &
                                          cmplx_i*wb(nn)*bk(idir, nn, ik)*m_matrix(j, i, nn, ik)*fac
-                        endif
+                        end if
                      end do
                   end do
                end do

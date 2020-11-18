@@ -170,7 +170,7 @@ contains
          call get_AA_R
          imf_list = 0.0_dp
          adpt_counter_list = 0
-      endif
+      end if
 
       if (eval_morb) then
          call get_HH_R
@@ -180,7 +180,7 @@ contains
          imf_list2 = 0.0_dp
          img_list = 0.0_dp
          imh_list = 0.0_dp
-      endif
+      end if
 
       ! List here berry_tasks that assume nfermi=1
       !
@@ -212,8 +212,8 @@ contains
             kubo_H_spn = cmplx_0
             kubo_AH_spn = cmplx_0
             jdos_spn = 0.0_dp
-         endif
-      endif
+         end if
+      end if
 
       if (eval_sc) then
          call get_HH_R
@@ -222,7 +222,7 @@ contains
          allocate (sc_list(3, 6, kubo_nfreq))
          sc_k_list = 0.0_dp
          sc_list = 0.0_dp
-      endif
+      end if
 
       if (on_root) then
 
@@ -245,8 +245,8 @@ contains
             else
                write (stdout, '(/,3x,a)') '* Complex optical conductivity'
                write (stdout, '(/,3x,a)') '* Joint density of states'
-            endif
-         endif
+            end if
+         end if
 
          if (eval_sc) write (stdout, '(/,3x,a)') &
             '* Shift current'
@@ -258,12 +258,12 @@ contains
                'Using a translationally-invariant discretization for the'
             write (stdout, '(1x,a)') &
                'band-diagonal Wannier matrix elements of r, etc.'
-         endif
+         end if
 
          if (timing_level > 1) then
             call io_stopwatch('berry: prelims', 2)
             call io_stopwatch('berry: k-interpolation', 1)
-         endif
+         end if
 
       end if !on_root
 
@@ -342,8 +342,8 @@ contains
                      end do
                   else
                      imf_list(:, :, if) = imf_list(:, :, if) + imf_k_list(:, :, if)*kweight
-                  endif
-               enddo
+                  end if
+               end do
             end if
 
             if (eval_morb) then
@@ -351,7 +351,7 @@ contains
                imf_list2 = imf_list2 + imf_k_list*kweight
                img_list = img_list + img_k_list*kweight
                imh_list = imh_list + imh_k_List*kweight
-            endif
+            end if
 
             if (eval_kubo) then
                if (spin_decomp) then
@@ -359,7 +359,7 @@ contains
                                         kubo_H_k_spn, kubo_AH_k_spn, jdos_k_spn)
                else
                   call berry_get_kubo_k(kpt, kubo_H_k, kubo_AH_k, jdos_k)
-               endif
+               end if
                kubo_H = kubo_H + kubo_H_k*kweight
                kubo_AH = kubo_AH + kubo_AH_k*kweight
                jdos = jdos + jdos_k*kweight
@@ -367,8 +367,8 @@ contains
                   kubo_H_spn = kubo_H_spn + kubo_H_k_spn*kweight
                   kubo_AH_spn = kubo_AH_spn + kubo_AH_k_spn*kweight
                   jdos_spn = jdos_spn + jdos_k_spn*kweight
-               endif
-            endif
+               end if
+            end if
 
             if (eval_sc) then
                call berry_get_sc_klist(kpt, sc_k_list)
@@ -417,8 +417,8 @@ contains
                      end do
                   else
                      imf_list(:, :, if) = imf_list(:, :, if) + imf_k_list(:, :, if)*kweight
-                  endif
-               enddo
+                  end if
+               end do
             end if
 
             if (eval_morb) then
@@ -426,7 +426,7 @@ contains
                imf_list2 = imf_list2 + imf_k_list*kweight
                img_list = img_list + img_k_list*kweight
                imh_list = imh_list + imh_k_List*kweight
-            endif
+            end if
 
             if (eval_kubo) then
                if (spin_decomp) then
@@ -434,7 +434,7 @@ contains
                                         kubo_H_k_spn, kubo_AH_k_spn, jdos_k_spn)
                else
                   call berry_get_kubo_k(kpt, kubo_H_k, kubo_AH_k, jdos_k)
-               endif
+               end if
                kubo_H = kubo_H + kubo_H_k*kweight
                kubo_AH = kubo_AH + kubo_AH_k*kweight
                jdos = jdos + jdos_k*kweight
@@ -442,8 +442,8 @@ contains
                   kubo_H_spn = kubo_H_spn + kubo_H_k_spn*kweight
                   kubo_AH_spn = kubo_AH_spn + kubo_AH_k_spn*kweight
                   jdos_spn = jdos_spn + jdos_k_spn*kweight
-               endif
-            endif
+               end if
+            end if
 
             if (eval_sc) then
                call berry_get_sc_klist(kpt, sc_k_list)
@@ -462,7 +462,7 @@ contains
       if (eval_ahc) then
          call comms_reduce(imf_list(1, 1, 1), 3*3*nfermi, 'SUM')
          call comms_reduce(adpt_counter_list(1), nfermi, 'SUM')
-      endif
+      end if
 
       if (eval_morb) then
          call comms_reduce(imf_list2(1, 1, 1), 3*3*nfermi, 'SUM')
@@ -478,8 +478,8 @@ contains
             call comms_reduce(kubo_H_spn(1, 1, 1, 1), 3*3*3*kubo_nfreq, 'SUM')
             call comms_reduce(kubo_AH_spn(1, 1, 1, 1), 3*3*3*kubo_nfreq, 'SUM')
             call comms_reduce(jdos_spn(1, 1), 3*kubo_nfreq, 'SUM')
-         endif
-      endif
+         end if
+      end if
 
       if (eval_sc) then
          call comms_reduce(sc_list(1, 1, 1), 3*6*kubo_nfreq, 'SUM')
@@ -502,7 +502,7 @@ contains
                write (stdout, '(1x,a28,a17,f6.2,a)') &
                   'Refinement threshold: ', 'Berry curvature >', &
                   berry_curv_adpt_kmesh_thresh, ' bohr^2'
-            endif
+            end if
             if (nfermi == 1) then
                if (wanint_kpoint_file) then
                   write (stdout, '(1x,a30,i5,a,f5.2,a)') &
@@ -515,12 +515,12 @@ contains
                      ' Points triggering refinement: ', &
                      adpt_counter_list(1), '(', &
                      100*real(adpt_counter_list(1), dp)/product(berry_kmesh), '%)'
-               endif
-            endif
+               end if
+            end if
          else
             if (.not. wanint_kpoint_file) write (stdout, '(1x,a20,3(i0,1x))') &
                'Interpolation grid: ', berry_kmesh(1:3)
-         endif
+         end if
 
          if (eval_ahc) then
             !
@@ -566,7 +566,7 @@ contains
                write (stdout, '(/,3x,a)') '* '//file_name
                file_unit = io_file_unit()
                open (file_unit, FILE=file_name, STATUS='UNKNOWN', FORM='FORMATTED')
-            endif
+            end if
             do if = 1, nfermi
                if (nfermi > 1) write (file_unit, '(4(F12.6,1x))') &
                   fermi_energy_list(if), sum(ahc_list(:, 1, if)), &
@@ -586,8 +586,8 @@ contains
                         adpt_counter_list(if), '(', &
                         100*real(adpt_counter_list(if), dp) &
                         /product(berry_kmesh), '%)'
-                  endif
-               endif
+                  end if
+               end if
                write (stdout, '(/,1x,a)') &
                   'AHC (S/cm)       x          y          z'
                if (iprint > 1) then
@@ -608,10 +608,10 @@ contains
                   write (stdout, '(1x,a10,1x,3(f10.4,1x),/)') '==========', &
                      sum(ahc_list(:, 1, if)), sum(ahc_list(:, 2, if)), &
                      sum(ahc_list(:, 3, if))
-               endif
-            enddo
+               end if
+            end do
             if (nfermi > 1) close (file_unit)
-         endif
+         end if
 
          if (eval_morb) then
             !
@@ -653,7 +653,7 @@ contains
                write (stdout, '(/,3x,a)') '* '//file_name
                file_unit = io_file_unit()
                open (file_unit, FILE=file_name, STATUS='UNKNOWN', FORM='FORMATTED')
-            endif
+            end if
             do if = 1, nfermi
                LCtil_list(:, :, if) = (img_list(:, :, if) &
                                        - fermi_energy_list(if)*imf_list2(:, :, if))*fac
@@ -687,10 +687,10 @@ contains
                      '======================', &
                      sum(Morb_list(1:3, 1, if)), sum(Morb_list(1:3, 2, if)), &
                      sum(Morb_list(1:3, 3, if))
-               endif
-            enddo
+               end if
+            end do
             if (nfermi > 1) close (file_unit)
-         endif
+         end if
 
          ! -----------------------------!
          ! Complex optical conductivity !
@@ -705,7 +705,7 @@ contains
             if (spin_decomp) then
                kubo_H_spn = kubo_H_spn*fac
                kubo_AH_spn = kubo_AH_spn*fac
-            endif
+            end if
             !
             write (stdout, '(/,1x,a)') &
                '----------------------------------------------------------'
@@ -746,10 +746,10 @@ contains
                      write (file_unit, '(3E16.8)') real(kubo_freq_list(ifreq), dp), &
                         real(0.5_dp*(kubo_H(i, j, ifreq) + kubo_H(j, i, ifreq)), dp), &
                         aimag(0.5_dp*(kubo_AH(i, j, ifreq) + kubo_AH(j, i, ifreq)))
-                  endif
-               enddo
+                  end if
+               end do
                close (file_unit)
-            enddo
+            end do
             !
             ! Antisymmetric: real (imaginary) part is anti-Hermitean (Hermitean)
             !
@@ -783,10 +783,10 @@ contains
                      write (file_unit, '(3E16.8)') real(kubo_freq_list(ifreq), dp), &
                         real(0.5_dp*(kubo_AH(i, j, ifreq) - kubo_AH(j, i, ifreq)), dp), &
                         aimag(0.5_dp*(kubo_H(i, j, ifreq) - kubo_H(j, i, ifreq)))
-                  endif
-               enddo
+                  end if
+               end do
                close (file_unit)
-            enddo
+            end do
             !
             ! Joint density of states
             !
@@ -801,10 +801,10 @@ contains
                else
                   write (file_unit, '(2E16.8)') real(kubo_freq_list(ifreq), dp), &
                      jdos(ifreq)
-               endif
-            enddo
+               end if
+            end do
             close (file_unit)
-         endif
+         end if
 
          if (eval_sc) then
             ! -----------------------------!
@@ -863,12 +863,12 @@ contains
                   do ifreq = 1, kubo_nfreq
                      write (file_unit, '(2E18.8E3)') real(kubo_freq_list(ifreq), dp), &
                         fac*sc_list(i, jk, ifreq)
-                  enddo
+                  end do
                   close (file_unit)
-               enddo
-            enddo
+               end do
+            end do
 
-         endif
+         end if
 
       end if !on_root
 
@@ -892,7 +892,7 @@ contains
          call berry_get_imfgh_klist(kpt, imf_k_list, occ=occ)
       else
          call berry_get_imfgh_klist(kpt, imf_k_list)
-      endif
+      end if
 
    end subroutine berry_get_imf_klist
 
@@ -951,7 +951,7 @@ contains
          nfermi_loc = 1
       else
          nfermi_loc = nfermi
-      endif
+      end if
 
       allocate (HH(num_wann, num_wann))
       allocate (UU(num_wann, num_wann))
@@ -971,7 +971,7 @@ contains
       else
          call wham_get_eig_UU_HH_JJlist(kpt, eig, UU, HH, JJp_list, JJm_list)
          call wham_get_occ_mat_list(UU, f_list, g_list, eig=eig)
-      endif
+      end if
 
       call pw90common_fourier_R_to_k_vec(kpt, AA_R, OO_true=AA, OO_pseudo=OOmega)
 
@@ -1152,14 +1152,14 @@ contains
                                             OO_dy=delHH(:, :, 2), &
                                             OO_dz=delHH(:, :, 3))
          call utility_diagonalize(HH, num_wann, eig, UU)
-      endif
+      end if
       call pw90common_get_occ(eig, occ, fermi_energy_list(1))
       call wham_get_D_h(delHH, UU, eig, D_h)
 
       call pw90common_fourier_R_to_k_vec(kpt, AA_R, OO_true=AA)
       do i = 1, 3
          AA(:, :, i) = utility_rotate(AA(:, :, i), UU, num_wann)
-      enddo
+      end do
       AA = AA + cmplx_i*D_h ! Eq.(25) WYSV06
 
       ! Replace imaginary part of frequency with a fixed value
@@ -1197,7 +1197,7 @@ contains
                              kubo_adpt_smr_max)
             else
                eta_smr = kubo_smr_fixed_en_width
-            endif
+            end if
             rfac1 = (occ(m) - occ(n))*(eig(m) - eig(n))
             occ_prod = occ(n)*(1.0_dp - occ(m))
             do ifreq = 1, kubo_nfreq
@@ -1208,7 +1208,7 @@ contains
                   omega = real(kubo_freq_list(ifreq), dp) + cmplx_i*eta_smr
                else
                   omega = kubo_freq_list(ifreq)
-               endif
+               end if
                !
                ! Broadened delta function for the Hermitian conductivity and JDOS
                !
@@ -1239,12 +1239,12 @@ contains
                         kubo_AH_k_spn(i, j, ispn, ifreq) = &
                            kubo_AH_k_spn(i, j, ispn, ifreq) &
                            + cfac*AA(n, m, i)*AA(m, n, j)
-                     endif
-                  enddo
-               enddo
-            enddo
-         enddo
-      enddo
+                     end if
+                  end do
+               end do
+            end do
+         end do
+      end do
 
    end subroutine berry_get_kubo_k
 
@@ -1360,8 +1360,8 @@ contains
             AA_da_bar(:, :, a, b) = utility_rotate(AA_da(:, :, a, b), UU, num_wann)
             ! second derivative of Hamiltonian d^{2}H_dadb
             HH_dadb_bar(:, :, a, b) = utility_rotate(HH_dadb(:, :, a, b), UU, num_wann)
-         enddo
-      enddo
+         end do
+      end do
 
       ! setup for frequency-related quantities
       omega = real(kubo_freq_list(:), dp)
@@ -1387,7 +1387,7 @@ contains
                              kubo_adpt_smr_max)
             else
                eta_smr = kubo_smr_fixed_en_width
-            endif
+            end if
 
             ! restrict to energy window spanning [-sc_w_thr*eta_smr,+sc_w_thr*eta_smr]
             ! outside this range, the two delta functions are virtually zero
@@ -1407,8 +1407,8 @@ contains
                                  - (utility_zdotu(D_h(n, :, a), AA_bar(:, m, c)) - D_h(n, m, a)*AA_bar(m, m, c))
                   sum_HD(c, a) = (utility_zdotu(HH_da_bar(n, :, c), D_h(:, m, a)) - HH_da_bar(n, n, c)*D_h(n, m, a)) &
                                  - (utility_zdotu(D_h(n, :, a), HH_da_bar(:, m, c)) - D_h(n, m, a)*HH_da_bar(m, m, c))
-               enddo
-            enddo
+               end do
+            end do
 
             ! dipole matrix element
             r_mn(:) = AA_bar(m, n, :) + cmplx_i*D_h(m, n, :)
@@ -1436,8 +1436,8 @@ contains
                   b = alpha_S(bc)
                   c = beta_S(bc)
                   I_nm(a, bc) = aimag(r_mn(b)*gen_r_nm(c) + r_mn(c)*gen_r_nm(b))
-               enddo ! bc
-            enddo ! a
+               end do ! bc
+            end do ! a
 
             ! compute delta(E_nm-w)
             ! choose energy window spanning [-sc_w_thr*eta_smr,+sc_w_thr*eta_smr]
@@ -1449,7 +1449,7 @@ contains
                delta(istart:iend) = &
                   utility_w0gauss_vec((eig(m) - eig(n) + omega(istart:iend))/eta_smr, kubo_smr_index)/eta_smr
                call DGER(18, iend - istart + 1, occ_fac, I_nm, 1, delta(istart:iend), 1, sc_k_list(:, :, istart:iend), 18)
-            endif
+            end if
             ! same for delta(E_mn-w)
             istart = max(int((eig(m) - eig(n) - sc_w_thr*eta_smr - wmin)/wstep + 1), 1)
             iend = min(int((eig(m) - eig(n) + sc_w_thr*eta_smr - wmin)/wstep + 1), kubo_nfreq)
@@ -1458,10 +1458,10 @@ contains
                delta(istart:iend) = &
                   utility_w0gauss_vec((eig(n) - eig(m) + omega(istart:iend))/eta_smr, kubo_smr_index)/eta_smr
                call DGER(18, iend - istart + 1, occ_fac, I_nm, 1, delta(istart:iend), 1, sc_k_list(:, :, istart:iend), 18)
-            endif
+            end if
 
-         enddo ! bands
-      enddo ! bands
+         end do ! bands
+      end do ! bands
 
    end subroutine berry_get_sc_klist
 

@@ -95,8 +95,8 @@ contains
       if (present(force_recompute)) then
          if (force_recompute) then
             call clean_ws_translate()
-         endif
-      endif
+         end if
+      end if
       if (done_ws_distance) return
       done_ws_distance = .true.
 
@@ -137,10 +137,10 @@ contains
                   tmp_frac = REAL(irdist_ws(:, ideg, iw, jw, ir), kind=dp)
                   CALL utility_frac_to_cart(tmp_frac, tmp, real_lattice)
                   crdist_ws(:, ideg, iw, jw, ir) = tmp
-               enddo
-            enddo
-         enddo
-      enddo
+               end do
+            end do
+         end do
+      end do
    end subroutine ws_translate_dist
 
    subroutine R_wz_sc(R_in, R0, ndeg, R_out, shifts)
@@ -200,10 +200,10 @@ contains
                   shifts(1, :) = i*mp_grid(1)
                   shifts(2, :) = j*mp_grid(2)
                   shifts(3, :) = k*mp_grid(3)
-               endif
-            enddo
-         enddo
-      enddo
+               end if
+            end do
+         end do
+      end do
 
       ! Now, second loop to find the list of R_out that differ from R_in
       ! by a large-supercell lattice vector and are equally distant from R0
@@ -220,7 +220,7 @@ contains
          R_out(:, 1) = R0
          ! I can safely return as 'shifts' is already set
          return
-      endif
+      end if
       !
       ! take R_bz to cryst(frac) coord for translating
       call utility_cart_to_frac(R_bz, R_in_f, recip_lattice)
@@ -246,11 +246,11 @@ contains
                   shifts(1, ndeg) = shifts(1, ndeg) + i*mp_grid(1)
                   shifts(2, ndeg) = shifts(2, ndeg) + j*mp_grid(2)
                   shifts(3, ndeg) = shifts(3, ndeg) + k*mp_grid(3)
-               endif
+               end if
 
-            enddo
-         enddo
-      enddo
+            end do
+         end do
+      end do
       !====================================================!
    end subroutine R_wz_sc
    !====================================================!

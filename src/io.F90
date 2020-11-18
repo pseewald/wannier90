@@ -93,8 +93,8 @@ contains
                clocks(i)%ptime = t
                clocks(i)%ncalls = clocks(i)%ncalls + 1
                return
-            endif
-         enddo
+            end if
+         end do
 
          nnames = nnames + 1
          if (nnames .gt. nmax) call io_error('Maximum number of calls to io_stopwatch exceeded')
@@ -110,7 +110,7 @@ contains
             if (clocks(i)%label .eq. tag) then
                clocks(i)%ctime = clocks(i)%ctime + t - clocks(i)%ptime
                return
-            endif
+            end if
          end do
 
          write (stdout, '(1x,3a)') 'WARNING: name = ', trim(tag), ' not found in io_stopwatch'
@@ -144,7 +144,7 @@ contains
       do i = 1, nnames
          write (stdout, '(1x,"|",a50,":",i10,4x,f10.3,"|")') &
             clocks(i)%label, clocks(i)%ncalls, clocks(i)%ctime
-      enddo
+      end do
       write (stdout, '(1x,a)') '*---------------------------------------------------------------------------*'
 
       return
@@ -242,7 +242,7 @@ contains
             print_help = .true.
          else  ! must be the seedname
             seedname = trim(ctemp(1))
-         endif
+         end if
       else ! not 2 - as mpi call might add commands to argument list
          if (any(index(ctemp(1), help_flag(:)) > 0)) then
             print_help = .true.
@@ -259,8 +259,8 @@ contains
          else  ! must be the seedname
             seedname = trim(ctemp(1))
             if (seedname(1:1) == '-') print_help = .true.
-         endif
-      endif
+         end if
+      end if
 
       ! If on the command line the whole seedname.win was passed, I strip the last ".win"
       if (len(trim(seedname)) .ge. 5) then
@@ -290,14 +290,14 @@ contains
             write (6, '(a)') '  postw90.x [-h|--help]              : print this help message'
          end if
          stop
-      endif
+      end if
 
       if (print_version) then
          if (prog == 'wannier90') then
             write (6, '(a,a)') 'Wannier90: ', trim(w90_version)
          elseif (prog == 'postw90') then
             write (6, '(a,a)') 'Postw90: ', trim(w90_version)
-         endif
+         end if
          stop
       end if
 
@@ -323,7 +323,7 @@ contains
             write (filename, '(a,a,I0,a)') trim(seedname), '.node_', whoami, '.werr'
          else
             write (filename, '(a,a,I5.5,a)') trim(seedname), '.node_', whoami, '.werr'
-         endif
+         end if
          stderr = io_file_unit()
          open (unit=stderr, file=trim(filename), form='formatted', err=105)
          write (stderr, '(1x,a)') trim(error_msg)
@@ -414,7 +414,7 @@ contains
          first = .false.
       else
          io_time = t1 - t0
-      endif
+      end if
       return
    end function io_time
 
@@ -443,7 +443,7 @@ contains
       else
          call system_clock(c1)
          io_wallclocktime = real(c1 - c0)/real(rate)
-      endif
+      end if
       return
    end function io_wallclocktime
 

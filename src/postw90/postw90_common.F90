@@ -102,11 +102,11 @@ contains
                              //trim(seedname)//'_HH_R.dat and '//trim(seedname)//'.win')
             read (file_unit, *) nrpts
             close (file_unit)
-         endif
+         end if
          call comms_bcast(nrpts, 1)
       else
          call wigner_seitz(count_pts=.true.)
-      endif
+      end if
 
       ! Now can allocate several arrays
       !
@@ -138,7 +138,7 @@ contains
             ! Note that 'real_lattice' stores the lattice vectors as *rows*
             crvec(:, ir) = matmul(transpose(real_lattice), irvec(:, ir))
          end do
-      endif
+      end if
 
       return
 
@@ -237,7 +237,7 @@ contains
          call comms_bcast(mp_grid(1), 3)
          call comms_bcast(num_kpts, 1)
          call comms_bcast(num_bands, 1)
-      endif
+      end if
       call comms_bcast(num_wann, 1)
       call comms_bcast(timing_level, 1)
       call comms_bcast(iprint, 1)
@@ -407,7 +407,7 @@ contains
             allocate (kpt_latt(3, num_kpts), stat=ierr)
             if (ierr /= 0) &
                call io_error('Error allocating kpt_latt in postw90_param_dist')
-         endif
+         end if
       end if
       if (nfermi > 0) call comms_bcast(fermi_energy_list(1), nfermi)
       call comms_bcast(gyrotropic_freq_list(1), gyrotropic_nfreq)
@@ -419,7 +419,7 @@ contains
             call comms_bcast(eigval(1, 1), num_bands*num_kpts)
          end if
          call comms_bcast(kpt_latt(1, 1), 3*num_kpts)
-      endif
+      end if
 
       ! kmesh: only nntot,wb, and bk are needed to evaluate the WF matrix
       ! elements of the position operator in reciprocal space. For the
@@ -459,7 +459,7 @@ contains
          call comms_bcast(bka(1, 1), 3*nntot/2)
          call comms_bcast(bk(1, 1, 1), 3*nntot*num_kpts)
 
-      endif
+      end if
 
    end subroutine pw90common_wanint_param_dist
 
@@ -516,16 +516,16 @@ contains
                      do i = 1, num_wann
                         v_matrix(m, j, loop_kpt) = v_matrix(m, j, loop_kpt) &
                                                    + u_matrix_opt(m, i, loop_kpt)*u_matrix(i, j, loop_kpt)
-                     enddo
-                  enddo
-               enddo
-            enddo
-         endif
+                     end do
+                  end do
+               end do
+            end do
+         end if
          if (allocated(u_matrix_opt)) deallocate (u_matrix_opt)
          if (.not. (num_valence_bands > 0 .and. abs(scissors_shift) > 1.0e-7_dp)) then
             if (allocated(u_matrix)) deallocate (u_matrix)
-         endif
-      endif
+         end if
+      end if
       call comms_bcast(v_matrix(1, 1, 1), num_bands*num_wann*num_kpts)
 
       if (num_valence_bands > 0 .and. abs(scissors_shift) > 1.0e-7_dp) then
@@ -533,9 +533,9 @@ contains
          allocate (u_matrix(num_wann, num_wann, num_kpts), stat=ierr)
          if (ierr /= 0) &
             call io_error('Error allocating u_matrix in pw90common_wanint_data_dist')
-      endif
+      end if
       call comms_bcast(u_matrix(1, 1, 1), num_wann*num_wann*num_kpts)
-      endif
+      end if
 
 !    if (.not.on_root .and. .not.allocated(m_matrix)) then
 !       allocate(m_matrix(num_wann,num_wann,nntot,num_kpts),stat=ierr)
@@ -562,13 +562,13 @@ contains
                allocate (lwindow(num_bands, num_kpts), stat=ierr)
                if (ierr /= 0) &
                   call io_error('Error allocating lwindow in pw90common_wanint_data_dist')
-            endif
+            end if
 
             if (.not. allocated(ndimwin)) then
                allocate (ndimwin(num_kpts), stat=ierr)
                if (ierr /= 0) &
                   call io_error('Error allocating ndimwin in pw90common_wanint_data_dist')
-            endif
+            end if
 
          end if
 
@@ -725,10 +725,10 @@ contains
                      !OO(i,j)=OO(i,j)+cmplx_i*crvec(alpha,ir)*phase_fac*OO_R(i,j,ir)
                   else
                      stop 'wrong value of alpha in pw90common_fourier_R_to_k'
-                  endif
-               enddo
-            enddo
-            enddo
+                  end if
+               end do
+            end do
+            end do
          else
             ! [lp] Original code, without IJ-dependent shift:
             rdotk = twopi*dot_product(kpt(:), irvec(:, ir))
@@ -740,10 +740,10 @@ contains
                           cmplx_i*crvec(alpha, ir)*phase_fac*OO_R(:, :, ir)
             else
                stop 'wrong value of alpha in pw90common_fourier_R_to_k'
-            endif
-         endif
+            end if
+         end if
 
-      enddo
+      end do
 
    end subroutine pw90common_fourier_R_to_k
 
@@ -801,9 +801,9 @@ contains
                                                     cmplx_i*crvec(2, ir)*phase_fac*OO_R(i, j, ir)
                   if (present(OO_dz)) OO_dz(i, j) = OO_dz(i, j) + &
                                                     cmplx_i*crvec(3, ir)*phase_fac*OO_R(i, j, ir)
-               enddo
-            enddo
-            enddo
+               end do
+            end do
+            end do
          else
 ! [lp] Original code, without IJ-dependent shift:
             rdotk = twopi*dot_product(kpt(:), irvec(:, ir))
@@ -815,8 +815,8 @@ contains
                                               cmplx_i*crvec(2, ir)*phase_fac*OO_R(:, :, ir)
             if (present(OO_dz)) OO_dz(:, :) = OO_dz(:, :) + &
                                               cmplx_i*crvec(3, ir)*phase_fac*OO_R(:, :, ir)
-         endif
-      enddo
+         end if
+      end do
 
    end subroutine pw90common_fourier_R_to_k_new
 
@@ -871,20 +871,20 @@ contains
                   if (present(OO_da)) then
                      do a = 1, 3
                         OO_da(i, j, a) = OO_da(i, j, a) + cmplx_i*crvec(a, ir)*phase_fac*OO_R(i, j, ir)
-                     enddo
-                  endif
+                     end do
+                  end if
                   if (present(OO_dadb)) then
                      do a = 1, 3
                         do b = 1, 3
                            OO_dadb(i, j, a, b) = OO_dadb(i, j, a, b) - &
                                                  crvec(a, ir)*crvec(b, ir)*phase_fac*OO_R(i, j, ir)
-                        enddo
-                     enddo
+                        end do
+                     end do
                   end if
 
-               enddo
-            enddo
-            enddo
+               end do
+            end do
+            end do
          else
 ! [lp] Original code, without IJ-dependent shift:
             rdotk = twopi*dot_product(kpt(:), irvec(:, ir))
@@ -893,18 +893,18 @@ contains
             if (present(OO_da)) then
                do a = 1, 3
                   OO_da(:, :, a) = OO_da(:, :, a) + cmplx_i*crvec(a, ir)*phase_fac*OO_R(:, :, ir)
-               enddo
-            endif
+               end do
+            end if
             if (present(OO_dadb)) then
                do a = 1, 3
                   do b = 1, 3
                      OO_dadb(:, :, a, b) = OO_dadb(:, :, a, b) - &
                                            crvec(a, ir)*crvec(b, ir)*phase_fac*OO_R(:, :, ir)
-                  enddo
-               enddo
+                  end do
+               end do
             end if
-         endif
-      enddo
+         end if
+      end do
 
    end subroutine pw90common_fourier_R_to_k_new_second_d
 
@@ -959,14 +959,14 @@ contains
                local_wannier_centres(1, j) = real(oo_a_R(j, j, ir, 1))
                local_wannier_centres(2, j) = real(oo_a_R(j, j, ir, 2))
                local_wannier_centres(3, j) = real(oo_a_R(j, j, ir, 3))
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
       ! rotate wannier centres from cartesian to fractional coordinates
       wannier_centres_frac(:, :) = 0.d0
       do ir = 1, num_wann
          call utility_cart_to_frac(local_wannier_centres(:, ir), wannier_centres_frac(:, ir), recip_lattice)
-      enddo
+      end do
 
       if (present(OO)) OO = cmplx_0
       if (present(OO_da)) OO_da = cmplx_0
@@ -986,8 +986,8 @@ contains
                      do a = 1, 3
                         OO_da(i, j, a) = OO_da(i, j, a) + cmplx_i*(crvec(a, ir) + local_wannier_centres(a, j) - &
                                                                    local_wannier_centres(a, i))*phase_fac*OO_R(i, j, ir)
-                     enddo
-                  endif
+                     end do
+                  end if
                   if (present(OO_dadb)) then
                      do a = 1, 3
                         do b = 1, 3
@@ -995,13 +995,13 @@ contains
                                                  (crvec(a, ir) + local_wannier_centres(a, j) - local_wannier_centres(a, i))* &
                                                  (crvec(b, ir) + local_wannier_centres(b, j) - local_wannier_centres(b, i))* &
                                                  phase_fac*OO_R(i, j, ir)
-                        enddo
-                     enddo
+                        end do
+                     end do
                   end if
 
-               enddo
-            enddo
-            enddo
+               end do
+            end do
+            end do
          else
 ! [lp] Original code, without IJ-dependent shift:
             do j = 1, num_wann
@@ -1015,8 +1015,8 @@ contains
                         OO_da(i, j, a) = &
                            OO_da(i, j, a) + cmplx_i* &
                            (crvec(a, ir) + local_wannier_centres(a, j) - local_wannier_centres(a, i))*phase_fac*OO_R(i, j, ir)
-                     enddo
-                  endif
+                     end do
+                  end if
                   if (present(OO_dadb)) then
                      do a = 1, 3
                         do b = 1, 3
@@ -1025,13 +1025,13 @@ contains
                               (crvec(a, ir) + local_wannier_centres(a, j) - local_wannier_centres(a, i))* &
                               (crvec(b, ir) + local_wannier_centres(b, j) - local_wannier_centres(b, i))* &
                               phase_fac*OO_R(i, j, ir)
-                        enddo
-                     enddo
+                        end do
+                     end do
                   end if
-               enddo
-            enddo
-         endif
-      enddo
+               end do
+            end do
+         end if
+      end do
 
    end subroutine pw90common_fourier_R_to_k_new_second_d_TB_conv
 
@@ -1080,7 +1080,7 @@ contains
                      OO_true(i, j, 1) = OO_true(i, j, 1) + phase_fac*OO_R(i, j, ir, 1)
                      OO_true(i, j, 2) = OO_true(i, j, 2) + phase_fac*OO_R(i, j, ir, 2)
                      OO_true(i, j, 3) = OO_true(i, j, 3) + phase_fac*OO_R(i, j, ir, 3)
-                  endif
+                  end if
                   if (present(OO_pseudo)) then
                      OO_pseudo(i, j, 1) = OO_pseudo(i, j, 1) &
                                           + cmplx_i*crvec(2, ir)*phase_fac*OO_R(i, j, ir, 3) &
@@ -1091,10 +1091,10 @@ contains
                      OO_pseudo(i, j, 3) = OO_pseudo(i, j, 3) &
                                           + cmplx_i*crvec(1, ir)*phase_fac*OO_R(i, j, ir, 2) &
                                           - cmplx_i*crvec(2, ir)*phase_fac*OO_R(i, j, ir, 1)
-                  endif
-               enddo
-            enddo
-            enddo
+                  end if
+               end do
+            end do
+            end do
          else
 ! [lp] Original code, without IJ-dependent shift:
             rdotk = twopi*dot_product(kpt(:), irvec(:, ir))
@@ -1103,7 +1103,7 @@ contains
                OO_true(:, :, 1) = OO_true(:, :, 1) + phase_fac*OO_R(:, :, ir, 1)
                OO_true(:, :, 2) = OO_true(:, :, 2) + phase_fac*OO_R(:, :, ir, 2)
                OO_true(:, :, 3) = OO_true(:, :, 3) + phase_fac*OO_R(:, :, ir, 3)
-            endif
+            end if
             if (present(OO_pseudo)) then
                OO_pseudo(:, :, 1) = OO_pseudo(:, :, 1) &
                                     + cmplx_i*crvec(2, ir)*phase_fac*OO_R(:, :, ir, 3) &
@@ -1114,9 +1114,9 @@ contains
                OO_pseudo(:, :, 3) = OO_pseudo(:, :, 3) &
                                     + cmplx_i*crvec(1, ir)*phase_fac*OO_R(:, :, ir, 2) &
                                     - cmplx_i*crvec(2, ir)*phase_fac*OO_R(:, :, ir, 1)
-            endif
-         endif
-      enddo
+            end if
+         end if
+      end do
 
    end subroutine pw90common_fourier_R_to_k_vec
 
@@ -1167,18 +1167,18 @@ contains
                      OO_da(i, j, 1) = OO_da(i, j, 1) + phase_fac*OO_R(i, j, ir, 1)
                      OO_da(i, j, 2) = OO_da(i, j, 2) + phase_fac*OO_R(i, j, ir, 2)
                      OO_da(i, j, 3) = OO_da(i, j, 3) + phase_fac*OO_R(i, j, ir, 3)
-                  endif
+                  end if
                   if (present(OO_dadb)) then
                      do a = 1, 3
                         do b = 1, 3
                            OO_dadb(i, j, a, b) = OO_dadb(i, j, a, b) + cmplx_i*crvec(b, ir)*phase_fac*OO_R(i, j, ir, a)
-                        enddo
-                     enddo
-                  endif
+                        end do
+                     end do
+                  end if
 
-               enddo
-            enddo
-            enddo
+               end do
+            end do
+            end do
          else
 ! [lp] Original code, without IJ-dependent shift:
             rdotk = twopi*dot_product(kpt(:), irvec(:, ir))
@@ -1187,16 +1187,16 @@ contains
                OO_da(:, :, 1) = OO_da(:, :, 1) + phase_fac*OO_R(:, :, ir, 1)
                OO_da(:, :, 2) = OO_da(:, :, 2) + phase_fac*OO_R(:, :, ir, 2)
                OO_da(:, :, 3) = OO_da(:, :, 3) + phase_fac*OO_R(:, :, ir, 3)
-            endif
+            end if
             if (present(OO_dadb)) then
                do a = 1, 3
                   do b = 1, 3
                      OO_dadb(:, :, a, b) = OO_dadb(:, :, a, b) + cmplx_i*crvec(b, ir)*phase_fac*OO_R(:, :, ir, a)
-                  enddo
-               enddo
-            endif
-         endif
-      enddo
+                  end do
+               end do
+            end if
+         end if
+      end do
 
    end subroutine pw90common_fourier_R_to_k_vec_dadb
 
@@ -1251,14 +1251,14 @@ contains
                local_wannier_centres(1, j) = real(OO_R(j, j, ir, 1))
                local_wannier_centres(2, j) = real(OO_R(j, j, ir, 2))
                local_wannier_centres(3, j) = real(OO_R(j, j, ir, 3))
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
       ! rotate wannier centres from cartesian to fractional coordinates
       wannier_centres_frac(:, :) = 0.d0
       do ir = 1, num_wann
          call utility_cart_to_frac(local_wannier_centres(:, ir), wannier_centres_frac(:, ir), recip_lattice)
-      enddo
+      end do
 
 !    print *, 'wannier_centres_frac'
 !    do ir = 1,num_wann
@@ -1298,8 +1298,8 @@ contains
                         OO_da(i, j, 1) = OO_da(i, j, 1) + phase_fac*OO_R(i, j, ir, 1)
                         OO_da(i, j, 2) = OO_da(i, j, 2) + phase_fac*OO_R(i, j, ir, 2)
                         OO_da(i, j, 3) = OO_da(i, j, 3) + phase_fac*OO_R(i, j, ir, 3)
-                     endif
-                  endif
+                     end if
+                  end if
                   if (present(OO_dadb)) then
                      ! same skip as before
                      if ((irvec(1, ir) .eq. 0) .and. (irvec(2, ir) .eq. 0) .and. (irvec(3, ir) .eq. 0) .and. (i .eq. j)) then
@@ -1309,14 +1309,14 @@ contains
                            do b = 1, 3
                               OO_dadb(i, j, a, b) = OO_dadb(i, j, a, b) + cmplx_i*(crvec(b, ir) + local_wannier_centres(b, j) - &
                                                                             local_wannier_centres(b, i))*phase_fac*OO_R(i, j, ir, a)
-                           enddo
-                        enddo
-                     endif
-                  endif
+                           end do
+                        end do
+                     end if
+                  end if
 
-               enddo
-            enddo
-            enddo
+               end do
+            end do
+            end do
          else
 ! [lp] Original code, without IJ-dependent shift:
             do j = 1, num_wann
@@ -1340,8 +1340,8 @@ contains
                      OO_da(i, j, 1) = OO_da(i, j, 1) + phase_fac*OO_R(i, j, ir, 1)
                      OO_da(i, j, 2) = OO_da(i, j, 2) + phase_fac*OO_R(i, j, ir, 2)
                      OO_da(i, j, 3) = OO_da(i, j, 3) + phase_fac*OO_R(i, j, ir, 3)
-                  endif
-               endif
+                  end if
+               end if
                if (present(OO_dadb)) then
                   ! same skip as before
                   if ((irvec(1, ir) .eq. 0) .and. (irvec(2, ir) .eq. 0) .and. (irvec(3, ir) .eq. 0) .and. (i .eq. j)) then
@@ -1350,22 +1350,22 @@ contains
                            OO_dadb(i, j, a, b) = OO_dadb(i, j, a, b) + cmplx_i*(crvec(b, ir) + local_wannier_centres(b, j) - &
                                                                                 local_wannier_centres(b, i))*phase_fac* &
                                                  (OO_R(i, j, ir, a) - local_wannier_centres(a, j))
-                        enddo
-                     enddo
+                        end do
+                     end do
 !           cycle
                   else
                      do a = 1, 3
                         do b = 1, 3
                            OO_dadb(i, j, a, b) = OO_dadb(i, j, a, b) + cmplx_i*(crvec(b, ir) + local_wannier_centres(b, j) - &
                                                                             local_wannier_centres(b, i))*phase_fac*OO_R(i, j, ir, a)
-                        enddo
-                     enddo
-                  endif
-               endif
-            enddo
-            enddo
-         endif
-      enddo
+                        end do
+                     end do
+                  end if
+               end if
+            end do
+            end do
+         end if
+      end do
 
    end subroutine pw90common_fourier_R_to_k_vec_dadb_TB_conv
 
@@ -1434,11 +1434,11 @@ contains
                            do j = 1, 3
                               dist(icnt) = dist(icnt) + &
                                            real(ndiff(i), dp)*real_metric(i, j)*real(ndiff(j), dp)
-                           enddo
-                        enddo
-                     enddo
-                  enddo
-               enddo
+                           end do
+                        end do
+                     end do
+                  end do
+               end do
                dist_min = minval(dist)
                if (abs(dist(63) - dist_min) .lt. 1.e-7_dp) then
                   nrpts = nrpts + 1
@@ -1455,15 +1455,15 @@ contains
                      ! Remember which grid point r is at the origin
                      !
                      if (n1 == 0 .and. n2 == 0 .and. n3 == 0) rpt_origin = nrpts
-                  endif
+                  end if
                end if
 
                !n3
-            enddo
+            end do
             !n2
-         enddo
+         end do
          !n1
-      enddo
+      end do
       !
       if (count_pts) then
          if (timing_level > 1 .and. on_root) &
@@ -1477,8 +1477,8 @@ contains
          do ir = 1, nrpts
             write (stdout, '(4x,a,3(i3,1x),a,i2)') '  vector ', irvec(1, ir), &
                irvec(2, ir), irvec(3, ir), '  degeneracy: ', ndegen(ir)
-         enddo
-      endif
+         end do
+      end if
       ! Check the "sum rule"
       tot = 0.0_dp
       do ir = 1, nrpts
@@ -1487,7 +1487,7 @@ contains
          ! W-S supercell
          !
          tot = tot + 1.0_dp/real(ndegen(ir), dp)
-      enddo
+      end do
       if (abs(tot - real(mp_grid(1)*mp_grid(2)*mp_grid(3), dp)) > 1.e-8_dp) &
          call io_error('ERROR in wigner_seitz: error in finding Wigner-Seitz points')
 

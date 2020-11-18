@@ -64,7 +64,7 @@ contains
          if (on_root) then
             allocate (m_matrix_orig(num_bands, num_bands, nntot, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error in allocating m_matrix_orig in overlap_read')
-         endif
+         end if
          allocate (m_matrix_orig_local(num_bands, num_bands, nntot, counts(my_node_id)), stat=ierr)
          if (ierr /= 0) call io_error('Error in allocating m_matrix_orig_local in overlap_read')
          allocate (a_matrix(num_bands, num_wann, num_kpts), stat=ierr)
@@ -76,11 +76,11 @@ contains
             allocate (m_matrix(num_wann, num_wann, nntot, num_kpts), stat=ierr)
             if (ierr /= 0) call io_error('Error in allocating m_matrix in overlap_read')
             m_matrix = cmplx_0
-         endif
+         end if
          allocate (m_matrix_local(num_wann, num_wann, nntot, counts(my_node_id)), stat=ierr)
          if (ierr /= 0) call io_error('Error in allocating m_matrix_local in overlap_read')
          m_matrix_local = cmplx_0
-      endif
+      end if
 
       if (timing_level > 0) call io_stopwatch('overlap: allocate', 2)
 
@@ -122,11 +122,11 @@ contains
       if (disentanglement) then
          if (on_root) then
             m_matrix_orig = cmplx_0
-         endif
+         end if
          m_matrix_orig_local = cmplx_0
          a_matrix = cmplx_0
          u_matrix_opt = cmplx_0
-      endif
+      end if
 
       if (on_root) then
 
@@ -162,8 +162,8 @@ contains
                do m = 1, num_bands
                   read (mmn_in, *, err=103, end=103) m_real, m_imag
                   mmn_tmp(m, n) = cmplx(m_real, m_imag, kind=dp)
-               enddo
-            enddo
+               end do
+            end do
             nn = 0
             nn_found = .false.
             do inn = 1, nntot
@@ -177,8 +177,8 @@ contains
                   else
                      call io_error('Error reading '//trim(seedname)// &
                                    '.mmn. More than one matching nearest neighbour found')
-                  endif
-               endif
+                  end if
+               end if
             end do
             if (nn .eq. 0) then
                if (on_root) write (stdout, '(/a,i8,2i5,i4,2x,3i3)') &
@@ -195,7 +195,7 @@ contains
          deallocate (mmn_tmp, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating mmn_tmp in overlap_read')
          close (mmn_in)
-      endif
+      end if
 
       if (disentanglement) then
 !       call comms_bcast(m_matrix_orig(1,1,1,1),num_bands*num_bands*nntot*num_kpts)
@@ -205,7 +205,7 @@ contains
 !       call comms_bcast(m_matrix(1,1,1,1),num_wann*num_wann*nntot*num_kpts)
          call comms_scatterv(m_matrix_local, num_wann*num_wann*nntot*counts(my_node_id), &
                              m_matrix, num_wann*num_wann*nntot*counts, num_wann*num_wann*nntot*displs)
-      endif
+      end if
 
       if (.not. use_bloch_phases) then
          if (on_root) then
@@ -250,13 +250,13 @@ contains
                end do
             end if
             close (amn_in)
-         endif
+         end if
 
          if (disentanglement) then
             call comms_bcast(a_matrix(1, 1, 1), num_bands*num_wann*num_kpts)
          else
             call comms_bcast(u_matrix(1, 1, 1), num_wann*num_wann*num_kpts)
-         endif
+         end if
 
       else
 
@@ -298,8 +298,8 @@ contains
             call overlap_project()
          else
             call overlap_project_gamma()
-         endif
-      endif
+         end if
+      end if
 !~[aam]
 
       !~      if( gamma_only .and. use_bloch_phases ) then
@@ -567,12 +567,12 @@ contains
       if (allocated(m_matrix_orig)) then
          deallocate (m_matrix_orig, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating m_matrix_orig in overlap_dealloc')
-      endif
-      endif
+      end if
+      end if
       if (allocated(m_matrix_orig_local)) then
          deallocate (m_matrix_orig_local, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating m_matrix_orig_local in overlap_dealloc')
-      endif
+      end if
 !~![ysl-b]
 !~    if (allocated( ph_g)) then
 !~       deallocate( ph_g, stat=ierr )
@@ -592,16 +592,16 @@ contains
          if (allocated(m_matrix)) then
             deallocate (m_matrix, stat=ierr)
             if (ierr /= 0) call io_error('Error deallocating m_matrix in overlap_dealloc')
-         endif
-      endif
+         end if
+      end if
       if (allocated(m_matrix_local)) then
          deallocate (m_matrix_local, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating m_matrix_local in overlap_dealloc')
-      endif
+      end if
       if (allocated(u_matrix)) then
          deallocate (u_matrix, stat=ierr)
          if (ierr /= 0) call io_error('Error deallocating u_matrix in overlap_dealloc')
-      endif
+      end if
 
       return
 
@@ -670,9 +670,9 @@ contains
             write (stdout, *) ' K-POINT NKP=', nkp, ' INFO=', info
             if (info .lt. 0) then
                write (stdout, *) ' THE ', -info, '-TH ARGUMENT HAD ILLEGAL VALUE'
-            endif
+            end if
             call io_error('Error in ZGESVD in overlap_project')
-         endif
+         end if
 
 !       u_matrix(:,:,nkp)=matmul(cz,cvdag)
          call utility_zgemm(u_matrix(:, :, nkp), cz, 'N', cvdag, 'N', num_wann)
@@ -685,7 +685,7 @@ contains
                ctmp2 = cmplx_0
                do m = 1, num_bands
                   ctmp2 = ctmp2 + u_matrix(m, j, nkp)*conjg(u_matrix(m, i, nkp))
-               enddo
+               end do
                if ((i .eq. j) .and. (abs(ctmp2 - cmplx_1) .gt. eps5)) then
                   write (stdout, *) ' ERROR: unitarity of initial U'
                   write (stdout, '(1x,a,i2)') 'nkp= ', nkp
@@ -694,7 +694,7 @@ contains
                      '[u_matrix.transpose(u_matrix)]_ij= ', &
                      real(ctmp2, dp), aimag(ctmp2)
                   call io_error('Error in unitarity of initial U in overlap_project')
-               endif
+               end if
                if ((i .ne. j) .and. (abs(ctmp2) .gt. eps5)) then
                   write (stdout, *) ' ERROR: unitarity of initial U'
                   write (stdout, '(1x,a,i2)') 'nkp= ', nkp
@@ -703,10 +703,10 @@ contains
                      '[u_matrix.transpose(u_matrix)]_ij= ', &
                      real(ctmp2, dp), aimag(ctmp2)
                   call io_error('Error in unitarity of initial U in overlap_project')
-               endif
-            enddo
-         enddo
-      enddo
+               end if
+            end do
+         end do
+      end do
       ! NKP
 
       if (lsitesymmetry) call sitesym_symmetrize_u_matrix(num_wann, u_matrix) !RS: update U(Rk)
@@ -861,9 +861,9 @@ contains
          write (stdout, *) ' ERROR: IN DGESVD IN overlap_project_gamma'
          if (info .lt. 0) then
             write (stdout, *) 'THE ', -info, '-TH ARGUMENT HAD ILLEGAL VALUE'
-         endif
+         end if
          call io_error('overlap_project_gamma: problem in DGESVD 1')
-      endif
+      end if
 
       call dgemm('N', 'N', num_wann, num_wann, num_wann, 1.0_dp, &
                  rz, num_wann, rv, num_wann, 0.0_dp, u_matrix_r, num_wann)
@@ -875,7 +875,7 @@ contains
             rtmp2 = 0.0_dp
             do m = 1, num_wann
                rtmp2 = rtmp2 + u_matrix_r(m, j)*u_matrix_r(m, i)
-            enddo
+            end do
             if ((i .eq. j) .and. (abs(rtmp2 - 1.0_dp) .gt. eps5)) then
                write (stdout, *) ' ERROR: unitarity of initial U'
                write (stdout, '(1x,a,i2,2x,a,i2)') 'i= ', i, 'j= ', j
@@ -883,7 +883,7 @@ contains
                   '[u_matrix.transpose(u_matrix)]_ij= ', &
                   rtmp2
                call io_error('Error in unitarity of initial U in overlap_project_gamma')
-            endif
+            end if
             if ((i .ne. j) .and. (abs(rtmp2) .gt. eps5)) then
                write (stdout, *) ' ERROR: unitarity of initial U'
                write (stdout, '(1x,a,i2,2x,a,i2)') 'i= ', i, 'j= ', j
@@ -891,9 +891,9 @@ contains
                   '[u_matrix.transpose(u_matrix)]_ij= ', &
                   rtmp2
                call io_error('Error in unitarity of initial U in overlap_project_gamma')
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
 
       u_matrix(:, :, 1) = cmplx(u_matrix_r(:, :), 0.0_dp, dp)
 

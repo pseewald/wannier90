@@ -119,14 +119,14 @@ contains
                      counter = counter + 1 ! count the multiplicity of the shell
                   end if
                end if
-            enddo
-         enddo
+            end do
+         end do
          if (dnn1 .lt. eta - kmesh_tol) ndnntot = ndnntot + 1
          dnn(nlist) = dnn1
          multi(nlist) = counter
          dnn0 = dnn1
          dnn1 = eta
-      enddo
+      end do
 
       if (on_root) then
          write (stdout, '(1x,a)') '+----------------------------------------------------------------------------+'
@@ -138,12 +138,12 @@ contains
          else
             write (stdout, '(1x,a)') '|          Shell             Distance (Bohr^-1)         Multiplicity         |'
             write (stdout, '(1x,a)') '|          -----             ------------------         ------------         |'
-         endif
+         end if
          do ndnn = 1, ndnntot
             write (stdout, '(1x,a,11x,i3,17x,f10.6,19x,i4,12x,a)') '|', ndnn, dnn(ndnn)/lenconfac, multi(ndnn), '|'
-         enddo
+         end do
          write (stdout, '(1x,a)') '+----------------------------------------------------------------------------+'
-      endif
+      end if
 
       if (iprint >= 4) then
          ! Write out all the bvectors
@@ -152,7 +152,7 @@ contains
             write (stdout, '(1x,a)') '|         Complete list of b-vectors and their lengths                       |'
             write (stdout, '(1x,"|",76(" "),"|")')
             write (stdout, '(1x,"+",76("-"),"+")')
-         endif
+         end if
 
          allocate (bvec_tmp(3, maxval(multi)), stat=ierr)
          if (ierr /= 0) call io_error('Error allocating bvec_tmp in kmesh_get')
@@ -189,13 +189,13 @@ contains
                   write (stdout, '(i3,1x)', advance='no') shell_list(ndnn)
                else
                   write (stdout, '(i3,",")', advance='no') shell_list(ndnn)
-               endif
-            enddo
+               end if
+            end do
             do l = 1, 11 - num_shells
                write (stdout, '(4x)', advance='no')
-            enddo
+            end do
             write (stdout, '("|")')
-         endif
+         end if
       end if
 
       nntot = 0
@@ -225,7 +225,7 @@ contains
          write (stdout, '(a)') ' The elements are the bvectors labelled according to the following '
          write (stdout, '(a)') ' list (last column is distance)'
          write (stdout, '(a)') ' '
-      endif
+      end if
 
       allocate (bvec_tmp(3, maxval(multi)), stat=ierr)
       if (ierr /= 0) call io_error('Error allocating bvec_tmp in kmesh_get')
@@ -279,7 +279,7 @@ contains
          write (stdout, '(1x,a)') '+----------------------------------------------------------------------------+'
          write (stdout, '(1x,a)') '|                        Shell   # Nearest-Neighbours                        |'
          write (stdout, '(1x,a)') '|                        -----   --------------------                        |'
-      endif
+      end if
       if (index(devel_flag, 'kmesh_degen') == 0) then
          !
          ! Standard routine
@@ -304,11 +304,11 @@ contains
                         nncell(2, nkp, nnx) = m
                         nncell(3, nkp, nnx) = n
                         bk_local(:, nnx, nkp) = vkpp(:) - kpt_cart(:, nkp)
-                     endif
+                     end if
                      !if we have the right number of neighbours we can exit
                      if (nnshell(nkp, ndnn) == multi(ndnn)) cycle ok
-                  enddo
-               enddo
+                  end do
+               end do
                ! check to see if too few neighbours here
             end do ok
 
@@ -341,12 +341,12 @@ contains
                            nncell(2, nkp, bnum) = m
                            nncell(3, nkp, bnum) = n
                            bk_local(:, bnum, nkp) = bvec_inp(:, nbvec, ndnnx)
-                        endif
-                     enddo
+                        end if
+                     end do
                   end do
                   if (nnx == sum(multi)) exit ok2
                end do
-            enddo ok2
+            end do ok2
             ! check to see if too few neighbours here
          end do
 
@@ -369,14 +369,14 @@ contains
                do i = 1, 3
                   bb1 = bb1 + bk_local(i, nnx, 1)*bk_local(i, nnx, 1)
                   bbn = bbn + bk_local(i, nnx, nkp)*bk_local(i, nnx, nkp)
-               enddo
+               end do
                if (abs(sqrt(bb1) - sqrt(bbn)) .gt. kmesh_tol) then
                   if (on_root) write (stdout, '(1x,2f10.6)') bb1, bbn
                   call io_error('Non-symmetric k-point neighbours!')
-               endif
-            enddo
-         enddo
-      enddo
+               end if
+            end do
+         end do
+      end do
 
       ! now check that the completeness relation is satisfied for every kpoint
       ! We know it is true for kpt=1; but we check the rest to be safe.
@@ -393,19 +393,19 @@ contains
                      do nnsh = 1, nnshell(1, ndnn)
                         nnx = nnx + 1
                         ddelta = ddelta + wb_local(nnx)*bk_local(i, nnx, nkp)*bk_local(j, nnx, nkp)
-                     enddo
-                  enddo
+                     end do
+                  end do
                   if ((i .eq. j) .and. (abs(ddelta - 1.0_dp) .gt. kmesh_tol)) then
                      if (on_root) write (stdout, '(1x,2i3,f12.8)') i, j, ddelta
                      call io_error('Eq. (B1) not satisfied in kmesh_get (1)')
-                  endif
+                  end if
                   if ((i .ne. j) .and. (abs(ddelta) .gt. kmesh_tol)) then
                      if (on_root) write (stdout, '(1x,2i3,f12.8)') i, j, ddelta
                      call io_error('Eq. (B1) not satisfied in kmesh_get (2)')
-                  endif
-               enddo
-            enddo
-         enddo
+                  end if
+               end do
+            end do
+         end do
       end if
 
       if (on_root) write (stdout, '(1x,a)') '| Completeness relation is fully satisfied [Eq. (B1), PRB 56, 12847 (1997)]  |'
@@ -419,8 +419,8 @@ contains
          do nnsh = 1, nnshell(1, ndnn)
             nnx = nnx + 1
             wbtot = wbtot + wb_local(nnx)
-         enddo
-      enddo
+         end do
+      end do
 
       nnh = nntot/2
       ! make list of bka vectors from neighbours of first k-point
@@ -432,16 +432,16 @@ contains
             do nap = 1, na
                call utility_compar(bka(1, nap), bk_local(1, nn, 1), ifpos, ifneg)
                if (ifneg .eq. 1) ifound = 1
-            enddo
-         endif
+            end do
+         end if
          if (ifound .eq. 0) then
             !         found new vector to add to set
             na = na + 1
             bka(1, na) = bk_local(1, nn, 1)
             bka(2, na) = bk_local(2, nn, 1)
             bka(3, na) = bk_local(3, nn, 1)
-         endif
-      enddo
+         end if
+      end do
       if (na .ne. nnh) call io_error('Did not find right number of bk directions')
 
       if (on_root) then
@@ -451,13 +451,13 @@ contains
          else
             write (stdout, '(1x,a)') '|                 b_k Vectors (Bohr^-1) and Weights (Bohr^2)                 |'
             write (stdout, '(1x,a)') '|                 ------------------------------------------                 |'
-         endif
+         end if
          write (stdout, '(1x,a)') '|            No.         b_k(x)      b_k(y)      b_k(z)        w_b           |'
          write (stdout, '(1x,a)') '|            ---        --------------------------------     --------        |'
          do i = 1, nntot
             write (stdout, '(1x,"|",11x,i3,5x,3f12.6,3x,f10.6,8x,"|")') &
                i, (bk_local(j, i, 1)/lenconfac, j=1, 3), wb_local(i)*lenconfac**2
-         enddo
+         end do
          write (stdout, '(1x,"+",76("-"),"+")')
          if (lenconfac .eq. 1.0_dp) then
             write (stdout, '(1x,a)') '|                           b_k Directions (Ang^-1)                          |'
@@ -465,15 +465,15 @@ contains
          else
             write (stdout, '(1x,a)') '|                           b_k Directions (Bohr^-1)                         |'
             write (stdout, '(1x,a)') '|                           ------------------------                         |'
-         endif
+         end if
          write (stdout, '(1x,a)') '|            No.           x           y           z                         |'
          write (stdout, '(1x,a)') '|            ---        --------------------------------                     |'
          do i = 1, nnh
             write (stdout, '(1x,"|",11x,i3,5x,3f12.6,21x,"|")') i, (bka(j, i)/lenconfac, j=1, 3)
-         enddo
+         end do
          write (stdout, '(1x,"+",76("-"),"+")')
          write (stdout, *) ' '
-      endif
+      end if
 
       ! find index array
       do nkp = 1, num_kpts
@@ -484,14 +484,14 @@ contains
             do nn = 1, nntot
                call utility_compar(bka(1, na), bk_local(1, nn, nkp), ifpos, ifneg)
                if (ifpos .eq. 1) neigh(nkp, na) = nn
-            enddo
+            end do
             ! check found
             if (neigh(nkp, na) .eq. 0) then
                if (on_root) write (stdout, *) ' nkp,na=', nkp, na
                call io_error('kmesh_get: failed to find neighbours for this kpoint')
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
 
       !fill in the global arrays from the local ones
 
@@ -547,8 +547,8 @@ contains
                do nap = 1, na
                   call utility_compar(bk(1, nap, 1), bk_local(1, nn, 1), ifpos, ifneg)
                   if (ifneg .eq. 1) ifound = 1
-               enddo
-            endif
+               end do
+            end if
             if (ifound .eq. 0) then
                !         found new vector to add to set
                na = na + 1
@@ -564,8 +564,8 @@ contains
                ! check bk.eq.bka
                call utility_compar(bk(1, na, 1), bka(1, na), ifpos, ifneg)
                if (ifpos .ne. 1) call io_error('Error in kmesh_get: bk is not identical to bka in gamma_only option')
-            endif
-         enddo
+            end if
+         end do
 
          if (na .ne. nnh) call io_error('Did not find right number of b-vectors in gamma_only option')
 
@@ -579,23 +579,23 @@ contains
             else
                write (stdout, '(1x,a)') '|                 b_k Vectors (Bohr^-1) and Weights (Bohr^2)                 |'
                write (stdout, '(1x,a)') '|                 ------------------------------------------                 |'
-            endif
+            end if
             write (stdout, '(1x,a)') '|            No.         b_k(x)      b_k(y)      b_k(z)        w_b           |'
             write (stdout, '(1x,a)') '|            ---        --------------------------------     --------        |'
             do i = 1, nntot
                write (stdout, '(1x,"|",11x,i3,5x,3f12.6,3x,f10.6,8x,"|")') &
                   i, (bk(j, i, 1)/lenconfac, j=1, 3), wb(i)*lenconfac**2
-            enddo
+            end do
             write (stdout, '(1x,"+",76("-"),"+")')
             write (stdout, *) ' '
-         endif
+         end if
 
          deallocate (nnlist_tmp, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating nnlist_tmp in kmesh_get')
          deallocate (nncell_tmp, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating nncell_tmp in kmesh_get')
 
-      endif
+      end if
 ![ysl-e]
 
       if (timing_level > 0) call io_stopwatch('kmesh: get', 2)
@@ -672,7 +672,7 @@ contains
       write (nnkpout, '(i6)') num_kpts
       do nkp = 1, num_kpts
          write (nnkpout, '(3f14.8)') (kpt_latt(i, nkp), i=1, 3)
-      enddo
+      end do
       write (nnkpout, '(a/)') 'end kpoints'
 
       if (spinors) then
@@ -692,7 +692,7 @@ contains
                write (nnkpout, '(2x,1i3,1x,3f11.7)') &
                   input_proj_s(i), &
                   input_proj_s_qaxis(1, i), input_proj_s_qaxis(2, i), input_proj_s_qaxis(3, i)
-            enddo
+            end do
          else
             ! No projections
             write (nnkpout, '(i6)') 0
@@ -712,13 +712,13 @@ contains
                   input_proj_z(1, i), input_proj_z(2, i), input_proj_z(3, i), &
                   input_proj_x(1, i), input_proj_x(2, i), input_proj_x(3, i), &
                   input_proj_zona(i)
-            enddo
+            end do
          else
             ! No projections
             write (nnkpout, '(i6)') 0
          end if
          write (nnkpout, '(a/)') 'end projections'
-      endif
+      end if
 
       ! Info for automatic generation of projections
       if (auto_projections) then
@@ -746,7 +746,7 @@ contains
          do i = 1, num_exclude_bands
             write (nnkpout, '(i4)') exclude_bands(i)
          end do
-      endif
+      end if
       write (nnkpout, '(a)') 'end exclude_bands'
 
       close (nnkpout)
@@ -774,11 +774,11 @@ contains
       if (allocated(bk)) then
          deallocate (bk, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating bk in kmesh_dealloc')
-      endif
+      end if
       if (allocated(bka)) then
          deallocate (bka, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating bka in kmesh_dealloc')
-      endif
+      end if
       if (allocated(wb)) then
          deallocate (wb, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating wb in kmesh_dealloc')
@@ -792,11 +792,11 @@ contains
       if (allocated(nncell)) then
          deallocate (nncell, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating nncell in kmesh_dealloc')
-      endif
+      end if
       if (allocated(nnlist)) then
          deallocate (nnlist, stat=ierr)
          if (ierr /= 0) call io_error('Error in deallocating nnlist in kmesh_dealloc')
-      endif
+      end if
 
       return
 
@@ -885,11 +885,11 @@ contains
             if ((dist .ge. shell_dist*(1.0_dp - kmesh_tol)) .and. dist .le. shell_dist*(1.0_dp + kmesh_tol)) then
                num_bvec = num_bvec + 1
                bvector(:, num_bvec) = vkpp(:) - kpt_cart(:, kpt)
-            endif
+            end if
             !if we have the right number of neighbours we can exit
             if (num_bvec == multi) cycle ok
-         enddo
-      enddo ok
+         end do
+      end do ok
 
       if (num_bvec < multi) call io_error('kmesh_get_bvector: Not enough bvectors found')
 
@@ -1308,7 +1308,7 @@ contains
          tot_num_lines = tot_num_lines + 1
          if (.not. dummy(1:1) == '!' .and. .not. dummy(1:1) == '#') then
             if (len(trim(dummy)) > 0) num_lines = num_lines + 1
-         endif
+         end if
 
       end do
 
@@ -1337,7 +1337,7 @@ contains
                length = length + 1
             else
                exit
-            endif
+            end if
 
          end do
          multi(counter) = length
@@ -1472,7 +1472,7 @@ contains
          if (abs(dist(loop) - dist(guess(1))) < eps8) then
             counter = counter + 1
             list(counter) = loop
-         endif
+         end if
       end do
       ! and always return the lowest index
       internal_maxloc = minval(list(1:counter))

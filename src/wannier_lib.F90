@@ -119,7 +119,7 @@ subroutine wannier_setup(seed__name, mp_grid_loc, num_kpts_loc, &
       stat = 'old'
    else
       stat = 'replace'
-   endif
+   end if
    pos = 'append'
 
    stdout = io_file_unit()
@@ -193,7 +193,7 @@ subroutine wannier_setup(seed__name, mp_grid_loc, num_kpts_loc, &
          proj_s_loc(1:num_proj) = proj_s(1:num_proj)
          proj_s_qaxis_loc(:, 1:num_proj) = proj_s_qaxis(:, 1:num_proj)
       end if
-   endif
+   end if
    if (allocated(exclude_bands)) then
       exclude_bands_loc(1:num_exclude_bands) = exclude_bands(1:num_exclude_bands)
    end if
@@ -202,7 +202,7 @@ subroutine wannier_setup(seed__name, mp_grid_loc, num_kpts_loc, &
       call kmesh_write()
       write (stdout, '(1x,a25,f11.3,a)') 'Time to write kmesh      ', io_time(), ' (sec)'
       write (stdout, '(/a)') ' '//trim(seedname)//'.nnkp written.'
-   endif
+   end if
 
    call kmesh_dealloc()
    call param_dealloc()
@@ -292,7 +292,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
       stat = 'old'
    else
       stat = 'replace'
-   endif
+   end if
    pos = 'append'
 
    stdout = io_file_unit()
@@ -344,7 +344,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
    else
       m_matrix = m_matrix_loc
       u_matrix = a_matrix_loc
-   endif
+   end if
 
    ! IMPORTANT NOTE: _loc are variables local to this function, passed in as variables
    ! Instead, _local are variables local to the MPI process.
@@ -354,7 +354,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
    else
       call comms_scatterv(m_matrix_local, num_wann*num_wann*nntot*counts(my_node_id), &
                           m_matrix, num_wann*num_wann*nntot*counts, num_wann*num_wann*nntot*displs)
-   endif
+   end if
 
 !~  ! Check Mmn(k,b) is symmetric in m and n for gamma_only case
 !~  if (gamma_only) call overlap_check_m_symmetry()
@@ -371,7 +371,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
          call overlap_project_gamma()
       else
          call overlap_project()
-      endif
+      end if
       time1 = io_time()
       write (stdout, '(1x,a25,f11.3,a)') 'Time to project overlaps ', time1 - time2, ' (sec)'
    end if
@@ -380,7 +380,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
       call wann_main_gamma()
    else
       call wann_main()
-   endif
+   end if
 
    call param_write_chkpt('postwann')
 
@@ -425,7 +425,7 @@ subroutine wannier_run(seed__name, mp_grid_loc, num_kpts_loc, &
       spread_loc(1) = omega_total
       spread_loc(2) = omega_invariant
       spread_loc(3) = omega_tilde
-   endif
+   end if
    call hamiltonian_dealloc()
    call overlap_dealloc()
    call kmesh_dealloc()
